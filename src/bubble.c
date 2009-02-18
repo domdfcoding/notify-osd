@@ -1725,7 +1725,7 @@ bubble_new (Defaults* defaults)
 	this->defaults = defaults;
 	priv = GET_PRIVATE (this);
 
-	priv->widget = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	priv->widget = gtk_window_new (GTK_WINDOW_POPUP);
 	window = priv->widget;
 	if (!window)
 		return NULL;
@@ -1767,7 +1767,7 @@ bubble_new (Defaults* defaults)
 
 	/*  "clear" input-mask, set title/icon/attributes */
 	gtk_widget_set_app_paintable (window, TRUE);
-	gtk_window_set_title (GTK_WINDOW (window), "notification");
+	gtk_window_set_title (GTK_WINDOW (window), "notify-osd");
 	gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
 	gtk_window_set_keep_above (GTK_WINDOW (window), TRUE);
 	gtk_window_set_resizable (GTK_WINDOW (window), FALSE);

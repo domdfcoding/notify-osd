@@ -1,3 +1,17 @@
+notify-osd (0.8-0ubuntu3) jaunty; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in: Run
+    notification-daemon for stracciatella-session.
+  * Merge bug fixes from trunk:
+    - Ensure that window is always on top. Thanks Alexander Sack for
+      the patch! (LP: #331115)
+    - change window-title to be picked up by window-match-rules of
+      compiz-plugins and not collide with the old notification-daemon
+    - egg/egg-fixed.c: Fix unused symbol on arm, which causes build
+      failure due to -Werror.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 18 Feb 2009 22:55:40 +0100
+
 notify-osd (0.8-0ubuntu2) jaunty; urgency=low
 
   [ David Barth ]
