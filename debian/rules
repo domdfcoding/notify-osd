@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/gnome.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+DEB_DH_INSTALL_SOURCEDIR := debian/tmp
+DEB_CONFIGURE_SCRIPT_ENV += LDFLAGS="-Wl,--as-needed"
+# DEB_MAKE_TEST_TARGET := test
+

@@ -1,0 +1,35 @@
+notify-osd (0.8-0ubuntu2) jaunty; urgency=low
+
+  [ David Barth ]
+  * Ensure we are installed with the right icon set.
+  * imported code with from the trunk with the new 'notify-osd' name
+  * return proper list of server capabilities
+  * sync bubble timers to avoid a hole at the top (temporary)
+  * remove flicker for bubble appearing/fading under the mouse-pointer
+  * added new default icons for volume & brightness
+  * numerous other visual tweaks
+  * various code cleanups
+  * bumped the release number closer to 1.0
+
+  [ Martin Pitt ]
+  * debian/control: Fix Vcs-Bzr to point to Ubuntu packaging branch.
+  * Add debian/notify-osd.{preinst,postrm}: Divert
+    notification-daemon's D-BUS activation .service file, and drop the
+    Conflicts:/Replaces: notification-daemon, so that the packages can
+    be installed side by side. This paves the way for offering an
+    "almost vanilla" GNOME session (UbuntuSpec:stracciatella-session).
+  * debian/control, debian/changelog, debian/notify-osd.install:
+    Rename package to notify-osd.  The transitional package should be
+    kept for a while, until all users of the PPA and daily Jaunty
+    users have upgraded to the new package name.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 18 Feb 2009 18:53:58 +0100
+
+alsdorf (0.8-0ubuntu1) jaunty; urgency=low
+
+  * Initial jaunty upload based on the dxteam work
+  * debian/control, debian/rules:
+    - don't run autotools but use a tarball
+  * COPYING.LGPL: copy the LGPL license in the tarball
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 17 Feb 2009 19:33:58 +0100

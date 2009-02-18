@@ -1,0 +1,65 @@
+AC_INIT(notify_osd, 0.9, dx-team@canonical.com)
+
+AC_CONFIG_SRCDIR(src/main.c)
+AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_MACRO_DIR([m4])
+
+AM_INIT_AUTOMAKE
+GNOME_COMMON_INIT
+GNOME_COMPILE_WARNINGS(maximum)
+
+AM_MAINTAINER_MODE
+AM_DISABLE_STATIC
+AM_PROG_LIBTOOL
+AC_SUBST(ACLOCAL_AMFLAGS, "$ACLOCAL_FLAGS -I m4")
+AC_PROG_CC
+AM_PROG_CC_C_O
+AC_PROG_INSTALL
+
+#
+# pkg-config
+#
+PKG_PROG_PKG_CONFIG
+
+#
+# glib, we need 2.16.0 for the unit-tests
+#
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.16.0 gthread-2.0 gconf-2.0 gio-2.0])
+
+#
+# gconf, used by the Defaults class to get system font-face and font-size
+#
+PKG_CHECK_MODULES([GCONF], [gconf-2.0])
+
+#
+# dbus
+#
+PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= 0.76])
+DBUS_GLIB_BIN="`$PKG_CONFIG --variable=exec_prefix dbus-glib-1`/bin"
+AC_SUBST(DBUS_GLIB_BIN)
+
+#
+# Gnome/GTK checks
+#
+
+AM_PATH_GTK_2_0
+
+
+PKG_CHECK_MODULES(notify_osd, 
+		  gtk+-2.0 >= 2.6)
+AC_SUBST(NOTIFY_OSD_CFLAGS)
+AC_SUBST(NOTIFY_OSD_LIBS)
+# example python module
+# AM_CHECK_PYMOD(gobject)
+
+dnl CFLAGS
+CFLAGS="$CFLAGS -lm"
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+tests/Makefile
+data/Makefile
+data/icons/Makefile
+data/icons/scalable/Makefile
+])

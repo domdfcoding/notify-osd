@@ -1,0 +1,28 @@
+Source: notify-osd
+Section: x11
+Priority: optional
+Maintainer: DX Team <dx-team@lists.ubuntu.com>
+Build-Depends: cdbs (>= 0.4.23-1.1), debhelper (>= 5), libglib2.0-dev (>= 2.4), libgtk2.0-dev (>= 2.4), libdbus-1-dev (>= 0.36), libdbus-glib-1-dev (>= 0.60), intltool, libnotify-dev, libgconf2-dev
+Standards-Version: 3.8.0
+Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/aachen/ubuntu
+Homepage: https://launchpad.net/aachen
+
+Package: notify-osd
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, human-icon-theme (>= 0.33)
+Conflicts: notify-daemon, alsdorf (<< 0.8ubuntu2)
+Replaces: notify-daemon, alsdorf (<< 0.8ubuntu2)
+Provides: notification-daemon
+Description: daemon that displays passive pop-up notifications
+ The Desktop Notifications framework provides a standard way of doing
+ passive pop-up notifications on the Linux desktop.  These are
+ designed to notify the user of something without interrupting their
+ work with a dialog box that they must close.  Passive popups can
+ automatically disappear after a short period of time.
+
+Package: alsdorf
+Architecture: all
+Depends: notify-osd
+Description: transitional package to migrate to notify-osd
+ This is a transitional package for the alsdorf -> notify-osd
+ renaming.
