@@ -10,8 +10,8 @@ Homepage: https://launchpad.net/aachen
 Package: notify-osd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, human-icon-theme (>= 0.33)
-Conflicts: notify-daemon, alsdorf (<< 0.8ubuntu2)
-Replaces: notify-daemon, alsdorf (<< 0.8ubuntu2)
+Conflicts: notify-daemon, alsdorf (<< 0.8-0ubuntu2)
+Replaces: notify-daemon, alsdorf (<< 0.8-0ubuntu2)
 Provides: notification-daemon
 Description: daemon that displays passive pop-up notifications
  The Desktop Notifications framework provides a standard way of doing
