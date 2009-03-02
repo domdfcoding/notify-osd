@@ -1,3 +1,32 @@
+notify-osd (0.9-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release:
+  - src/bubble.c: Ensure that window is always on top (LP: #331115)
+  - Updated value-indicator bar-rendering to comply to visual guidelines from
+    design-team
+  - Temp. fix for notifications appearing over panel, will visually break for
+    people without a top panel
+  - Added API-calls bubble_get_title(), bubble_get_body_message() and
+    bubble_get_value() to ease a11y
+  - Don't allow LAYOUT_ICON_ONLY when missing icon pixbuf, nice catch by
+    Frederic "fredp" Peters <fpeters@gnome.org>
+  - Implement support for title-only (LP: #333524)
+  - Changed capability hints: private-synchronous, append and private-icon-only
+  - make sure text is rendered using system-wide font-settings
+    for antialiasing, subpixel-order and hinting (LP: #331165)
+  - Provide fallback gnome icons for people not using the Human theme; thanks to
+    asomething for the proposed fix
+  - sync. icon-value following sync. icon-only misses layout-change
+    (LP: #335250)
+  - Fallback alert has leftmost button as default (LP: #330091)
+  - Fallback alert boxes shouldn't use custom icons (LP: #330088)
+  - Fallback alerts aren't centered (LP: #330484)
+  * debian/control: Fix Homepage and Vcs-Bzr fields.
+  * Drop icons/avatar.png from bzr, since it's not part of the orig.tar.gz and
+    not used in the upstream code.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 02 Mar 2009 17:37:47 +0100
+
 notify-osd (0.8-0ubuntu4) jaunty; urgency=low
 
   * Fix Conflicts/Replaces on alsdorf so that the transitional package is

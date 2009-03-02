@@ -4,8 +4,8 @@ Priority: optional
 Maintainer: DX Team <dx-team@lists.ubuntu.com>
 Build-Depends: cdbs (>= 0.4.23-1.1), debhelper (>= 5), libglib2.0-dev (>= 2.4), libgtk2.0-dev (>= 2.4), libdbus-1-dev (>= 0.36), libdbus-glib-1-dev (>= 0.60), intltool, libnotify-dev, libgconf2-dev
 Standards-Version: 3.8.0
-Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/aachen/ubuntu
-Homepage: https://launchpad.net/aachen
+Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/notify-osd/ubuntu
+Homepage: https://launchpad.net/notify-osd
 
 Package: notify-osd
 Architecture: any

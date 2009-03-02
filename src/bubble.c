@@ -2,7 +2,7 @@
 **3456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
 **      10        20        30        40        50        60        70        80
 **
-** Codename "alsdorf"
+** notify-osd
 **
 ** bubble.c - implements all the rendering of a notification bubble
 **
@@ -81,6 +81,7 @@ struct _BubblePrivate {
 	gint             body_width;
 	gint             body_height;
 	gboolean         append;
+	gboolean         icon_only;
 };
 
 enum
@@ -113,7 +114,7 @@ enum
 #define BUBBLE_BG_COLOR_R  0.07f
 #define BUBBLE_BG_COLOR_G  0.07f
 #define BUBBLE_BG_COLOR_B  0.07f
-#define BUBBLE_BG_COLOR_A  0.8f
+#define BUBBLE_BG_COLOR_A  0.9f
 
 #define INDICATOR_UNLIT_R  1.0f
 #define INDICATOR_UNLIT_G  1.0f
@@ -490,67 +491,162 @@ draw_layout_grid (cairo_t* cr,
 }
 #endif
 
+/* color-, alpha-, radius-, width-, height- and gradient-values were determined
+ * by very close obvervation of a SVG-mockup from the design-team */
 static void
 draw_value_indicator (cairo_t* cr,
-		      gint     value,   /* value to render: 0 - 100        */
-		      gint     start_x, /* top of surrounding rect         */
-		      gint     start_y, /* left of surrounding rect        */
-		      gint     width,   /* width of surrounding rect       */
-		      gint     height,  /* height of surrounding rect      */
-		      gint     bars,    /* how may bars to use for display */
-		      gdouble* lit,     /* lit-color as gdouble[4]         */
-		      gdouble* unlit    /* unlit-color as gdouble[4]       */)
+		      gint     value,   /* value to render: 0 - 100   */
+		      gint     start_x, /* top of surrounding rect    */
+		      gint     start_y, /* left of surrounding rect   */
+		      gint     width,   /* width of surrounding rect  */
+		      gint     height   /* height of surrounding rect */)
 {
-	gint    step;
-	gdouble x = (gdouble) start_x;
-	gdouble y = (gdouble) start_y;
-	gdouble w = (gdouble) width;
-	gdouble h = (gdouble) height;
-	gdouble radius;           /* corner-radius of a bar         */
-	gdouble x_gap;            /* gap between two bars           */
-	gdouble y_start = 0.275f; /* normalized height of first bar */
-	gdouble x_step;           /* width of a bar                 */
-	gdouble y_step;           /* increment-step for bar-height  */
-	gint    step_value;
+	gdouble          outline_radius;
+	gdouble          outline_thickness;
+	gdouble          outline_width;
+	gdouble          outline_height;
+	gdouble          bar_radius;
+	gdouble          bar_width;
+	gdouble          bar_height;
+	cairo_pattern_t* gradient;
 
-	/* sanity checks */
-	if (bars < 0 || lit == NULL || unlit == NULL)
-		return;
+	outline_radius    = 2.0f;
+	outline_thickness = 2.0f;
+	outline_width     = width - 2 * outline_radius;
+	outline_height    = height / 5.0f;
 
-	step_value = 100.0f / (gdouble) bars;
-	x_gap = w * 0.3f / (gdouble) (bars - 1);
-	x_step = w * 0.7f / (gdouble) bars;
-	radius = 0.3f * x_step;
-	y_step = (h - (h * y_start)) / (bars - 1);
+	/* draw bar-background */
+	cairo_set_line_width (cr, outline_thickness);
+	cairo_set_source_rgba (cr, 0.0f, 0.0f, 0.0f, 0.3f);
+	draw_round_rect (cr,
+			 1.0f,
+			 (gdouble) start_x + 0.5f,
+			 (gdouble) start_y +
+			 height / 2.0f -
+			 outline_height / 2.0f +
+			 0.5f,
+			 outline_radius,
+			 (gdouble) outline_width,
+			 (gdouble) outline_height);
+	cairo_stroke_preserve (cr);
+	gradient = cairo_pattern_create_linear (0.0f,
+						(gdouble) start_y +
+						height / 2.0f -
+						outline_height / 2.0f +
+						0.5f,
+						0.0f,
+						(gdouble) start_y +
+						height / 2.0f -
+						outline_height / 2.0f +
+						0.5f +
+						outline_height);
+	cairo_pattern_add_color_stop_rgba (gradient,
+					   0.0f,
+					   0.866f,
+					   0.866f,
+					   0.866f,
+					   0.3f);
+	cairo_pattern_add_color_stop_rgba (gradient,
+					   0.2f,
+					   0.827f,
+					   0.827f,
+					   0.827f,
+					   0.3f);
+	cairo_pattern_add_color_stop_rgba (gradient,
+					   0.3f,
+					   0.772f,
+					   0.772f,
+					   0.772f,
+					   0.3f);
+	cairo_pattern_add_color_stop_rgba (gradient,
+					   1.0f,
+					   0.623f,
+					   0.623f,
+					   0.623f,
+					   0.3f);
+	cairo_set_source (cr, gradient);
+	cairo_fill (cr);
+	cairo_pattern_destroy (gradient);
 
-	for (step = 0; step < bars; step++)
+	bar_radius = 0.8f;
+	bar_width  = outline_width - outline_radius;
+	bar_height = outline_height - outline_radius;
+
+	/* draw value-bar */
+	if (value > 0)
 	{
-		if (step * step_value >= value)
-		{
-			cairo_set_source_rgba (cr,
-					       unlit[R],
-					       unlit[G],
-					       unlit[B],
-					       unlit[A]);
-		}
-		else
-		{
-			cairo_set_source_rgba (cr,
-					       lit[R],
-					       lit[G],
-					       lit[B],
-					       lit[A]);
-		}
-
 		draw_round_rect (cr,
 				 1.0f,
-				 x + (x_step + x_gap) * (gdouble) step,
-				 h + y - y_step * (gdouble) step - y_start * h,
-				 radius,
-				 x_step,
-				 y_start * h + y_step * (gdouble) step);
+				 (gdouble) start_x + outline_thickness + 0.5f,
+				 (gdouble) start_y +
+				 height / 2.0f -
+				 outline_height / 2.0f +
+				 outline_thickness / 2.0f +
+				 0.5f,
+				 bar_radius,
+				 bar_width / 100.0f * (gdouble) value,
+				 bar_height);
+		gradient = cairo_pattern_create_linear (0.0f,
+							(gdouble) start_x +
+							outline_thickness +
+							0.5f,
+							0.0f,
+							(gdouble) start_y +
+							height / 2.0f -
+							outline_height / 2.0f +
+							outline_thickness / 2.0f +
+							0.5f);
+		cairo_pattern_add_color_stop_rgba (gradient,
+						   0.0f,
+						   1.0f,
+						   1.0f,
+						   1.0f,
+						   1.0f);
+		cairo_pattern_add_color_stop_rgba (gradient,
+						   0.2f,
+						   0.95f,
+						   0.95f,
+						   0.95f,
+						   1.0f);
+		cairo_pattern_add_color_stop_rgba (gradient,
+						   0.3f,
+						   0.8f,
+						   0.8f,
+						   0.8f,
+						   1.0f);
+		cairo_pattern_add_color_stop_rgba (gradient,
+						   1.0f,
+						   0.623f,
+						   0.623f,
+						   0.623f,
+						   1.0f);
+		cairo_set_source (cr, gradient);
 		cairo_fill (cr);
+		cairo_pattern_destroy (gradient);
 	}
+}
+
+static void
+_render_icon_only (Bubble*  self,
+		   cairo_t* cr)
+{
+	Defaults* d = self->defaults;
+	gint      shadow;
+	gint      icon_half;
+	gint      width_half;
+	gint      height_half;
+
+	shadow      = EM2PIXELS (defaults_get_bubble_shadow_size (d), d);
+	icon_half   = EM2PIXELS (defaults_get_icon_size (d), d) / 2;
+	width_half  = EM2PIXELS (defaults_get_bubble_width (d), d) / 2;
+	height_half = EM2PIXELS (defaults_get_bubble_min_height (d), d) / 2;
+
+	/* render icon */
+	gdk_cairo_set_source_pixbuf (cr,
+				     GET_PRIVATE (self)->icon_pixbuf,
+				     shadow + width_half - icon_half,
+				     shadow + height_half - icon_half);
+	cairo_paint (cr);
 }
 
 static void
@@ -563,15 +659,6 @@ _render_icon_indicator (Bubble*  self,
 	cairo_surface_t* tmp;
 	cairo_status_t   status;
 	cairo_pattern_t* pattern;
-	gint             bars = 13;
-	gdouble          lit[4]   = {INDICATOR_LIT_R,
-				     INDICATOR_LIT_G,
-				     INDICATOR_LIT_B,
-				     INDICATOR_LIT_A};
-	gdouble          unlit[4] = {INDICATOR_UNLIT_R,
-				     INDICATOR_UNLIT_G,
-				     INDICATOR_UNLIT_B,
-				     INDICATOR_UNLIT_A};
 	gint             blur_radius = 10;
 	gdouble          dim_glow_opacity;
 	BubblePrivate*   priv = GET_PRIVATE (self);
@@ -622,10 +709,7 @@ _render_icon_indicator (Bubble*  self,
 		EM2PIXELS (defaults_get_bubble_width (d), d) -
 		3 * EM2PIXELS (defaults_get_margin_size (d), d) -
 		EM2PIXELS (defaults_get_icon_size (d), d),
-		EM2PIXELS (defaults_get_icon_size (d), d),
-		bars,
-		lit,
-		unlit);
+		EM2PIXELS (defaults_get_icon_size (d), d));
 
 	/* "blit" scratch-pad context to context of bubble */
 	cairo_set_source_surface (cr,
@@ -795,16 +879,16 @@ _render_icon_title (Bubble*  self,
 
 	cairo_move_to (cr, left_margin, top_margin);
 
-	/* draw pango-text as path to our cairo-context */
-	pango_cairo_layout_path (cr, layout);
-
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_set_source_rgba (cr,
 			       TEXT_TITLE_COLOR_R,
 			       TEXT_TITLE_COLOR_G,
 			       TEXT_TITLE_COLOR_B,
 			       TEXT_TITLE_COLOR_A);
-	cairo_fill (cr);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
 	g_object_unref (layout);
 }
 
@@ -862,16 +946,16 @@ _render_icon_title_body (Bubble*  self,
 
 	cairo_move_to (cr, left_margin, top_margin);
 
-	/* draw pango-text as path to our cairo-context */
-	pango_cairo_layout_path (cr, layout);
-
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_set_source_rgba (cr,
 			       TEXT_TITLE_COLOR_R,
 			       TEXT_TITLE_COLOR_G,
 			       TEXT_TITLE_COLOR_B,
 			       TEXT_TITLE_COLOR_A);
-	cairo_fill (cr);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
 	g_object_unref (layout);
 
 	top_margin += log_rect.height / PANGO_SCALE;
@@ -902,15 +986,15 @@ _render_icon_title_body (Bubble*  self,
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_move_to (cr, left_margin, top_margin);
 
-	/* draw pango-text as path to our cairo-context */
-	pango_cairo_layout_path (cr, layout);
-
 	cairo_set_source_rgba (cr,
 			       TEXT_BODY_COLOR_R,
 			       TEXT_BODY_COLOR_G,
 			       TEXT_BODY_COLOR_B,
 			       TEXT_BODY_COLOR_A);
-	cairo_fill (cr);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
 	g_object_unref (layout);
 }
 
@@ -960,16 +1044,16 @@ _render_title_body (Bubble*  self,
 
 	cairo_move_to (cr, left_margin, top_margin);
 
-	/* draw pango-text as path to our cairo-context */
-	pango_cairo_layout_path (cr, layout);
-
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_set_source_rgba (cr,
 			       TEXT_TITLE_COLOR_R,
 			       TEXT_TITLE_COLOR_G,
 			       TEXT_TITLE_COLOR_B,
 			       TEXT_TITLE_COLOR_A);
-	cairo_fill (cr);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
 	g_object_unref (layout);
 
 	top_margin += (gdouble) log_rect.height / PANGO_SCALE;
@@ -1000,15 +1084,70 @@ _render_title_body (Bubble*  self,
 	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
 	cairo_move_to (cr, left_margin, top_margin);
 
-	/* draw pango-text as path to our cairo-context */
-	pango_cairo_layout_path (cr, layout);
-
 	cairo_set_source_rgba (cr,
 			       TEXT_BODY_COLOR_R,
 			       TEXT_BODY_COLOR_G,
 			       TEXT_BODY_COLOR_B,
 			       TEXT_BODY_COLOR_A);
-	cairo_fill (cr);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
+	g_object_unref (layout);
+}
+
+static void
+_render_title_only (Bubble*  self,
+		    cairo_t* cr)
+{
+	Defaults*             d      = self->defaults;
+	PangoFontDescription* desc   = NULL;
+	PangoLayout*          layout = NULL;
+	gint                  margin_gap;
+	gint                  top_margin;
+	gint                  left_margin;
+	BubblePrivate*        priv = GET_PRIVATE (self);
+
+	margin_gap  = EM2PIXELS (defaults_get_margin_size (d), d);
+	top_margin  = EM2PIXELS (defaults_get_bubble_shadow_size (d), d);
+	left_margin = EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		      EM2PIXELS (defaults_get_margin_size (d), d);
+
+	/* render title */
+	layout = pango_cairo_create_layout (cr);
+	desc = pango_font_description_new ();
+
+	pango_font_description_set_size (desc,
+					 EM2PIXELS (defaults_get_text_title_size (d), d) *
+					 PANGO_SCALE);
+	pango_font_description_set_family_static (desc, defaults_get_text_font_face (d));
+	pango_font_description_set_weight (desc, defaults_get_text_title_weight (d));
+	pango_font_description_set_style (desc, PANGO_STYLE_NORMAL);
+	pango_layout_set_wrap (layout, PANGO_WRAP_WORD);
+	pango_layout_set_font_description (layout, desc);
+	pango_font_description_free (desc);
+
+	pango_layout_set_width (layout, priv->title_width * PANGO_SCALE);
+
+	pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
+
+	/* print and layout string (pango-wise) */
+	pango_layout_set_text (layout, priv->title->str, priv->title->len);
+
+	top_margin += margin_gap;
+
+	cairo_move_to (cr, left_margin, top_margin);
+
+	cairo_set_operator (cr, CAIRO_OPERATOR_OVER);
+	cairo_set_source_rgba (cr,
+			       TEXT_TITLE_COLOR_R,
+			       TEXT_TITLE_COLOR_G,
+			       TEXT_TITLE_COLOR_B,
+			       TEXT_TITLE_COLOR_A);
+
+	/* draw pango-text using hinting-, subpixel-order and antialiasing */
+	pango_cairo_show_layout (cr, layout);
+
 	g_object_unref (layout);
 }
 
@@ -1367,6 +1506,10 @@ expose_handler (GtkWidget*      window,
 
 	switch (bubble_get_layout (bubble))
 	{
+		case LAYOUT_ICON_ONLY:
+			_render_icon_only (bubble, cr);
+		break;
+
 		case LAYOUT_ICON_INDICATOR:
 			_render_icon_indicator (bubble, cr);
 		break;
@@ -1381,6 +1524,10 @@ expose_handler (GtkWidget*      window,
 
 		case LAYOUT_TITLE_BODY:
 			_render_title_body (bubble, cr);
+		break;
+
+		case LAYOUT_TITLE_ONLY:
+			_render_title_only (bubble, cr);
 		break;
 
 		case LAYOUT_NONE:
@@ -1482,6 +1629,7 @@ load_icon (const gchar* filename,
 								    icon_size,
 								    TRUE,
 								    NULL);
+
 		gtk_icon_info_free (info);
 	}
 
@@ -1730,13 +1878,14 @@ bubble_new (Defaults* defaults)
 	if (!window)
 		return NULL;
 
-	g_object_set_data (G_OBJECT(window), "bubble", (gpointer) &this);
+	g_object_set_data (G_OBJECT(window), "bubble", (gpointer) this);
 
 	gtk_window_set_type_hint (GTK_WINDOW (window),
 				  GDK_WINDOW_TYPE_HINT_NOTIFICATION);
 	gtk_window_set_skip_pager_hint (GTK_WINDOW (window), TRUE);
 	gtk_window_set_skip_taskbar_hint (GTK_WINDOW (window), TRUE);
-					
+	gtk_window_stick (GTK_WINDOW (window));
+
 	gtk_widget_add_events (window,
 			       GDK_POINTER_MOTION_MASK |
 			       GDK_BUTTON_PRESS_MASK |
@@ -1802,6 +1951,7 @@ bubble_new (Defaults* defaults)
 	this->priv->body_width      = 0;
 	this->priv->body_height     = 0;
 	this->priv->append          = FALSE;
+	this->priv->icon_only       = FALSE;
 
 	update_input_shape (window, 1, 1);
 
@@ -1857,6 +2007,9 @@ void
 bubble_set_title (Bubble*      self,
 		  const gchar* title)
 {
+	gboolean       result;
+	gchar*         text;
+	GError*        error = NULL;
 	BubblePrivate* priv;
 
 	if (!self || !IS_BUBBLE (self))
@@ -1867,7 +2020,26 @@ bubble_set_title (Bubble*      self,
 	if (priv->title->len != 0)
 		g_string_free (priv->title, TRUE);
 
-	priv->title = g_string_new (title);
+	/* filter out any HTML/markup if possible */
+    	result = pango_parse_markup (title,
+				     -1,
+				     0,    /* no accel-marker needed */
+				     NULL, /* no PangoAttr needed */
+				     &text,
+				     NULL, /* no accel-marker-return needed */
+				     &error);
+
+	priv->title = g_string_new (text);
+	g_free ((gpointer) text);
+}
+
+const gchar*
+bubble_get_title (Bubble* self)
+{
+	if (!self || !IS_BUBBLE (self))
+		return NULL;
+
+	return GET_PRIVATE (self)->title->str;
 }
 
 void
@@ -1898,6 +2070,15 @@ bubble_set_message_body (Bubble*      self,
 
 	priv->message_body = g_string_new (text);
 	g_free ((gpointer) text);
+}
+
+const gchar*
+bubble_get_message_body (Bubble* self)
+{
+	if (!self || !IS_BUBBLE (self))
+		return NULL;
+
+	return GET_PRIVATE (self)->message_body->str;
 }
 
 void
@@ -1982,6 +2163,15 @@ bubble_set_value (Bubble* self,
 		return;
 
 	GET_PRIVATE (self)->value = value;
+}
+
+gint
+bubble_get_value (Bubble* self)
+{
+	if (!self || !IS_BUBBLE (self))
+		return -1;
+
+	return GET_PRIVATE (self)->value;
 }
 
 void
@@ -2714,6 +2904,7 @@ bubble_recalc_size (Bubble *self)
 
 	switch (priv->layout)
 	{
+		case LAYOUT_ICON_ONLY:
 		case LAYOUT_ICON_INDICATOR:
 		case LAYOUT_ICON_TITLE:
 			new_bubble_height =
@@ -2782,6 +2973,7 @@ bubble_recalc_size (Bubble *self)
 		break;
 
 		case LAYOUT_TITLE_BODY:
+		case LAYOUT_TITLE_ONLY:
 		{
 			gdouble available_height = 0.0f;
 			gdouble bubble_height    = 0.0f;
@@ -2908,11 +3100,21 @@ bubble_determine_layout (Bubble* self)
 	/* set a sane default */
 	priv->layout = LAYOUT_NONE;
 
+	/* icon-only layout-case, e.g. eject */
+	if (priv->icon_only)
+	{
+		priv->layout = LAYOUT_ICON_ONLY;
+		if (priv->icon_pixbuf == NULL)
+			priv->layout = LAYOUT_NONE;
+		return;
+	}
+
 	/* icon + indicator layout-case, e.g. volume */
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len == 0) &&
-	    (priv->value             >= 0))
+	    (priv->value             >= 0) &&
+	    !(priv->icon_only))
 	{
 		priv->layout = LAYOUT_ICON_INDICATOR;
 		return;
@@ -2922,7 +3124,8 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len == 0) &&
-	    (priv->value             == -1))
+	    (priv->value             == -1) &&
+	    !(priv->icon_only))
 	{
 		priv->layout = LAYOUT_ICON_TITLE;
 		return;	    
@@ -2932,7 +3135,8 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len != 0) &&
-	    (priv->value             == -1))
+	    (priv->value             == -1) &&
+	    !(priv->icon_only))
 	{
 		priv->layout = LAYOUT_ICON_TITLE_BODY;
 		return;
@@ -2942,13 +3146,23 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       == NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len != 0) &&
-	    (priv->value             == -1))
+	    (priv->value             == -1) &&
+	    !(priv->icon_only))
 	{
 		priv->layout = LAYOUT_TITLE_BODY;
 		return;
 	}
 
-	priv->layout = LAYOUT_TITLE_BODY;
+	/* title-only layout-case, use discouraged but needs to be supported */
+	if ((priv->icon_pixbuf       == NULL) &&
+	    (priv->title->len        != 0) &&
+	    (priv->message_body->len == 0) &&
+	    (priv->value             == -1) &&
+	    !(priv->icon_only))
+	{
+		priv->layout = LAYOUT_TITLE_ONLY;
+		return;
+	}
 
 	return;
 }
@@ -2963,6 +3177,16 @@ bubble_get_layout (Bubble* self)
 }
 
 void
+bubble_set_icon_only (Bubble*  self,
+		      gboolean allowed)
+{
+	if (!self || !IS_BUBBLE (self))
+		return;
+
+	GET_PRIVATE (self)->icon_only = allowed;
+}
+
+void
 bubble_set_append (Bubble*  self,
 		   gboolean allowed)
 {
@@ -2971,6 +3195,7 @@ bubble_set_append (Bubble*  self,
 
 	GET_PRIVATE (self)->append = allowed;
 }
+
 
 gboolean
 bubble_is_append_allowed (Bubble* self)
