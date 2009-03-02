@@ -37,10 +37,12 @@
 typedef enum
 {
 	LAYOUT_NONE = 0,
+	LAYOUT_ICON_ONLY,
 	LAYOUT_ICON_INDICATOR,
 	LAYOUT_ICON_TITLE,
 	LAYOUT_ICON_TITLE_BODY,
-	LAYOUT_TITLE_BODY
+	LAYOUT_TITLE_BODY,
+	LAYOUT_TITLE_ONLY
 } BubbleLayout;
 
 G_BEGIN_DECLS
@@ -93,9 +95,15 @@ void
 bubble_set_title (Bubble*      self,
 		  const gchar* title);
 
+const gchar*
+bubble_get_title (Bubble* self);
+
 void
 bubble_set_message_body (Bubble*      self,
 			 const gchar* body);
+
+const gchar*
+bubble_get_message_body (Bubble* self);
 
 void
 bubble_set_icon (Bubble*      self,
@@ -111,6 +119,9 @@ bubble_get_icon_pixbuf (Bubble *self);
 void
 bubble_set_value (Bubble* self,
 		  gint    value);
+
+gint
+bubble_get_value (Bubble* self);
 
 void
 bubble_set_size (Bubble* self,
@@ -210,6 +221,10 @@ bubble_determine_layout (Bubble* self);
 
 BubbleLayout
 bubble_get_layout (Bubble* self);
+
+void
+bubble_set_icon_only (Bubble*  self,
+		      gboolean allowed);
 
 void
 bubble_set_append (Bubble*  self,

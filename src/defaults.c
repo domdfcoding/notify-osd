@@ -242,10 +242,22 @@ defaults_constructed (GObject* gobject)
 			      "desktop-height",
 			      (gint) coords[3],
 			      NULL);
-		g_object_set (self,
-			      "desktop-top",
-			      (gint) coords[1],
-			      NULL);
+
+		/* FIXME: temp. workaround for notify-osd being started before
+		 * strut is set by gnome-panel, assume the usual value of 27,
+		 * in the long run this will be made dynamic and adapt to any
+		 * updates to the strut */
+		if ((gint) coords[1] != 0)
+			g_object_set (self,
+				      "desktop-top",
+				      (gint) coords[1],
+				      NULL);
+		else
+			g_object_set (self,
+				      "desktop-top",
+				      27,
+				      NULL);
+
 		g_object_set (self,
 			      "desktop-bottom",
 			      (gint) coords[3],
@@ -346,7 +358,7 @@ defaults_constructed (GObject* gobject)
 					1.0f / 72.0f * dpi);
 		g_object_set (self,
 			      "pixels-per-em",
-			      pixels_per_em,
+			      (gint) pixels_per_em,
 			      NULL);
 	}
 
