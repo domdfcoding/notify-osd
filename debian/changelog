@@ -1,3 +1,14 @@
+notify-osd (0.9ubuntu2) jaunty; urgency=low
+
+  * Merge bug fixes from trunk (r219):
+    - Added max. limit of 10 lines for message-body text.
+    - 3-line wrapping for summary text.
+    - capability "truncation" now advertised to clients (LP: #337389)
+    - non-composite mouse-hover effect now fully blanks (LP: #336108)
+    - disable markup-filter if parsing fails (LP: #331019)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 04 Mar 2009 19:47:24 +0100
+
 notify-osd (0.9-0ubuntu1) jaunty; urgency=low
 
   * New upstream release:
