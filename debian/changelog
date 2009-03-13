@@ -1,3 +1,12 @@
+notify-osd (0.9.3-0ubuntu1) jaunty; urgency=low
+
+  * New upstream version:
+    - don't crash on download notifications (lp: #332042)
+    - correctly pass actions to the fallback (lp: #340773)
+    - correctly namespace the capability names (lp: #340817)
+   
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 13 Mar 2009 15:13:30 +0100
+
 notify-osd (0.9ubuntu2) jaunty; urgency=low
 
   * Merge bug fixes from trunk (r219):
