@@ -1,3 +1,9 @@
+notify-osd (0.9.6-0ubuntu2) jaunty; urgency=low
+
+  * debian/control: Add missing new build dependency libwnck-dev.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 19 Mar 2009 14:23:19 +0100
+
 notify-osd (0.9.6-0ubuntu1) jaunty; urgency=low
 
   * New upstream release 0.9.6:
