@@ -4,13 +4,12 @@
 **
 ** notify-osd
 **
-** dbus.h - dbus boiler-plate code for talking with libnotify
+** util.h - all sorts of helper functions
 **
 ** Copyright 2009 Canonical Ltd.
 **
 ** Authors:
-**    Mirco "MacSlow" Mueller <mirco.mueller@canonical.com>
-**    David Barth <david.barth@canonical.com>
+**    Cody Russell <cody.russell@canonical.com>
 **
 ** This program is free software: you can redistribute it and/or modify it
 ** under the terms of the GNU General Public License version 3, as published
@@ -26,35 +25,6 @@
 **
 *******************************************************************************/
 
-#ifndef __NOTIFY_OSD_DBUS_H
-#define __NOTIFY_OSD_DBUS_H
+gchar*
+filter_text (const gchar* app_name);
 
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-bindings.h>
-
-#ifndef DBUS_PATH
-#define DBUS_PATH "/org/freedesktop/Notifications"
-#endif
-#ifndef DBUS_NAME
-#define DBUS_NAME "org.freedesktop.Notifications"
-#endif
-
-DBusGConnection*
-dbus_create_service_instance (const char *service_name);
-
-DBusGConnection*
-dbus_get_connection (void);
-
-void
-dbus_send_close_signal (gchar *dest,
-			guint id, 
-			guint reason);
-void
-dbus_send_action_signal (gchar *dest,
-			 guint id, 
-			 const char *action_key);
-
-G_END_DECLS
-
-#endif /* __NOTIFY_OSD_DBUS_H */

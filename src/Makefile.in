@@ -50,8 +50,11 @@ am__objects_2 = notify_osd-bubble.$(OBJEXT) \
 	notify_osd-defaults.$(OBJEXT) notify_osd-main.$(OBJEXT) \
 	notify_osd-observer.$(OBJEXT) notify_osd-stack.$(OBJEXT) \
 	notify_osd-dbus.$(OBJEXT) notify_osd-dnd.$(OBJEXT) \
-	notify_osd-apport.$(OBJEXT) notify_osd-egg-fixed.$(OBJEXT) \
-	notify_osd-egg-units.$(OBJEXT) \
+	notify_osd-apport.$(OBJEXT) notify_osd-log.$(OBJEXT) \
+	notify_osd-util.$(OBJEXT) notify_osd-bubble-window.$(OBJEXT) \
+	notify_osd-bubble-window-accessible.$(OBJEXT) \
+	notify_osd-bubble-window-accessible-factory.$(OBJEXT) \
+	notify_osd-egg-fixed.$(OBJEXT) notify_osd-egg-units.$(OBJEXT) \
 	notify_osd-egg-timeline.$(OBJEXT) \
 	notify_osd-egg-timeout-pool.$(OBJEXT) \
 	notify_osd-egg-alpha.$(OBJEXT) notify_osd-egg-hack.$(OBJEXT) \
@@ -63,7 +66,7 @@ notify_osd_OBJECTS = $(am_notify_osd_OBJECTS)
 am__DEPENDENCIES_1 =
 notify_osd_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 notify_osd_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(notify_osd_CFLAGS) \
 	$(CFLAGS) $(notify_osd_LDFLAGS) $(LDFLAGS) -o $@
@@ -158,6 +161,8 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 WARN_CFLAGS = @WARN_CFLAGS@
+WNCK_CFLAGS = @WNCK_CFLAGS@
+WNCK_LIBS = @WNCK_LIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -203,6 +208,7 @@ notify_osd_CFLAGS = \
 	$(GTK_CFLAGS) 		\
 	$(GCONF_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
+	$(WNCK_CFLAGS)		\
 	$(NULL)
 
 notify_osd_LIBS = @notify_osd_LIBS@
@@ -235,6 +241,11 @@ notify_osd_sources = \
 	dbus.c			\
 	dnd.c			\
 	apport.c		\
+	log.c			\
+	util.c			\
+	bubble-window.c		\
+	bubble-window-accessible.c \
+	bubble-window-accessible-factory.c \
 	../egg/egg-fixed.c		\
 	../egg/egg-units.c		\
 	../egg/egg-timeline.c		\
@@ -251,7 +262,11 @@ notify_osd_headers = \
 	stack-glue.h		\
 	dbus.h			\
 	dnd.h			\
+	log.h			\
 	apport.h		\
+	bubble-window.h \
+	bubble-window-accessible.h \
+	bubble-window-accessible-factory.h \
 	../egg/egg-fixed.h		\
 	../egg/egg-units.h		\
 	../egg/egg-timeline.h		\
@@ -272,6 +287,7 @@ notify_osd_LDADD = \
 	$(GCONF_LIBS) 		\
 	$(GTK_LIBS) 		\
 	$(DBUS_LIBS)     	\
+	$(WNCK_LIBS)     	\
 	$(NULL)
 
 notify_osd_LDFLAGS = \
@@ -363,6 +379,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-apport.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-bubble-window-accessible-factory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-bubble-window-accessible.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-bubble-window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-bubble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-dbus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-defaults.Po@am__quote@
@@ -373,9 +392,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeout-pool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-units.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-observer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-util.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -509,6 +530,76 @@ notify_osd-apport.obj: apport.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='apport.c' object='notify_osd-apport.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-apport.obj `if test -f 'apport.c'; then $(CYGPATH_W) 'apport.c'; else $(CYGPATH_W) '$(srcdir)/apport.c'; fi`
+
+notify_osd-log.o: log.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-log.o -MD -MP -MF $(DEPDIR)/notify_osd-log.Tpo -c -o notify_osd-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-log.Tpo $(DEPDIR)/notify_osd-log.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='notify_osd-log.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+
+notify_osd-log.obj: log.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-log.obj -MD -MP -MF $(DEPDIR)/notify_osd-log.Tpo -c -o notify_osd-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-log.Tpo $(DEPDIR)/notify_osd-log.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='notify_osd-log.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
+
+notify_osd-util.o: util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-util.o -MD -MP -MF $(DEPDIR)/notify_osd-util.Tpo -c -o notify_osd-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-util.Tpo $(DEPDIR)/notify_osd-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='notify_osd-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-util.o `test -f 'util.c' || echo '$(srcdir)/'`util.c
+
+notify_osd-util.obj: util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-util.obj -MD -MP -MF $(DEPDIR)/notify_osd-util.Tpo -c -o notify_osd-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-util.Tpo $(DEPDIR)/notify_osd-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='notify_osd-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
+notify_osd-bubble-window.o: bubble-window.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window.o -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window.Tpo -c -o notify_osd-bubble-window.o `test -f 'bubble-window.c' || echo '$(srcdir)/'`bubble-window.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window.Tpo $(DEPDIR)/notify_osd-bubble-window.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window.c' object='notify_osd-bubble-window.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window.o `test -f 'bubble-window.c' || echo '$(srcdir)/'`bubble-window.c
+
+notify_osd-bubble-window.obj: bubble-window.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window.obj -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window.Tpo -c -o notify_osd-bubble-window.obj `if test -f 'bubble-window.c'; then $(CYGPATH_W) 'bubble-window.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window.Tpo $(DEPDIR)/notify_osd-bubble-window.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window.c' object='notify_osd-bubble-window.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window.obj `if test -f 'bubble-window.c'; then $(CYGPATH_W) 'bubble-window.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window.c'; fi`
+
+notify_osd-bubble-window-accessible.o: bubble-window-accessible.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window-accessible.o -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window-accessible.Tpo -c -o notify_osd-bubble-window-accessible.o `test -f 'bubble-window-accessible.c' || echo '$(srcdir)/'`bubble-window-accessible.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window-accessible.Tpo $(DEPDIR)/notify_osd-bubble-window-accessible.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window-accessible.c' object='notify_osd-bubble-window-accessible.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window-accessible.o `test -f 'bubble-window-accessible.c' || echo '$(srcdir)/'`bubble-window-accessible.c
+
+notify_osd-bubble-window-accessible.obj: bubble-window-accessible.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window-accessible.obj -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window-accessible.Tpo -c -o notify_osd-bubble-window-accessible.obj `if test -f 'bubble-window-accessible.c'; then $(CYGPATH_W) 'bubble-window-accessible.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window-accessible.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window-accessible.Tpo $(DEPDIR)/notify_osd-bubble-window-accessible.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window-accessible.c' object='notify_osd-bubble-window-accessible.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window-accessible.obj `if test -f 'bubble-window-accessible.c'; then $(CYGPATH_W) 'bubble-window-accessible.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window-accessible.c'; fi`
+
+notify_osd-bubble-window-accessible-factory.o: bubble-window-accessible-factory.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window-accessible-factory.o -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Tpo -c -o notify_osd-bubble-window-accessible-factory.o `test -f 'bubble-window-accessible-factory.c' || echo '$(srcdir)/'`bubble-window-accessible-factory.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Tpo $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window-accessible-factory.c' object='notify_osd-bubble-window-accessible-factory.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window-accessible-factory.o `test -f 'bubble-window-accessible-factory.c' || echo '$(srcdir)/'`bubble-window-accessible-factory.c
+
+notify_osd-bubble-window-accessible-factory.obj: bubble-window-accessible-factory.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window-accessible-factory.obj -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Tpo -c -o notify_osd-bubble-window-accessible-factory.obj `if test -f 'bubble-window-accessible-factory.c'; then $(CYGPATH_W) 'bubble-window-accessible-factory.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window-accessible-factory.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Tpo $(DEPDIR)/notify_osd-bubble-window-accessible-factory.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='bubble-window-accessible-factory.c' object='notify_osd-bubble-window-accessible-factory.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window-accessible-factory.obj `if test -f 'bubble-window-accessible-factory.c'; then $(CYGPATH_W) 'bubble-window-accessible-factory.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window-accessible-factory.c'; fi`
 
 notify_osd-egg-fixed.o: ../egg/egg-fixed.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-fixed.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-fixed.Tpo -c -o notify_osd-egg-fixed.o `test -f '../egg/egg-fixed.c' || echo '$(srcdir)/'`../egg/egg-fixed.c

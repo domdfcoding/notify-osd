@@ -9,14 +9,19 @@ noinst_PROGRAMS = test-modules \
 check_PROGRAMS = test-modules
 TESTS = test-modules
 
-test_modules_SOURCES =		\
-	../src/bubble.c		\
-	../src/defaults.c	\
-	../src/observer.c	\
-	../src/stack.c		\
-	../src/dbus.c		\
-	../src/dnd.c		\
-	../src/apport.c		\
+test_modules_SOURCES =		                   \
+	../src/bubble.c		                   \
+	../src/defaults.c	                   \ 
+	../src/observer.c	                   \
+	../src/stack.c		                   \
+	../src/dbus.c		                   \
+	../src/dnd.c		                   \
+	../src/apport.c		                   \
+	../src/util.c				\
+	../src/bubble-window.c                     \
+	../src/bubble-window-accessible.c          \
+	../src/bubble-window-accessible-factory.c  \
+	../src/log.c		\
 	$(EGG_MODULES)	\
 	test-modules-main.c     \
 	test-apport.c		\
@@ -27,17 +32,20 @@ test_modules_SOURCES =		\
 	test-observer.c		\
 	test-i18n.c		\
 	test-synchronous.c	\
+	test-dnd.c	\
 	test-stack.c
 
 test_modules_CFLAGS =		\
 	-Wall -Werror -std=c99  \
 	$(GLIB_CFLAGS)		\
 	$(GTK_CFLAGS)		\
+	$(WNCK_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
 	-I$(top_srcdir)/src
 
 test_modules_LDADD =		\
 	$(GLIB_LIBS)		\
+	$(WNCK_LIBS)		\
 	$(DBUS_LIBS)		\
 	$(GTK_LIBS)		\
 	-lnotify

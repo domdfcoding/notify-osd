@@ -28,15 +28,27 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-bindings.h>
 #include <dbus/dbus-glib-lowlevel.h>
-#include <dbus/dbus.h>
+
+#include "dbus.h"
 
 static DBusGConnection* connection = NULL;
 
 DBusGConnection*
-dbus_create_service_instance (char *service_name)
+dbus_get_connection (void)
+{
+	/* usefull mostly for unit tests */
+	if (connection == NULL)
+		connection = dbus_create_service_instance (DBUS_NAME);
+
+	return connection;
+}
+
+DBusGConnection*
+dbus_create_service_instance (const char *service_name)
 {
 	DBusGProxy*      proxy      = NULL;
 	guint            request_name_result;
@@ -122,4 +134,3 @@ dbus_send_action_signal (gchar *dest,
 
 	dbus_message_unref (msg);
 }
-

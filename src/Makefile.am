@@ -22,6 +22,11 @@ notify_osd_sources =		\
 	dbus.c			\
 	dnd.c			\
 	apport.c		\
+	log.c			\
+	util.c			\
+	bubble-window.c		\
+	bubble-window-accessible.c \
+	bubble-window-accessible-factory.c \
 	../egg/egg-fixed.c		\
 	../egg/egg-units.c		\
 	../egg/egg-timeline.c		\
@@ -38,7 +43,11 @@ notify_osd_headers =		\
 	stack-glue.h		\
 	dbus.h			\
 	dnd.h			\
+	log.h			\
 	apport.h		\
+	bubble-window.h \
+	bubble-window-accessible.h \
+	bubble-window-accessible-factory.h \
 	../egg/egg-fixed.h		\
 	../egg/egg-units.h		\
 	../egg/egg-timeline.h		\
@@ -59,6 +68,7 @@ notify_osd_LDADD =			\
 	$(GCONF_LIBS) 		\
 	$(GTK_LIBS) 		\
 	$(DBUS_LIBS)     	\
+	$(WNCK_LIBS)     	\
 	$(NULL)
 
 notify_osd_CFLAGS = 		\
@@ -67,6 +77,7 @@ notify_osd_CFLAGS = 		\
 	$(GTK_CFLAGS) 		\
 	$(GCONF_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
+	$(WNCK_CFLAGS)		\
 	$(NULL)
 
 notify_osd_LDFLAGS = 		\

@@ -1,3 +1,15 @@
+notify-osd (0.9.6-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release 0.9.6:
+    - Detect screensaver inhibition for do-not-disturb mode.
+    - Add compatibility checks to ease transition period for applications to
+      pick up the capability  and hint name changes. (LP: #343553)
+    - Correctly exit if registering on DBus failed. (LP: #331150)
+    - Fix filtering of HTML.
+    - Basic accessibility support.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 19 Mar 2009 13:39:13 +0100
+
 notify-osd (0.9.5-0ubuntu1) jaunty; urgency=low
 
   * New upstream bug fix release:
