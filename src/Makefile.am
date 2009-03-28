@@ -45,6 +45,7 @@ notify_osd_headers =		\
 	dnd.h			\
 	log.h			\
 	apport.h		\
+	util.h			\
 	bubble-window.h \
 	bubble-window-accessible.h \
 	bubble-window-accessible-factory.h \
@@ -72,7 +73,6 @@ notify_osd_LDADD =			\
 	$(NULL)
 
 notify_osd_CFLAGS = 		\
-	-Wall -Werror -std=c99	\
 	-DDATADIR=\""$(datadir)"\" \
 	$(GTK_CFLAGS) 		\
 	$(GCONF_CFLAGS)		\

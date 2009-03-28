@@ -53,7 +53,7 @@ G_BEGIN_DECLS
 #endif /* !G_ENABLE_DEBUG */
 
 
-/* NONE:STRING,UINT,STRING,STRING,STRING,BOXED,BOXED,INT,POINTER (/tmp/dbus-binding-tool-c-marshallers.RMVERU:1) */
+/* NONE:STRING,UINT,STRING,STRING,STRING,BOXED,BOXED,INT,POINTER (/tmp/dbus-binding-tool-c-marshallers.GXG7QU:1) */
 extern void dbus_glib_marshal_stack_VOID__STRING_UINT_STRING_STRING_STRING_BOXED_BOXED_INT_POINTER (GClosure     *closure,
                                                                                                     GValue       *return_value,
                                                                                                     guint         n_param_values,
@@ -111,7 +111,7 @@ dbus_glib_marshal_stack_VOID__STRING_UINT_STRING_STRING_STRING_BOXED_BOXED_INT_P
 }
 #define dbus_glib_marshal_stack_NONE__STRING_UINT_STRING_STRING_STRING_BOXED_BOXED_INT_POINTER	dbus_glib_marshal_stack_VOID__STRING_UINT_STRING_STRING_STRING_BOXED_BOXED_INT_POINTER
 
-/* BOOLEAN:POINTER,POINTER,POINTER,POINTER,POINTER (/tmp/dbus-binding-tool-c-marshallers.RMVERU:2) */
+/* BOOLEAN:POINTER,POINTER,POINTER,POINTER,POINTER (/tmp/dbus-binding-tool-c-marshallers.GXG7QU:2) */
 extern void dbus_glib_marshal_stack_BOOLEAN__POINTER_POINTER_POINTER_POINTER_POINTER (GClosure     *closure,
                                                                                       GValue       *return_value,
                                                                                       guint         n_param_values,
@@ -164,7 +164,7 @@ dbus_glib_marshal_stack_BOOLEAN__POINTER_POINTER_POINTER_POINTER_POINTER (GClosu
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:UINT,POINTER (/tmp/dbus-binding-tool-c-marshallers.RMVERU:3) */
+/* BOOLEAN:UINT,POINTER (/tmp/dbus-binding-tool-c-marshallers.GXG7QU:3) */
 extern void dbus_glib_marshal_stack_BOOLEAN__UINT_POINTER (GClosure     *closure,
                                                            GValue       *return_value,
                                                            guint         n_param_values,
@@ -211,7 +211,7 @@ dbus_glib_marshal_stack_BOOLEAN__UINT_POINTER (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* BOOLEAN:POINTER,POINTER (/tmp/dbus-binding-tool-c-marshallers.RMVERU:4) */
+/* BOOLEAN:POINTER,POINTER (/tmp/dbus-binding-tool-c-marshallers.GXG7QU:4) */
 extern void dbus_glib_marshal_stack_BOOLEAN__POINTER_POINTER (GClosure     *closure,
                                                               GValue       *return_value,
                                                               guint         n_param_values,
