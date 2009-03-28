@@ -1,3 +1,23 @@
+notify-osd (0.9.7-0ubuntu1) jaunty; urgency=low
+
+  * New upstream version:
+    - added and improved multihead support, 
+      notifications stick to panel whatever the monitor it is on (lp: #331369)
+    - crashers fixes (lp: #331927, #349133)
+    - enable the icon lookup fallback mechanism for fallback icons like 
+      notification-display-brightness-* (lp: #344385)
+    - reworked parts of notify-osd in order to make it adapt dynamically to 
+      changes of font-face, font-size and dpi (lp: #339731)
+    - ensure X errors will not kill notify-osd
+    - use HTML- and markup-filter for title- and body-message-text also 
+      in fallback-dialog
+  * debian/patches/correct_service_install.patch:
+    - correctly install the dbus service
+  * debian/rules:
+    - use simple-patchsys rules 
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Sat, 28 Mar 2009 12:45:12 +0100
+
 notify-osd (0.9.6-0ubuntu2) jaunty; urgency=low
 
   * debian/control: Add missing new build dependency libwnck-dev.

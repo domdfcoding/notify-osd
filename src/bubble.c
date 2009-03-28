@@ -89,7 +89,7 @@ struct _BubblePrivate {
 enum
 {
 	TIMED_OUT,
-    VALUE_CHANGED,
+	VALUE_CHANGED,
 	LAST_SIGNAL
 };
 
@@ -769,6 +769,7 @@ _render_icon_indicator (Bubble*  self,
 						  EM2PIXELS (defaults_get_margin_size (d), d) -
 						  blur_radius);
 			cairo_paint_with_alpha (cr, dim_glow_opacity);
+			cairo_surface_destroy (tmp);
 		break;
 
 		/* "overshoot" effect */
@@ -806,6 +807,7 @@ _render_icon_indicator (Bubble*  self,
 						  EM2PIXELS (defaults_get_margin_size (d), d) -
 						  blur_radius);
 			cairo_paint_with_alpha (cr, dim_glow_opacity);
+			cairo_surface_destroy (tmp);
 		break;
 
 		/* normal effect-less rendering */
@@ -817,7 +819,6 @@ _render_icon_indicator (Bubble*  self,
 	/* clean up */
 	cairo_destroy (glow_cr);
 	cairo_surface_destroy (glow_surface);
-	cairo_surface_destroy (tmp);
 }
 
 static void
@@ -1639,6 +1640,7 @@ load_icon (const gchar* filename,
 						   filename,
                                                    icon_size,
 						   GTK_ICON_LOOKUP_FORCE_SVG |
+						   GTK_ICON_LOOKUP_GENERIC_FALLBACK |
 						   GTK_ICON_LOOKUP_FORCE_SIZE,
 						   &error);
 		if (error)
@@ -2210,7 +2212,7 @@ bubble_set_value (Bubble* self,
 
 	GET_PRIVATE (self)->value = value;
     
-    g_signal_emit (self, g_bubble_signals[VALUE_CHANGED], 0, value);	
+	g_signal_emit (self, g_bubble_signals[VALUE_CHANGED], 0, value);
 }
 
 gint
@@ -2417,6 +2419,9 @@ bubble_show (Bubble* self)
 void
 bubble_refresh (Bubble* self)
 {
+	if (!self || !IS_BUBBLE (self))
+		return;
+
 	/* force a redraw */
 	gtk_widget_queue_draw (GET_PRIVATE (self)->widget);
 }
@@ -2946,6 +2951,18 @@ bubble_recalc_size (Bubble *self)
 
 	d    = self->defaults;
 	priv = GET_PRIVATE (self);
+
+	/* FIXME: a quick fix to rescale an icon (e.g. user changed font-size or
+	** DPI while a bubble is displayed, thus bubble is re-rendered and the
+	** icon needs to adapt to the new size) */
+	if (priv->icon_pixbuf)
+	{
+		priv->icon_pixbuf = gdk_pixbuf_scale_simple (
+					priv->icon_pixbuf,
+        	                        EM2PIXELS (defaults_get_icon_size (d), d),
+        	                        EM2PIXELS (defaults_get_icon_size (d), d),
+					GDK_INTERP_HYPER);
+	}
 
 	bubble_determine_layout (self);
 

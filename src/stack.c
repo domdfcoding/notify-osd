@@ -208,8 +208,36 @@ stack_purge_old_bubbles (Stack* self)
 	}
 }
 
+static void
+_trigger_bubble_redraw (gpointer data,
+			gpointer user_data)
+{
+	Bubble* bubble;
+
+	if (!data)
+		return;
+
+	bubble = BUBBLE (data);
+	if (!IS_BUBBLE (bubble))
+		return;
+
+	bubble_recalc_size (bubble);
+	bubble_refresh (bubble);
+}
+
+static void
+value_changed_handler (Defaults* defaults,
+		       Stack*    stack)
+{
+	if (stack->list != NULL)
+		g_list_foreach (stack->list, _trigger_bubble_redraw, NULL);
+}
+
 /* fwd declaration */
 void close_handler (GObject* n, Stack*  stack);
+
+/* this is in dialog.c */
+gboolean dialog_check_actions_and_timeout (gchar **actions, gint timeout);
 
 static Bubble *sync_bubble = NULL;
 
@@ -234,6 +262,12 @@ stack_new (Defaults* defaults,
 	this->observer = observer;
 	this->list     = NULL;
 	this->next_id  = 1;
+
+	/* hook up handler to act on changes of defaults/settings */
+	g_signal_connect (G_OBJECT (defaults),
+			  "value-changed",
+			  G_CALLBACK (value_changed_handler),
+			  this);
 
 	return this;
 }
@@ -427,7 +461,7 @@ stack_notify_handler (Stack*                 self,
 		bubble_set_sender (bubble,
 				   dbus_g_method_get_sender (context));
 	}
-	
+
 	if (hints)
 	{
 		data   = (GValue*) g_hash_table_lookup (hints, "x-canonical-private-synchronous");
@@ -515,8 +549,13 @@ stack_notify_handler (Stack*                 self,
 			bubble_set_icon (bubble, icon);
 	}
 
-	if ((timeout == 0)
-	    || actions[0] != NULL)
+	log_bubble_debug (bubble, app_name,
+			  (*icon == '\0' && data != NULL) ?
+			  "..." : icon);
+
+	gboolean turn_into_dialog = dialog_check_actions_and_timeout (actions, timeout);
+
+	if (turn_into_dialog)
 		/* || bubble_is_urgent (bubble)) */
 	{
 		/* TODO: apport_report (app_name, summary, actions, timeout); */
