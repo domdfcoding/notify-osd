@@ -28,10 +28,3 @@ Description: daemon that displays passive pop-up notifications
  designed to notify the user of something without interrupting their
  work with a dialog box that they must close.  Passive popups can
  automatically disappear after a short period of time.
-
-Package: alsdorf
-Architecture: all
-Depends: notify-osd
-Description: transitional package to migrate to notify-osd
- This is a transitional package for the alsdorf -> notify-osd
- renaming.
