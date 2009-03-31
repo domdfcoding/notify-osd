@@ -1,4 +1,4 @@
-AC_INIT(notify-osd, 0.9.7, dx-team@canonical.com)
+AC_INIT(notify-osd, 0.9.6, dx-team@canonical.com)
 
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_HEADERS(config.h)
@@ -59,7 +59,7 @@ AC_SUBST(NOTIFY_OSD_LIBS)
 # AM_CHECK_PYMOD(gobject)
 
 dnl CFLAGS
-CFLAGS="$CFLAGS -lm -Wall -Werror -std=c99"
+CFLAGS="$CFLAGS -lm"
 
 AC_OUTPUT([
 Makefile

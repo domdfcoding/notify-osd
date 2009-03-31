@@ -32,9 +32,6 @@
 #include <gdk/gdkx.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
-#include <libwnck/application.h>
-#include <libwnck/class-group.h>
-#include <libwnck/workspace.h>
 
 #include "defaults.h"
 
@@ -77,12 +74,6 @@ enum
 	PROP_TEXT_BODY_WEIGHT,
 	PROP_TEXT_BODY_SIZE,
 	PROP_PIXELS_PER_EM
-};
-
-enum
-{
-	VALUE_CHANGED,
-	LAST_SIGNAL
 };
 
 enum
@@ -133,208 +124,10 @@ enum
 #define DEFAULT_FADE_OUT_TIMEOUT     1000
 #define DEFAULT_ON_SCREEN_TIMEOUT    5000
 
-/* GConf-keys to watch */
-#define GCONF_UI_FONT_NAME        "/desktop/gnome/interface/font_name"
-#define GCONF_FONT_ANTIALIAS      "/desktop/gnome/font_rendering/antialiasing"
-#define GCONF_FONT_DPI            "/desktop/gnome/font_rendering/dpi"
-#define GCONF_FONT_HINTING        "/desktop/gnome/font_rendering/hinting"
-#define GCONF_FONT_SUBPIXEL_ORDER "/desktop/gnome/font_rendering/rgba_order"
-
-/* GConf-trees to watch */
-#define GCONF_UI_TREE             "/desktop/gnome/interface"
-#define GCONF_FONT_TREE           "/desktop/gnome/font_rendering"
-
-/* notify-osd settings */
-#define GCONF_MULTIHEAD_MODE "/apps/notify-osd/multihead_mode"
-
-static guint g_defaults_signals[LAST_SIGNAL] = { 0 };
+#define GCONF_FONT_KEY "/desktop/gnome/interface/font_name"
+#define GCONF_DPI_KEY "/desktop/gnome/font_rendering/dpi"
 
 /*-- internal API ------------------------------------------------------------*/
-
-static void
-_get_font_size_dpi (Defaults* self)
-{
-	GString*   string        = NULL;
-	GError*    error         = NULL;
-	GScanner*  scanner       = NULL;
-	GTokenType token         = G_TOKEN_NONE;
-	gint       points        = 0;
-	GString*   font_face     = NULL;
-	gdouble    dpi           = 0.0f;
-	gint       pixels_per_em = 0;
-
-	if (!IS_DEFAULTS (self))
-		return;
-
-	/* determine current system font-name/size */
-	string = g_string_new (gconf_client_get_string (self->context,
-							GCONF_UI_FONT_NAME,
-							&error));
-	if (error)
-	{
-		/* if something went wrong, assume "Sans 10" and continue */
-		string = g_string_assign (string, "Sans 10");
-	}
-
-	/* extract font-family-name and font-size */
-	scanner = g_scanner_new (NULL);
-	if (scanner)
-	{
-		g_scanner_input_text (scanner, string->str, string->len);
-		for (token = g_scanner_get_next_token (scanner);
-		     token != G_TOKEN_EOF;
-		     token = g_scanner_get_next_token (scanner))
-		{
-			switch (token)
-			{
-				case G_TOKEN_INT:
-					points = (gint) scanner->value.v_int;
-				break;
-
-				case G_TOKEN_IDENTIFIER:
-					if (!font_face)
-						font_face = g_string_new (scanner->value.v_string);
-					else
-					{
-						g_string_append (font_face,
-								 " ");
-						g_string_append (font_face,
-								 scanner->value.v_string);
-					}
-				break;
-
-				default:
-				break;
-			}
-		}
-		g_scanner_destroy (scanner);
-	}
-
-	/* clean up */
-	if (string != NULL)
-		g_string_free (string, TRUE);
-
-	/* update stored font-face name and clean up */
-	if (font_face != NULL)
-	{
-		g_object_set (self, "text-font-face", font_face->str, NULL);
-		g_string_free (font_face, TRUE);
-	}
-
-	/* determine current system DPI-setting */
-	dpi = gconf_client_get_float (self->context, GCONF_FONT_DPI, &error);
-	if (error)
-	{
-		/* if something went wrong, assume 72 DPI and continue */
-		dpi = 72.0f;
-	}
-
-	/* update stored DPI-value */
-	pixels_per_em = (gint) ((gdouble) points * 1.0f / 72.0f * dpi);
-	g_object_set (self, "pixels-per-em", (gint) pixels_per_em, NULL);
-}
-
-static void
-_font_changed (GConfClient* client,
-	       guint        cnxn_id,
-	       GConfEntry*  entry,
-               gpointer     data)
-{
-	Defaults* defaults;
-
-	if (!data)
-		return;
-
-	defaults = (Defaults*) data;
-	if (!IS_DEFAULTS (defaults))
-		return;
-
-    	/* grab system-wide font-face/size and DPI */
-	_get_font_size_dpi (defaults);
-
-	g_signal_emit (defaults, g_defaults_signals[VALUE_CHANGED], 0);
-}
-
-static void
-_antialias_changed (GConfClient* client,
-		    guint        cnxn_id,
-		    GConfEntry*  entry,
-		    gpointer     data)
-{
-	Defaults* defaults;
-
-	if (!data)
-		return;
-
-	defaults = (Defaults*) data;
-	if (!IS_DEFAULTS (defaults))
-		return;
-
-	/* just triggering a redraw by emitting the "value-changed" signal is
-	** enough in this case, no need to update any stored values */
-	g_signal_emit (defaults, g_defaults_signals[VALUE_CHANGED], 0);
-}
-
-static void
-_dpi_changed (GConfClient* client,
-	      guint        cnxn_id,
-	      GConfEntry*  entry,
-	      gpointer     data)
-{
-	Defaults* defaults;
-
-	if (!data)
-		return;
-
-	defaults = (Defaults*) data;
-	if (!IS_DEFAULTS (defaults))
-		return;
-
-    	/* grab system-wide font-face/size and DPI */
-	_get_font_size_dpi (defaults);
-
-	g_signal_emit (defaults, g_defaults_signals[VALUE_CHANGED], 0);
-}
-
-static void
-_hinting_changed (GConfClient* client,
-		  guint        cnxn_id,
-		  GConfEntry*  entry,
-		  gpointer     data)
-{
-	Defaults* defaults;
-
-	if (!data)
-		return;
-
-	defaults = (Defaults*) data;
-	if (!IS_DEFAULTS (defaults))
-		return;
-
-	/* just triggering a redraw by emitting the "value-changed" signal is
-	** enough in this case, no need to update any stored values */
-	g_signal_emit (defaults, g_defaults_signals[VALUE_CHANGED], 0);
-}
-
-static void
-_subpixel_order_changed (GConfClient* client,
-			 guint        cnxn_id,
-			 GConfEntry*  entry,
-			 gpointer     data)
-{
-	Defaults* defaults;
-
-	if (!data)
-		return;
-
-	defaults = (Defaults*) data;
-	if (!IS_DEFAULTS (defaults))
-		return;
-
-	/* just triggering a redraw by emitting the "value-changed" signal is
-	** enough in this case, no need to update any stored values */
-	g_signal_emit (defaults, g_defaults_signals[VALUE_CHANGED], 0);
-}
 
 static gdouble
 _get_average_char_width (Defaults* self)
@@ -393,8 +186,8 @@ _get_average_char_width (Defaults* self)
 	return PIXELS2EM (char_width / PANGO_SCALE, self);
 }
 
-void
-defaults_refresh_screen_dimension_properties (Defaults *self)
+static void
+defaults_constructed (GObject* gobject)
 {
 	Atom         real_type;
 	gint         result;
@@ -403,8 +196,23 @@ defaults_refresh_screen_dimension_properties (Defaults *self)
 	gulong       items_left;
 	glong*       coords;
 	Atom         workarea_atom;
+	Defaults*    self;
+	GConfClient* context       = NULL;
+	GString*     string        = NULL;
+	gdouble      dpi           = 0.0f;
+	GError*      error         = NULL;
+	GString*     font_face     = NULL;
+	gint         points        = 0;
+	gint         pixels_per_em = 0;
+	gdouble      margin_size;
+	gdouble      icon_size;
+	gdouble      bubble_height;
+	gdouble      new_bubble_height;
+	gdouble      bubble_width;
+	gdouble      new_bubble_width;
+	gdouble      average_char_width;
 
-	g_return_if_fail ((self != NULL) && IS_DEFAULTS (self));
+	self = DEFAULTS (gobject);
 
 	/* get real desktop-area without the panels */
 	workarea_atom = gdk_x11_get_xatom_by_name ("_NET_WORKAREA");
@@ -422,7 +230,6 @@ defaults_refresh_screen_dimension_properties (Defaults *self)
 				     &items_read,
 				     &items_left,
 				     (guchar **) (void*) &coords);
-	gdk_flush ();
 	gdk_error_trap_pop ();
 
 	if (result == Success && items_read)
@@ -435,10 +242,22 @@ defaults_refresh_screen_dimension_properties (Defaults *self)
 			      "desktop-height",
 			      (gint) coords[3],
 			      NULL);
-		g_object_set (self,
-			      "desktop-top",
-			      (gint) coords[1],
-			      NULL);
+
+		/* FIXME: temp. workaround for notify-osd being started before
+		 * strut is set by gnome-panel, assume the usual value of 27,
+		 * in the long run this will be made dynamic and adapt to any
+		 * updates to the strut */
+		if ((gint) coords[1] != 0)
+			g_object_set (self,
+				      "desktop-top",
+				      (gint) coords[1],
+				      NULL);
+		else
+			g_object_set (self,
+				      "desktop-top",
+				      27,
+				      NULL);
+
 		g_object_set (self,
 			      "desktop-bottom",
 			      (gint) coords[3],
@@ -458,26 +277,92 @@ defaults_refresh_screen_dimension_properties (Defaults *self)
 			      NULL);*/
 		XFree (coords);
 	}
-}
 
-static void
-defaults_constructed (GObject* gobject)
-{
-	Defaults*    self;
-	gdouble      margin_size;
-	gdouble      icon_size;
-	gdouble      bubble_height;
-	gdouble      new_bubble_height;
-	gdouble      bubble_width;
-	gdouble      new_bubble_width;
-	gdouble      average_char_width;
+	/* grab default font-face and size from gconf */
+	context = gconf_client_get_default ();
+	if (!context)
+		return;
 
-	self = DEFAULTS (gobject);
+	string = g_string_new (gconf_client_get_string (context,
+							GCONF_FONT_KEY,
+							&error));
 
-	defaults_refresh_screen_dimension_properties (self);
+	if (error)
+	{
+		g_object_unref (context);
+		return;
+	}
+	else
+	{
+		GScanner*  scanner = NULL;
+		GTokenType token   = G_TOKEN_NONE;
 
-	/* grab system-wide font-face/size and DPI */
-	_get_font_size_dpi (self);
+		/* extract font-family-name and font-size */
+		scanner = g_scanner_new (NULL);
+		if (scanner)
+		{
+			g_scanner_input_text (scanner,
+					      string->str,
+					      string->len);
+			for (token = g_scanner_get_next_token (scanner);
+			     token != G_TOKEN_EOF;
+			     token = g_scanner_get_next_token (scanner))
+			{
+				switch (token)
+				{
+					case G_TOKEN_INT:
+						points = (gint) scanner->value.v_int;
+					break;
+
+					case G_TOKEN_IDENTIFIER:
+						if (!font_face)
+							font_face = g_string_new (scanner->value.v_string);
+						else
+						{
+							g_string_append (font_face,
+									 " ");
+							g_string_append (font_face,
+									 scanner->value.v_string);
+						}
+					break;
+
+					default:
+					break;
+				}
+			}
+
+			g_scanner_destroy (scanner);
+		}
+
+		if (string != NULL)
+			g_string_free (string, TRUE);
+
+		g_object_set (self,
+			      "text-font-face",
+			      font_face->str,
+			      NULL);
+
+		if (font_face != NULL)
+			g_string_free (font_face, TRUE);
+	}
+
+	dpi = gconf_client_get_float (context, GCONF_DPI_KEY, &error);
+	if (error)
+	{
+		g_object_unref (context);
+		return;
+	}
+	else
+	{
+		pixels_per_em = (gint) ((gdouble) points *
+					1.0f / 72.0f * dpi);
+		g_object_set (self,
+			      "pixels-per-em",
+			      (gint) pixels_per_em,
+			      NULL);
+	}
+
+	g_object_unref (context);
 
 	/* correct the default min. bubble-height, according to the icon-size */
 	g_object_get (self,
@@ -544,19 +429,6 @@ defaults_constructed (GObject* gobject)
 static void
 defaults_dispose (GObject* gobject)
 {
-	Defaults* defaults;
-
-	defaults = DEFAULTS (gobject);
-
-	gconf_client_notify_remove (defaults->context, defaults->notifier[0]);
-	gconf_client_notify_remove (defaults->context, defaults->notifier[1]);
-	gconf_client_notify_remove (defaults->context, defaults->notifier[2]);
-	gconf_client_notify_remove (defaults->context, defaults->notifier[3]);
-	gconf_client_notify_remove (defaults->context, defaults->notifier[4]);
-	gconf_client_remove_dir (defaults->context, GCONF_UI_TREE, NULL);
-	gconf_client_remove_dir (defaults->context, GCONF_FONT_TREE, NULL);
-	g_object_unref (defaults->context);
-
 	/* chain up to the parent class */
 	G_OBJECT_CLASS (defaults_parent_class)->dispose (gobject);
 }
@@ -571,137 +443,6 @@ defaults_finalize (GObject* gobject)
 static void
 defaults_init (Defaults* self)
 {
-	GError* error;
-
-	/* "connect" to the whole gconf-thing */
-	self->context = gconf_client_get_default ();
-	if (!self->context)
-	{
-		g_warning ("Could not get GConf client-context");
-		return;
-	}
-
-	/* register watching all relevant GNOME UI-settings */
-	error = NULL;
-	gconf_client_add_dir (self->context,
-			      GCONF_UI_TREE,
-			      GCONF_CLIENT_PRELOAD_NONE,
-			      &error);
-	if (error)
-	{
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-
-	/* register watching all font-settings */
-	error = NULL;
-	gconf_client_add_dir (self->context,
-			      GCONF_FONT_TREE,
-			      GCONF_CLIENT_PRELOAD_NONE,
-			      &error);
-	if (error)
-	{
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-
-	/* hook up notifier for font-name/size changes */
-	error = NULL;
-	self->notifier[0] = gconf_client_notify_add (self->context,
-						     GCONF_UI_FONT_NAME,
-						     _font_changed,
-						     (gpointer) self,
-						     NULL,
-						     &error);
-	if (error)
-	{
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		gconf_client_remove_dir (self->context, GCONF_FONT_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-
-	/* hook up notifier for antialiasing changes */
-	error = NULL;
-	self->notifier[1] = gconf_client_notify_add (self->context,
-						     GCONF_FONT_ANTIALIAS,
-						     _antialias_changed,
-						     (gpointer) self,
-						     NULL,
-						     &error);
-	if (error)
-	{
-		gconf_client_notify_remove (self->context, self->notifier[0]);
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		gconf_client_remove_dir (self->context, GCONF_FONT_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-
-	/* hook up notifier for DPI changes */
-	error = NULL;
-	self->notifier[2] = gconf_client_notify_add (self->context,
-						     GCONF_FONT_DPI,
-						     _dpi_changed,
-						     (gpointer) self,
-						     NULL,
-						     &error);
-	if (error)
-	{
-		gconf_client_notify_remove (self->context, self->notifier[0]);
-		gconf_client_notify_remove (self->context, self->notifier[1]);
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		gconf_client_remove_dir (self->context, GCONF_FONT_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-	
-	/* hook up notifier for hinting changes */
-	error = NULL;
-	self->notifier[3] = gconf_client_notify_add (self->context,
-						     GCONF_FONT_HINTING,
-						     _hinting_changed,
-						     (gpointer) self,
-						     NULL,
-						     &error);
-	if (error)
-	{
-		gconf_client_notify_remove (self->context, self->notifier[0]);
-		gconf_client_notify_remove (self->context, self->notifier[1]);
-		gconf_client_notify_remove (self->context, self->notifier[2]);
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		gconf_client_remove_dir (self->context, GCONF_FONT_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
-
-	/* hook up notifier for subpixel-order changes */
-	error = NULL;
-	self->notifier[4] = gconf_client_notify_add (self->context,
-						     GCONF_FONT_SUBPIXEL_ORDER,
-						     _subpixel_order_changed,
-						     (gpointer) self,
-						     NULL,
-						     &error);
-	if (error)
-	{
-		gconf_client_notify_remove (self->context, self->notifier[0]);
-		gconf_client_notify_remove (self->context, self->notifier[1]);
-		gconf_client_notify_remove (self->context, self->notifier[2]);
-		gconf_client_notify_remove (self->context, self->notifier[3]);
-		gconf_client_remove_dir (self->context, GCONF_UI_TREE, NULL);
-		gconf_client_remove_dir (self->context, GCONF_FONT_TREE, NULL);
-		g_object_unref (self->context);
-		g_warning ("%s\n", error->message);
-		return;
-	}
 }
 
 static void
@@ -1112,17 +853,6 @@ defaults_class_init (DefaultsClass* klass)
 	gobject_class->finalize     = defaults_finalize;
 	gobject_class->get_property = defaults_get_property;
 	gobject_class->set_property = defaults_set_property;
-
-	g_defaults_signals[VALUE_CHANGED] = g_signal_new (
-		"value-changed",
-		G_OBJECT_CLASS_TYPE (gobject_class),
-		G_SIGNAL_RUN_LAST,
-		G_STRUCT_OFFSET (DefaultsClass, value_changed),
-		NULL,
-		NULL,
-		g_cclosure_marshal_VOID__VOID,
-		G_TYPE_NONE,
-		0);
 
 	property_desktop_width = g_param_spec_int (
 				"desktop-width",
@@ -2055,175 +1785,4 @@ defaults_get_pixel_per_em (Defaults* self)
 	g_object_get (self, "pixels-per-em", &pixels_per_em, NULL);
 
 	return pixels_per_em;
-}
-
-static gboolean
-defaults_multihead_does_focus_follow (Defaults *self)
-{
-	GError *error = NULL;
-	gboolean mode = FALSE;
-
-	g_return_val_if_fail (self != NULL && IS_DEFAULTS (self), FALSE);
-
-	gchar *mode_str = gconf_client_get_string (self->context,
-						   GCONF_MULTIHEAD_MODE,
-						   &error);
-	if (mode_str != NULL)
-	{
-		if (g_strcmp0 (mode_str, "focus-follow"))
-			mode = TRUE;
-	} else if (error != NULL)
-		g_warning ("error getting multihead mode: %s\n",
-			   error->message);
-	
-	return mode;
-}
-
-static gboolean
-_window_look_for_top_panel_attributes (GdkWindow *win)
-{
-	XClassHint class_hints;
-	gboolean is_panel = FALSE;
-	GdkRectangle frame;
-	int result;
-
-	gdk_error_trap_push ();
-
-	result = XGetClassHint (GDK_DISPLAY (),
-				GDK_WINDOW_XWINDOW (win),
-				&class_hints);
-
-	if (! result || class_hints.res_class == NULL)
-		goto failed;
-
-	if (g_strcmp0 (class_hints.res_name, "gnome-panel"))
-		goto failed;
-
-	/* discard dialog windows like panel properties or the applet directory... */
-	if (gdk_window_get_type_hint (win)
-	    != GDK_WINDOW_TYPE_HINT_DOCK)
-		goto failed;
-
-	/* select only the top panel */
-	gdk_window_get_frame_extents (win, &frame);
-	if (frame.x != 0 || frame.y != 0)
-		goto failed;
-
-	if (frame.width < frame.height)
-		goto failed;
-			
-	is_panel = TRUE;
-
-failed:
-	if (class_hints.res_class)
-		XFree (class_hints.res_class);
-	if (class_hints.res_name)
-		XFree (class_hints.res_name);
-
-	gdk_error_trap_pop ();
-
-	return is_panel;
-}
-
-static GdkWindow*
-get_panel_window (void)
-{
-	GdkWindow *panel_window = NULL;
-	GList     *window;
-	GList     *iter;
-	
-	window = gdk_screen_get_window_stack (gdk_screen_get_default ());
-
-	for (iter = g_list_first (window);
-	     iter != NULL;
-	     iter = g_list_next (iter))
-	{
-		if (_window_look_for_top_panel_attributes (iter->data))
-		{
-			panel_window = iter->data;
-			break;
-		}
-	}
-	
-	g_list_free (window);
-
-	return panel_window;
-}
-
-void
-defaults_get_top_corner (Defaults *self, gint *x, gint *y)
-{
-	GdkRectangle rect;
-	GdkRectangle panel_rect = {0, 0, 0, 0};
-	GdkScreen *screen = NULL;
-	GdkWindow *active_window = NULL;
-	GdkWindow *panel_window = NULL;
-	gint mx, my;
-	int monitor = 0, panel_monitor = 0, aw_monitor;
-
-	g_return_if_fail (self != NULL && IS_DEFAULTS (self));
-
-	gdk_display_get_pointer (gdk_display_get_default (),
-				 &screen, &mx, &my, NULL);
-
-	panel_window = get_panel_window ();
-
-	if (panel_window != NULL)
-	{
-		gdk_window_get_frame_extents (panel_window, &panel_rect);
-		panel_monitor = gdk_screen_get_monitor_at_window (screen, panel_window);
-		monitor = panel_monitor;
-		g_debug ("found panel (%d,%d) - %dx%d on monitor %d",
-			 panel_rect.x, panel_rect.y,
-			 panel_rect.width, panel_rect.height, monitor);
-	}
-
-	if (defaults_multihead_does_focus_follow (self))
-	{
-		g_debug ("multi_head_focus_follow mode");
-		monitor = gdk_screen_get_monitor_at_point (screen, mx, my);
-		active_window = gdk_screen_get_active_window (screen);
-		if (active_window != NULL)
-		{
-			aw_monitor = gdk_screen_get_monitor_at_window (screen, active_window);
-			if (monitor != aw_monitor)
-				g_debug ("choosing the monitor with the active window, not the one with the mouse cursor");
-			monitor = aw_monitor;
-
-			g_object_unref (active_window);
-		}
-	}
-
-	gdk_screen_get_monitor_geometry (screen, monitor, &rect);
-	g_debug ("selecting monitor %d at (%d,%d) - %dx%d",
-		 monitor, rect.x, rect.y, rect.width, rect.height);
-	
-	/* not used anymore,
-	   defaults_refresh_screen_dimension_properties (self);
-	*/
-
-	/* Position the top left corner of the stack. */
-	if (panel_window != NULL
-	    && panel_monitor == monitor)
-	{
-		/* position the corner on the selected monitor */
-		rect.y += panel_rect.y + panel_rect.height;
-	}
-	*y   = rect.y;
-	*y  += EM2PIXELS (defaults_get_bubble_vert_gap (self), self)
-	       - EM2PIXELS (defaults_get_bubble_shadow_size (self), self);
-
-	if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-	{
-		*x = rect.x + rect.width;
-		*x -= EM2PIXELS (defaults_get_bubble_shadow_size (self), self)
-			+ EM2PIXELS (defaults_get_bubble_horz_gap (self), self)
-			+ EM2PIXELS (defaults_get_bubble_width (self), self);
-	} else {
-		*x = rect.x
-			- EM2PIXELS (defaults_get_bubble_shadow_size (self), self)
-			+ EM2PIXELS (defaults_get_bubble_horz_gap (self), self);
-	}
-
-	g_debug ("top corner at: %d, %d", *x, *y);
 }
