@@ -57,15 +57,37 @@ stack_find_bubble_on_display (Stack *self)
 	return NULL;
 }
 
+static void
+stack_get_top_corner (Stack *self, gint *x, gint *y)
+{
+	Defaults* d;
+
+	g_assert (IS_STACK (self));
+
+	/* Position the top left corner of the stack. */
+	d = self->defaults;
+	*y  =  defaults_get_desktop_top (d);
+	*y  += EM2PIXELS (defaults_get_bubble_vert_gap (d), d)
+	       - EM2PIXELS (defaults_get_bubble_shadow_size (d), d);
+
+	*x  =  (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR) ?
+		(defaults_get_desktop_right (d) -
+		 EM2PIXELS (defaults_get_bubble_shadow_size (d), d) -
+		 EM2PIXELS (defaults_get_bubble_horz_gap (d), d) -
+		 EM2PIXELS (defaults_get_bubble_width (d), d))
+		:
+		(defaults_get_desktop_left (d) -
+		 EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		 EM2PIXELS (defaults_get_bubble_horz_gap (d), d))
+		;
+}
+
 static gboolean
 stack_is_at_top_corner (Stack *self, Bubble *bubble)
 {
 	gint x, y1, y2;
 
-	g_assert (IS_STACK (self));
-	g_assert (IS_BUBBLE (bubble));
-
-	defaults_get_top_corner (self->defaults, &x, &y1);
+	stack_get_top_corner (self, &x, &y1);
 	bubble_get_position (bubble, &x, &y2);
 
 	return y1 == y2;
@@ -104,12 +126,8 @@ stack_display_sync_bubble (Stack *self, Bubble *bubble)
 		return;
 	}
 
-	defaults_get_top_corner (self->defaults, &x, &y);
+	stack_get_top_corner (self, &x, &y);
 
-	/* TODO: with multi-head, in focus follow mode, there may be enough
-	         space left on the top monitor
-	*/
-	   
 	Bubble *async = stack_find_bubble_on_display (self);
 	if (async != NULL)
 	{
@@ -214,7 +232,7 @@ stack_layout (Stack* self)
 	bubble_set_timeout (bubble,
 			    defaults_get_on_screen_timeout (self->defaults));
 
-	defaults_get_top_corner (self->defaults, &x, &y);
+	stack_get_top_corner (self, &x, &y);
 
 	if (sync_bubble != NULL
 	    && bubble_is_visible (sync_bubble))
