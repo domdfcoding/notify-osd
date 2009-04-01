@@ -1,3 +1,15 @@
+notify-osd (0.9.8-0ubuntu1) jaunty; urgency=low
+
+  * New upstream version:
+    - introduced env. variable NOTIFY_OSD_MUST_NOT_USE_COMPOSITING for UNR
+    - added fallback positioning-behaviour for corner-case 
+      when no gnome-panel was found (lp: #351516, #351593)
+    - added sanity-check for existence of $HOME/.cache (lp: #345770)
+  * debian/patches/correct_service_install.patch:
+    - the change is in the new version
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 01 Apr 2009 15:33:59 +0200
+
 notify-osd (0.9.7-0ubuntu3) jaunty; urgency=low
 
   * Merge to trunk, to *really* get 0.9.7.
