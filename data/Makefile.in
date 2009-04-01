@@ -199,8 +199,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = icons
 servicedir = /usr/share/dbus-1/services
-service_DATA = org.freedesktop.Notifications.service.in
-EXTRA_DIST = $(service_DATA)
+service_DATA = org.freedesktop.Notifications.service
+EXTRA_DIST = org.freedesktop.Notifications.service.in
 all: all-recursive
 
 .SUFFIXES:
