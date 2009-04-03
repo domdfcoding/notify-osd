@@ -1938,19 +1938,10 @@ bubble_new (Defaults* defaults)
 			  "screen-changed",
 			  G_CALLBACK (screen_changed_handler),
 			  NULL);
-
 	g_signal_connect (G_OBJECT (window),
 			  "composited-changed",
 			  G_CALLBACK (composited_changed_handler),
 			  this);
-
-	/* disconnect the signal if we don't want to use compositing
-	   (for UNR) */
-	if (g_getenv ("NOTIFY_OSD_MUST_NOT_USE_COMPOSITING"))
-		g_signal_handlers_disconnect_by_func (
-			G_OBJECT (window),
-			G_CALLBACK (composited_changed_handler),
-			this);
 
 	gtk_window_move (GTK_WINDOW (window), 0, 0);
 
@@ -1989,11 +1980,8 @@ bubble_new (Defaults* defaults)
 	this->priv->end_y           = 0;
 	this->priv->inc_factor      = 0.0f;
 	this->priv->delta_y         = 0;
-	if (g_getenv ("NOTIFY_OSD_MUST_NOT_USE_COMPOSITING"))
-		this->priv->composited = FALSE;
-	else
-		this->priv->composited = gdk_screen_is_composited (
-			gtk_widget_get_screen (window));
+	this->priv->composited      = gdk_screen_is_composited (
+						gtk_widget_get_screen (window));
 	this->priv->alpha           = NULL;
 	this->priv->timeline        = NULL;
 	this->priv->blurred_content = NULL;
@@ -2061,11 +2049,7 @@ void
 bubble_set_title (Bubble*      self,
 		  const gchar* title)
 {
-	gchar*         text;
-	gchar*         new_title;
-	gboolean       success;
 	BubblePrivate* priv;
-	GError*        error = NULL;
 
 	if (!self || !IS_BUBBLE (self))
 		return;
@@ -2075,19 +2059,7 @@ bubble_set_title (Bubble*      self,
 	if (priv->title->len != 0)
 		g_string_free (priv->title, TRUE);
 
-	/* filter out any HTML/markup if possible */
-	text = filter_text (title);
-	success = pango_parse_markup (text,
-				      -1,
-				      0,            /* no accel-marker needed */
-				      NULL,         /* No PangoAttr needed */
-				      &new_title,
-				      NULL,         /* No accel-marker-return needed */
-				      &error);
-
-	priv->title = g_string_new (new_title);
-	g_free (text);
-	g_free (new_title);
+	priv->title = g_string_new (title);
 }
 
 const gchar*
@@ -2516,6 +2488,15 @@ bubble_slide_to (Bubble* self,
 				  self);
 }
 
+
+static inline gboolean
+bubble_is_composited (Bubble *bubble)
+{
+	/* no g_return_if_fail(), the caller should have already
+	   checked that */
+	return gtk_widget_is_composited (GET_PRIVATE (bubble)->widget);
+}
+
 static inline GtkWindow*
 bubble_get_window (Bubble *bubble)
 {
@@ -2598,7 +2579,7 @@ bubble_fade_in (Bubble* self,
 
 	priv = GET_PRIVATE (self);
 
-	if (priv->composited
+	if (!bubble_is_composited (self)
 	    || msecs == 0)
 	{
 		bubble_show (self);

@@ -1,3 +1,18 @@
+notify-osd (0.9.9-0ubuntu1) jaunty; urgency=low
+
+  * New upstream version:
+    - updated text-filter, fixes LP: #353398
+    - revert commit 267, a dedicated env-var for indicating a non-composited 
+      desktop under UNR is not needed
+    - revert commit 266, fixes LP: #354349
+    - don't do any filtering on the summary-text, removed the filter for the 
+      summary-text completely
+    - only pass message-body text through HTML- and markup-filter, 
+      the summary text should only be filtered for pango-markup, 
+      treat bubble and fallback-dialog in the same manner
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 03 Apr 2009 16:54:44 +0200
+
 notify-osd (0.9.8-0ubuntu1) jaunty; urgency=low
 
   * New upstream version:
