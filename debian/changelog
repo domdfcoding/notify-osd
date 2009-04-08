@@ -1,3 +1,17 @@
+notify-osd (0.9.10-0ubuntu1) jaunty; urgency=low
+
+  * New upstream bug fix release:
+    - Enforce 10-line-limit for body-message text if newline-characters are part of it.
+    - Fixes DoS-like exploit-weakness of new append-functionality introduced with rev. 280.
+    - Make fallback dialogs more HIG-compliant. (LP: #332178)
+    - cairo_surface_t reference is lost when pointer is overwritten (LP: #356916)
+    - priv->icon_pixbuf is overwritten before it's current reference is decreased (LP: #356927)
+    - string from dbus_g_method_get_sender not freed (LP: #356858)
+    - Notification entries are not appended unless a replace is used (LP: #337394)
+    - Fix the workarea fallback case.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 08 Apr 2009 16:14:08 -0700
+
 notify-osd (0.9.9-0ubuntu1) jaunty; urgency=low
 
   * New upstream version:

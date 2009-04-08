@@ -12,6 +12,9 @@
 **    Mirco "MacSlow" Mueller <mirco.mueller@canonical.com>
 **    David Barth <david.barth@canonical.com>
 **
+** Contributor(s):
+**    Frederic "fredp" Peters <fpeters@gnome.org> (icon-only fix, rev. 204)
+**
 ** This program is free software: you can redistribute it and/or modify it
 ** under the terms of the GNU General Public License version 3, as published
 ** by the Free Software Foundation.
@@ -1339,10 +1342,11 @@ draw_shadow (cairo_t* cr,
 	     gint     shadow_radius,
 	     gint     corner_radius)
 {
-	cairo_surface_t* tmp_surface = NULL;
-	cairo_surface_t* new_surface = NULL;
-	cairo_pattern_t* pattern     = NULL;
-	cairo_t*         cr_surf     = NULL;
+	cairo_surface_t* tmp_surface     = NULL;
+	cairo_surface_t* new_surface     = NULL;
+	cairo_surface_t* blurred_surface = NULL;	
+	cairo_pattern_t* pattern         = NULL;
+	cairo_t*         cr_surf         = NULL;
 	cairo_matrix_t   matrix;
 
 	tmp_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
@@ -1371,17 +1375,18 @@ draw_shadow (cairo_t* cr,
 		   360.0f * (G_PI / 180.f));
 	cairo_fill (cr_surf);
 	cairo_destroy (cr_surf);
-	tmp_surface = blur_image_surface (tmp_surface, shadow_radius, 4.0f);
+	blurred_surface = blur_image_surface (tmp_surface, shadow_radius, 4.0f);
+	cairo_surface_destroy (tmp_surface);
 	new_surface = cairo_image_surface_create_for_data (
-			cairo_image_surface_get_data (tmp_surface),
-			cairo_image_surface_get_format (tmp_surface),
-			cairo_image_surface_get_width (tmp_surface) / 2,
-			cairo_image_surface_get_height (tmp_surface) / 2,
-			cairo_image_surface_get_stride (tmp_surface));
+			cairo_image_surface_get_data (blurred_surface),
+			cairo_image_surface_get_format (blurred_surface),
+			cairo_image_surface_get_width (blurred_surface) / 2,
+			cairo_image_surface_get_height (blurred_surface) / 2,
+			cairo_image_surface_get_stride (blurred_surface));
 	pattern = cairo_pattern_create_for_surface (new_surface);
 	if (cairo_pattern_status (pattern) != CAIRO_STATUS_SUCCESS)
 	{
-		cairo_surface_destroy (tmp_surface);
+		cairo_surface_destroy (blurred_surface);
 		cairo_surface_destroy (new_surface);
 		return;
 	}
@@ -1431,7 +1436,7 @@ draw_shadow (cairo_t* cr,
 
 	/* clean up */
 	cairo_pattern_destroy (pattern);
-	cairo_surface_destroy (tmp_surface);
+	cairo_surface_destroy (blurred_surface);
 	cairo_surface_destroy (new_surface);
 }
 
@@ -2861,7 +2866,6 @@ _calc_body_height (Bubble* self,
 		   gint    body_width /* requested text-width in pixels */)
 {
 	Defaults*             d;
-	cairo_surface_t*      surface;
 	cairo_t*              cr;
 	PangoFontDescription* desc    = NULL;
 	PangoLayout*          layout  = NULL;
@@ -2875,13 +2879,7 @@ _calc_body_height (Bubble* self,
 	d    = self->defaults;
 	priv = GET_PRIVATE (self);
 
-	surface = cairo_image_surface_create (CAIRO_FORMAT_A1, 1, 1);
-	if (cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS)
-		return 0;
-
-	/*cr = cairo_create (surface);*/
 	cr = gdk_cairo_create (priv->widget->window);
-	cairo_surface_destroy (surface);
 	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
 		return 0;
 
@@ -2912,6 +2910,45 @@ _calc_body_height (Bubble* self,
 			       priv->message_body->str,
 			       priv->message_body->len);
 
+	/* enforce the 10 line-limit, usually only triggered by appended
+	** body-message text due to the newline-characters added with each
+	** append */
+	if (pango_layout_get_line_count (layout) > 10)
+	{
+		/* get it down to 9 lines, because we add our own ...-line */
+		while (pango_layout_get_line_count (layout) > 9)
+		{
+			GString* string = NULL;
+
+			/* cut leading chunk of text up to the first newline */
+			string = g_string_new (g_strstr_len (priv->message_body->str,
+							     priv->message_body->len,
+							     "\n"));
+
+			/* also cut the first newline itself */
+			string = g_string_erase (string, 0, 1);
+
+			/* copy that stripped text back to the body-message */
+			g_string_assign (priv->message_body, string->str);
+
+			/* set the new body-message text to the pango-layout */
+			pango_layout_set_text (layout,
+					       priv->message_body->str,
+					       priv->message_body->len);
+
+			/* clean up */
+			g_string_free (string, TRUE);
+		}
+
+		/* add our own ellipsize-line */
+		g_string_prepend (priv->message_body, "...\n");
+
+		/* set final body-message text to the pango-layout again */
+		pango_layout_set_text (layout,
+				       priv->message_body->str,
+				       priv->message_body->len);
+	}
+
 	pango_layout_get_extents (layout, NULL, &log_rect);
 	body_height = PANGO_PIXELS (log_rect.height);
 
@@ -2941,11 +2978,14 @@ bubble_recalc_size (Bubble *self)
 	** icon needs to adapt to the new size) */
 	if (priv->icon_pixbuf)
 	{
-		priv->icon_pixbuf = gdk_pixbuf_scale_simple (
+		GdkPixbuf *pixbuf;
+		pixbuf = gdk_pixbuf_scale_simple (
 					priv->icon_pixbuf,
         	                        EM2PIXELS (defaults_get_icon_size (d), d),
         	                        EM2PIXELS (defaults_get_icon_size (d), d),
 					GDK_INTERP_HYPER);
+		g_object_unref (priv->icon_pixbuf);
+		priv->icon_pixbuf = pixbuf;
 	}
 
 	bubble_determine_layout (self);
