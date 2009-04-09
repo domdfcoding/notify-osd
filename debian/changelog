@@ -1,3 +1,11 @@
+notify-osd (0.9.10-0ubuntu2) jaunty; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in: Only run notify-osd on
+    GNOME sessions; if you have both Kubuntu and Ubuntu installed, Kubuntu
+    shouldn't get notify-osd. (LP: #338279)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 08 Apr 2009 22:26:26 -0700
+
 notify-osd (0.9.10-0ubuntu1) jaunty; urgency=low
 
   * New upstream bug fix release:
