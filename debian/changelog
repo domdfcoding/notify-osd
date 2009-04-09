@@ -1,3 +1,11 @@
+notify-osd (0.9.11-0ubuntu1) jaunty; urgency=low
+
+  * New upstream version:
+    - reposition a sync. bubble upon appended async (lp: #334388)
+    - do not print debug for non-bubbles (NULL); (lp: #352668)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 09 Apr 2009 13:57:41 +0200
+
 notify-osd (0.9.10-0ubuntu2) jaunty; urgency=low
 
   * data/org.freedesktop.Notifications.service.in: Only run notify-osd on
