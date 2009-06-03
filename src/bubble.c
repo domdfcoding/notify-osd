@@ -68,10 +68,10 @@ struct _BubblePrivate {
 	gint         end_y;
 	gint         delta_y;
 	gdouble      inc_factor;
-	gint         value; /* "empty": -1, valid range: 0 - 100 */
+	gint         value; /* "empty": -2, valid range: -1..101, -1/101 trigger "over/undershoot"-effect */
 	gchar*       synchronous;
 	gchar*       sender;
-	gboolean     urgent;
+	guint        urgency;
 	gboolean     composited;
 	EggAlpha *alpha;
 	EggTimeline *timeline;
@@ -594,39 +594,31 @@ draw_value_indicator (cairo_t* cr,
 				 bar_width / 100.0f * (gdouble) value,
 				 bar_height);
 		gradient = cairo_pattern_create_linear (0.0f,
+
 							(gdouble) start_x +
 							outline_thickness +
 							0.5f,
-							0.0f,
+
+		                                        0.0f,
+
 							(gdouble) start_y +
 							height / 2.0f -
 							outline_height / 2.0f +
 							outline_thickness / 2.0f +
 							0.5f);
 		cairo_pattern_add_color_stop_rgba (gradient,
-						   0.0f,
-						   1.0f,
-						   1.0f,
-						   1.0f,
-						   1.0f);
-		cairo_pattern_add_color_stop_rgba (gradient,
-						   0.2f,
-						   0.95f,
-						   0.95f,
-						   0.95f,
-						   1.0f);
-		cairo_pattern_add_color_stop_rgba (gradient,
-						   0.3f,
-						   0.8f,
-						   0.8f,
-						   0.8f,
+						   0.75f,
+						   0.4f,
+						   0.4f,
+						   0.4f,
 						   1.0f);
 		cairo_pattern_add_color_stop_rgba (gradient,
 						   1.0f,
-						   0.623f,
-						   0.623f,
-						   0.623f,
+						   0.9f,
+						   0.9f,
+						   0.9f,
 						   1.0f);
+
 		cairo_set_source (cr, gradient);
 		cairo_fill (cr);
 		cairo_pattern_destroy (gradient);
@@ -741,7 +733,7 @@ _render_icon_indicator (Bubble*  self,
 	switch (priv->value)
 	{
 		/* "undershoot" effect */
-		case 0:
+		case -1:
 			/* abuse blur to create a mask of scratch-pad surface */
 			tmp = blur_image_surface (glow_surface,
 						  0.0f,
@@ -777,7 +769,7 @@ _render_icon_indicator (Bubble*  self,
 		break;
 
 		/* "overshoot" effect */
-		case 100:
+		case 101:
 			/* blur the scratch-pad surface */
 			tmp = blur_image_surface (glow_surface,
 						  blur_radius,
@@ -1509,6 +1501,69 @@ _render_background (cairo_t*  cr,
 			 2.0f * EM2PIXELS (defaults_get_bubble_shadow_size (d),
 					   d));
 	cairo_fill (cr);
+
+	/* urgency-indication bar */
+	if (g_getenv ("DEBUG"))
+	{
+		switch (bubble_get_urgency (bubble))
+		{
+			/* low urgency-bar is painted blue */
+			case 0:
+				cairo_set_source_rgb (cr, 0.25f, 0.5f, 1.0f);
+			break;
+
+			/* normal urgency-bar is painted green */
+			case 1:
+				cairo_set_source_rgb (cr, 0.0f, 1.0f, 0.0f);
+			break;
+
+			/* urgent urgency-bar is painted red */
+			case 2:
+				cairo_set_source_rgb (cr, 1.0f, 0.0f, 0.0f);
+			break;
+
+			default:
+			break;
+		}
+
+		draw_round_rect (cr,
+				 1.0f,
+				 EM2PIXELS (defaults_get_bubble_shadow_size (d),
+					    d) + 2.0f,
+				 EM2PIXELS (defaults_get_bubble_shadow_size (d),
+					    d) + 2.0f,
+				 EM2PIXELS (defaults_get_bubble_corner_radius (d),
+					    d) - 2.0f,
+				 EM2PIXELS (defaults_get_bubble_width (d),
+					    d) - 4.0f,
+				 2.0f * EM2PIXELS (defaults_get_bubble_shadow_size (d),
+					    d) - 2.0f);
+		cairo_fill (cr);
+
+		cairo_set_source_rgb (cr, 0.0f, 0.0f, 0.0f);
+		cairo_set_font_size (cr, EM2PIXELS (defaults_get_text_body_size  (d), d));
+		cairo_move_to (cr,
+			       EM2PIXELS (defaults_get_text_body_size  (d), d) + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) + 2.0f,
+			       EM2PIXELS (defaults_get_text_body_size  (d), d) + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) + 2.0f + ((2.0f * EM2PIXELS (defaults_get_bubble_shadow_size (d), d) - 2.0f) - EM2PIXELS (defaults_get_text_body_size  (d), d)) / 2);
+
+		switch (bubble_get_urgency (bubble))
+		{
+			case 0:
+				cairo_show_text (cr, "low - report incorrect urgency?");
+			break;
+
+			case 1:
+				cairo_show_text (cr, "normal - report incorrect urgency?");
+			break;
+
+			case 2:
+				cairo_show_text (cr, "urgent - report incorrect urgency?");
+			break;
+
+			default:
+			break;
+		}
+	}
 }
 
 static
@@ -1845,7 +1900,7 @@ bubble_init (Bubble* self)
 	priv->message_body      = NULL;
 	priv->visible           = FALSE;
 	priv->icon_pixbuf       = NULL;
-	priv->value             = -1;
+	priv->value             = -2;
 	priv->synchronous       = NULL;
 	priv->sender            = NULL;
 	priv->draw_handler_id   = 0;
@@ -1978,7 +2033,7 @@ bubble_new (Defaults* defaults)
 	this->priv->title           = g_string_new ("");
 	this->priv->message_body    = g_string_new ("");
 	this->priv->icon_pixbuf     = NULL;
-	this->priv->value           = -1;
+	this->priv->value           = -2;
 	this->priv->visible         = FALSE;
 	this->priv->timeout         = 5000;
 	this->priv->mouse_over      = FALSE;
@@ -2062,7 +2117,7 @@ bubble_set_title (Bubble*      self,
 
 	priv = GET_PRIVATE (self);
 
-	if (priv->title->len != 0)
+	if (priv->title)
 		g_string_free (priv->title, TRUE);
 
 	priv->title = g_string_new (title);
@@ -2081,10 +2136,7 @@ void
 bubble_set_message_body (Bubble*      self,
 			 const gchar* body)
 {
-	gboolean       success;
-	gchar*         new_body;
 	gchar*         text;
-	GError*        error = NULL;
 	BubblePrivate* priv;
 
 	if (!self || !IS_BUBBLE (self))
@@ -2092,22 +2144,14 @@ bubble_set_message_body (Bubble*      self,
 
 	priv = GET_PRIVATE (self);
 
-	if (priv->message_body->len != 0)
+	if (priv->message_body)
 		g_string_free (priv->message_body, TRUE);
 
 	/* filter out any HTML/markup if possible */
 	text = filter_text (body);
-    	success = pango_parse_markup (text,
-				      -1,
-				      0,    /* no accel-marker needed */
-				      NULL, /* no PangoAttr needed */
-				      &new_body,
-				      NULL, /* no accel-marker-return needed */
-				      &error);
 
-	priv->message_body = g_string_new (new_body);
+	priv->message_body = g_string_new (text);
 	g_free (text);
-	g_free (new_body);
 }
 
 const gchar*
@@ -2143,6 +2187,59 @@ bubble_set_icon (Bubble*      self,
 						  d));
 }
 
+static GdkPixbuf *
+scale_pixbuf (const GdkPixbuf *pixbuf, gint size)
+{
+	GdkPixbuf *scaled_icon;
+	GdkPixbuf *new_icon;
+	gint w, h, dest_x, dest_y, new_width, new_height, max_edge;
+
+	dest_x = dest_y = 0;
+
+	w = gdk_pixbuf_get_width (pixbuf);
+	h = gdk_pixbuf_get_height (pixbuf);
+
+	max_edge = MAX (w, h);
+
+	new_width = size * (w / max_edge);
+	new_height = size * (h / max_edge);
+
+	/* Scale the pixbuf down, preserving the aspect ratio */
+	scaled_icon = gdk_pixbuf_scale_simple (pixbuf,
+					       new_width,
+					       new_height,
+					       GDK_INTERP_BILINEAR);
+
+	if (w == h)
+		return scaled_icon;
+
+	/* Create a square pixbuf with an alpha channel */
+	new_icon = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (scaled_icon),
+				   TRUE,
+				   gdk_pixbuf_get_bits_per_sample (scaled_icon),
+				   size, size);
+
+	/* Clear the pixbuf so it is transparent */
+	gdk_pixbuf_fill (new_icon, 0x00000000);
+
+	/* Center the rectangular pixbuf inside the transparent square */
+	if (new_width > new_height)
+		dest_y = (new_width - new_height) / 2;
+	else
+		dest_x = (new_height - new_width) / 2;
+
+	/* Copy the rectangular pixbuf into the new pixbuf at a centered position */
+	gdk_pixbuf_copy_area (scaled_icon,
+			      0, 0,
+			      gdk_pixbuf_get_width (scaled_icon),
+			      gdk_pixbuf_get_height (scaled_icon),
+			      new_icon,
+			      dest_x, dest_y);
+	g_object_unref (scaled_icon);
+
+	return new_icon;
+}
+
 void
 bubble_set_icon_from_pixbuf (Bubble*    self,
 			     GdkPixbuf* pixbuf)
@@ -2169,16 +2266,12 @@ bubble_set_icon_from_pixbuf (Bubble*    self,
 
 	d = self->defaults;
 
-	if (width != defaults_get_icon_size (d))
+	if (width != defaults_get_icon_size (d) ||
+            height != defaults_get_icon_size (d))
 	{
-		if (width != height)
-			g_warning ("non-square pixmap");
-		/* TODO: improve scaling for non-square pixmaps */
+		scaled = scale_pixbuf (pixbuf, EM2PIXELS (defaults_get_icon_size (d), d));
+		g_object_unref (pixbuf);
 
-		scaled = gdk_pixbuf_scale_simple (pixbuf,
-						  EM2PIXELS (defaults_get_icon_size (d), d),
-						  EM2PIXELS (defaults_get_icon_size (d), d),
-						  GDK_INTERP_HYPER);
 		pixbuf = scaled;
 	}
 
@@ -2201,7 +2294,7 @@ bubble_set_value (Bubble* self,
 		return;
 
 	GET_PRIVATE (self)->value = value;
-    
+
 	g_signal_emit (self, g_bubble_signals[VALUE_CHANGED], 0, value);
 }
 
@@ -2209,7 +2302,7 @@ gint
 bubble_get_value (Bubble* self)
 {
 	if (!self || !IS_BUBBLE (self))
-		return -1;
+		return -2;
 
 	return GET_PRIVATE (self)->value;
 }
@@ -2768,7 +2861,7 @@ bubble_start_timer (Bubble* self)
 
 	/* if the bubble is displaying a value that is out of bounds
 	   trigger a dim/glow animation */
-	if (priv->value == 0 || priv->value == 100)
+	if (priv->value == -1 || priv->value == 101)
 		bubble_start_glow_effect (self, 500);
 }
 
@@ -2993,7 +3086,7 @@ bubble_recalc_size (Bubble *self)
 					priv->icon_pixbuf,
         	                        EM2PIXELS (defaults_get_icon_size (d), d),
         	                        EM2PIXELS (defaults_get_icon_size (d), d),
-					GDK_INTERP_HYPER);
+					GDK_INTERP_BILINEAR);
 		g_object_unref (priv->icon_pixbuf);
 		priv->icon_pixbuf = pixbuf;
 	}
@@ -3201,16 +3294,24 @@ bubble_is_urgent (Bubble *self)
 {
 	g_return_val_if_fail (IS_BUBBLE (self), FALSE);
 
-	return GET_PRIVATE (self)->urgent;
+	return (GET_PRIVATE (self)->urgency == 2);
+}
+
+guint
+bubble_get_urgency (Bubble *self)
+{
+	g_return_val_if_fail (IS_BUBBLE (self), 0);
+
+	return GET_PRIVATE (self)->urgency;
 }
 
 void
-bubble_set_urgent (Bubble *self,
-		   gboolean urgent)
+bubble_set_urgency (Bubble *self,
+		   guint  urgency)
 {
 	g_return_if_fail (IS_BUBBLE (self));
 
-	GET_PRIVATE (self)->urgent = urgent;
+	GET_PRIVATE (self)->urgency = urgency;
 }
 
 void
@@ -3228,11 +3329,9 @@ bubble_determine_layout (Bubble* self)
 	priv->layout = LAYOUT_NONE;
 
 	/* icon-only layout-case, e.g. eject */
-	if (priv->icon_only)
+	if (priv->icon_only && priv->icon_pixbuf != NULL)
 	{
 		priv->layout = LAYOUT_ICON_ONLY;
-		if (priv->icon_pixbuf == NULL)
-			priv->layout = LAYOUT_NONE;
 		return;
 	}
 
@@ -3240,8 +3339,7 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len == 0) &&
-	    (priv->value             >= 0) &&
-	    !(priv->icon_only))
+	    (priv->value             >= -1))
 	{
 		priv->layout = LAYOUT_ICON_INDICATOR;
 		return;
@@ -3251,8 +3349,7 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len == 0) &&
-	    (priv->value             == -1) &&
-	    !(priv->icon_only))
+	    (priv->value             == -2))
 	{
 		priv->layout = LAYOUT_ICON_TITLE;
 		return;
@@ -3262,8 +3359,7 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       != NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len != 0) &&
-	    (priv->value             == -1) &&
-	    !(priv->icon_only))
+	    (priv->value             == -2))
 	{
 		priv->layout = LAYOUT_ICON_TITLE_BODY;
 		return;
@@ -3273,8 +3369,7 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       == NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len != 0) &&
-	    (priv->value             == -1) &&
-	    !(priv->icon_only))
+	    (priv->value             == -2))
 	{
 		priv->layout = LAYOUT_TITLE_BODY;
 		return;
@@ -3284,8 +3379,7 @@ bubble_determine_layout (Bubble* self)
 	if ((priv->icon_pixbuf       == NULL) &&
 	    (priv->title->len        != 0) &&
 	    (priv->message_body->len == 0) &&
-	    (priv->value             == -1) &&
-	    !(priv->icon_only))
+	    (priv->value             == -2))
 	{
 		priv->layout = LAYOUT_TITLE_ONLY;
 		return;

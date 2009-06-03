@@ -43,12 +43,17 @@ stop_main_loop (GMainLoop *loop)
 }
 
 static void
+test_withlib_setup (void)
+{
+	notify_init (__FILE__);
+}
+
+static void
 test_withlib_get_server_information (void)
 {
 	gchar *name = NULL, *vendor = NULL, *version = NULL, *specver = NULL;
 	gboolean ret = FALSE;
 
-        notify_init (__FILE__);
 	ret = notify_get_server_info (&name, &vendor, &version, &specver);
 	
 	g_assert (ret);
@@ -61,8 +66,6 @@ test_withlib_get_server_caps (void)
 {
 	GList *cap, *caps = NULL;
 	gboolean test = FALSE;
-
-        notify_init (__FILE__);
 
 	caps = notify_get_server_caps ();
 
@@ -87,8 +90,6 @@ test_withlib_show_notification (void)
 {
         NotifyNotification *n;
 
-        notify_init (__FILE__);
-
 	n = notify_notification_new ("Test",
 				     "You should see a normal notification",
 				     "", NULL);
@@ -103,8 +104,6 @@ test_withlib_update_notification (void)
 {
         NotifyNotification *n;
 	gboolean res = FALSE;
-
-        notify_init (__FILE__);
 
 	n = notify_notification_new ("Test",
 				     "New notification",
@@ -160,16 +159,18 @@ test_withlib_priority (void)
 	n2 = notify_notification_new ("Normal Notification",
 				      "You should see this *after* the urgent notification.",
 				      "", NULL);
+	notify_notification_set_urgency (n2, NOTIFY_URGENCY_LOW);
 	notify_notification_show (n2, NULL);
 	n3 = notify_notification_new ("Synchronous Notification",
 				      "You should immediately see this notification.",
 				      "", NULL);
 	notify_notification_set_hint_string (n3, "synchronous", "test");
+	notify_notification_set_urgency (n3, NOTIFY_URGENCY_NORMAL);
 	notify_notification_show (n3, NULL);
 	n4 = notify_notification_new ("Urgent Notification",
 				      "You should see a dialog box, and after, a normal notification.",
 				      "", NULL);
-	notify_notification_set_urgency(n4, NOTIFY_URGENCY_CRITICAL);
+	notify_notification_set_urgency (n4, NOTIFY_URGENCY_CRITICAL);
 	notify_notification_show (n4, NULL);
 	
 	loop = g_main_loop_new(NULL, FALSE);
@@ -184,28 +185,31 @@ test_withlib_priority (void)
 
 static GMainLoop* loop;
 
+static char* test_action_callback_data = "Some string to pass to the action callback";
+
 static void
 callback (NotifyNotification *n,
 	  const char *action,
 	  void *user_data)
 {
-	g_assert (g_strcmp0 (action, "default") == 0);
+	g_assert (g_strcmp0 (action, "action") == 0);
+	g_assert (user_data == test_action_callback_data);
 	g_main_loop_quit (loop);
 }
 
 static void
 test_withlib_actions (void)
 {
-        NotifyNotification *n1;
+	NotifyNotification *n1;
 
-	n1 = notify_notification_new ("Notification with a default action",
-				      "You should see that in a dialog box",
+	n1 = notify_notification_new ("Notification with an action",
+				      "You should see that in a dialog box. Click the 'Action' button for the test to succeed.",
 				      "", NULL);
 	notify_notification_add_action (n1,
-					"default",
-					"default",
+					"action",
+					"Action",
 					(NotifyActionCallback)callback,
-					NULL,
+					test_action_callback_data,
 					NULL);
 	notify_notification_show (n1, NULL);
 	
@@ -245,8 +249,6 @@ test_withlib_append_hint (void)
 {
         NotifyNotification *n;
 	gboolean res = FALSE;
-
-        notify_init (__FILE__);
 
 	/* init notification, supply first line of body-text */
 	n = notify_notification_new ("Test (append-hint)",
@@ -288,8 +290,6 @@ test_withlib_icon_only_hint (void)
         NotifyNotification *n;
 	gboolean res = FALSE;
 
-        notify_init (__FILE__);
-
 	/* init notification, supply first line of body-text */
 	n = notify_notification_new (" ", /* needs this to be non-NULL */
 				     NULL,
@@ -309,8 +309,6 @@ test_withlib_swallow_markup (void)
         NotifyNotification *n;
 	gboolean res = FALSE;
 
-        notify_init (__FILE__);
-
 	n = notify_notification_new ("Swallow markup test",
 				     "This text is hopefully neither <b>bold</b>, <i>italic</i> nor <u>underlined</u>.\n\nA little math-notation:\n\n\ta &gt; b &lt; c = 0",
 				     "./icons/avatar.png",
@@ -329,94 +327,20 @@ test_withlib_create_test_suite (void)
 
 	ts = g_test_create_suite ("libnotify");
 
-	g_test_suite_add(ts,
-			 g_test_create_case ("can get server info",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_get_server_information,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("can get private server cap",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_get_server_caps,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("can show normal notification",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_show_notification,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("can update notification",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_update_notification,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("can pass icon data on the wire",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_pass_icon_data,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("can close a notification",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_close_notification,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("honors priority level",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_priority,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("supports append-hint",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_append_hint,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("supports icon-only-hint",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_icon_only_hint,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("swallows markup",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_swallow_markup,
-					     NULL)
-		);
-	g_test_suite_add(ts,
-			 g_test_create_case ("interprets actions",
-					     0,
-					     NULL,
-					     NULL,
-					     test_withlib_actions,
-					     NULL)
-		);
+	#define ADD_TEST(x) g_test_suite_add(ts, \
+		g_test_create_case(#x, 0, NULL, test_withlib_setup, x, NULL) \
+		)
+	ADD_TEST(test_withlib_get_server_information);
+	ADD_TEST(test_withlib_get_server_caps);
+	ADD_TEST(test_withlib_show_notification);
+	ADD_TEST(test_withlib_update_notification);
+	ADD_TEST(test_withlib_pass_icon_data);
+	ADD_TEST(test_withlib_close_notification);
+	ADD_TEST(test_withlib_priority);
+	ADD_TEST(test_withlib_append_hint);
+	ADD_TEST(test_withlib_icon_only_hint);
+	ADD_TEST(test_withlib_swallow_markup);
+	ADD_TEST(test_withlib_actions);
 
 	return ts;
 }
