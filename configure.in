@@ -1,4 +1,4 @@
-AC_INIT(notify-osd, 0.9.11, dx-team@canonical.com)
+AC_INIT(notify-osd, 0.9.12, dx-team@canonical.com)
 
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_HEADERS(config.h)
@@ -52,7 +52,7 @@ AM_PATH_GTK_2_0
 
 
 PKG_CHECK_MODULES(notify_osd, 
-		  gtk+-2.0 >= 2.6)
+		  gtk+-2.0 >= 2.14)
 AC_SUBST(NOTIFY_OSD_CFLAGS)
 AC_SUBST(NOTIFY_OSD_LIBS)
 # example python module
@@ -65,6 +65,7 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 tests/Makefile
+examples/Makefile
 data/Makefile
 data/icons/Makefile
 data/icons/scalable/Makefile

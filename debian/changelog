@@ -1,3 +1,24 @@
+notify-osd (0.9.13-0ubuntu1) karmic; urgency=low
+
+  * New upstream version 
+  * Tweak to the apport hook installation
+
+  [ Ara Pulido ]
+  * Install an apport hook so bugs get details about the configuration
+
+  [ Loic Minier ]
+  * Drop patch debian/patches/60_gdmsession-strip-desktop-extension.patch and
+    do the changes to data/org.freedesktop.Notifications.service.in directly.
+  * Drop unused simple-patchsys; changes are done in the diff directly.
+  * Set LDFLAGS directly instead of via DEB_CONFIGURE_ENV; bdep on cdbs >=
+    0.4.41.
+  * Cleanup some whitespaces.
+  * data/org.freedesktop.Notifications.service.in: more quoting, GDMSESSION
+    isn't always set (e.g. when using startx).
+  * Pass "-z defs" to ld before --as-needed for safety.
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 03 Jun 2009 15:49:05 +0200
+
 notify-osd (0.9.11-0ubuntu2) jaunty; urgency=low
 
   * data/org.freedesktop.Notifications.service.in: strip .desktop from
@@ -39,13 +60,13 @@ notify-osd (0.9.9-0ubuntu1) jaunty; urgency=low
 
   * New upstream version:
     - updated text-filter, fixes LP: #353398
-    - revert commit 267, a dedicated env-var for indicating a non-composited 
+    - revert commit 267, a dedicated env-var for indicating a non-composited
       desktop under UNR is not needed
     - revert commit 266, fixes LP: #354349
-    - don't do any filtering on the summary-text, removed the filter for the 
+    - don't do any filtering on the summary-text, removed the filter for the
       summary-text completely
-    - only pass message-body text through HTML- and markup-filter, 
-      the summary text should only be filtered for pango-markup, 
+    - only pass message-body text through HTML- and markup-filter,
+      the summary text should only be filtered for pango-markup,
       treat bubble and fallback-dialog in the same manner
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 03 Apr 2009 16:54:44 +0200
@@ -54,7 +75,7 @@ notify-osd (0.9.8-0ubuntu1) jaunty; urgency=low
 
   * New upstream version:
     - introduced env. variable NOTIFY_OSD_MUST_NOT_USE_COMPOSITING for UNR
-    - added fallback positioning-behaviour for corner-case 
+    - added fallback positioning-behaviour for corner-case
       when no gnome-panel was found (lp: #351516, #351593)
     - added sanity-check for existence of $HOME/.cache (lp: #345770)
   * debian/patches/correct_service_install.patch:
@@ -81,20 +102,20 @@ notify-osd (0.9.7-0ubuntu2) jaunty; urgency=low
 notify-osd (0.9.7-0ubuntu1) jaunty; urgency=low
 
   * New upstream version:
-    - added and improved multihead support, 
+    - added and improved multihead support,
       notifications stick to panel whatever the monitor it is on (lp: #331369)
     - crashers fixes (lp: #331927, #349133)
-    - enable the icon lookup fallback mechanism for fallback icons like 
+    - enable the icon lookup fallback mechanism for fallback icons like
       notification-display-brightness-* (lp: #344385)
-    - reworked parts of notify-osd in order to make it adapt dynamically to 
+    - reworked parts of notify-osd in order to make it adapt dynamically to
       changes of font-face, font-size and dpi (lp: #339731)
     - ensure X errors will not kill notify-osd
-    - use HTML- and markup-filter for title- and body-message-text also 
+    - use HTML- and markup-filter for title- and body-message-text also
       in fallback-dialog
   * debian/patches/correct_service_install.patch:
     - correctly install the dbus service
   * debian/rules:
-    - use simple-patchsys rules 
+    - use simple-patchsys rules
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Sat, 28 Mar 2009 12:45:12 +0100
 
@@ -132,7 +153,7 @@ notify-osd (0.9.3-0ubuntu1) jaunty; urgency=low
     - don't crash on download notifications (lp: #332042)
     - correctly pass actions to the fallback (lp: #340773)
     - correctly namespace the capability names (lp: #340817)
-   
+
  -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 13 Mar 2009 15:13:30 +0100
 
 notify-osd (0.9ubuntu2) jaunty; urgency=low
