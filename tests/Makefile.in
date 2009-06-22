@@ -277,6 +277,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+GCOV_CFLAGS = -fprofile-arcs -ftest-coverage
 test_modules_SOURCES = \
 	../src/bubble.c		                   \
 	../src/defaults.c	                   \
@@ -305,9 +306,11 @@ test_modules_SOURCES = \
 	test-text-filtering.c
 
 test_modules_CFLAGS = \
+	$(GCOV_CFLAGS) \
 	-Wall -Werror -std=c99  \
 	$(GLIB_CFLAGS)		\
 	$(GTK_CFLAGS)		\
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(WNCK_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
 	-I$(top_srcdir)/src
@@ -328,6 +331,7 @@ EGG_MODULES = \
 	../egg/egg-hack.c
 
 AM_CFLAGS = \
+	$(GCOV_CFLAGS) \
 	-Wall -Werror -std=c99  \
 	$(GLIB_CFLAGS)		\
 	-I$(top_srcdir)/src -I$(top_srcdir)/egg
