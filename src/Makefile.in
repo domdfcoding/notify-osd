@@ -69,7 +69,8 @@ notify_osd_OBJECTS = $(am_notify_osd_OBJECTS)
 am__DEPENDENCIES_1 =
 notify_osd_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 notify_osd_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(notify_osd_CFLAGS) \
 	$(CFLAGS) $(notify_osd_LDFLAGS) $(LDFLAGS) -o $@
@@ -208,8 +209,11 @@ mkdir_p = @mkdir_p@
 notify_osd_CFLAGS = \
 	-DDATADIR=\""$(datadir)"\" \
 	$(GTK_CFLAGS) 		\
+	$(NOTIFY_OSD_CFLAGS)	\
+	$(GLIB_CFLAGS) 		\
 	$(GCONF_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(WNCK_CFLAGS)		\
 	$(NULL)
 
@@ -289,6 +293,7 @@ notify_osd_LDADD = \
 	$(GLIB_LIBS) 		\
 	$(GCONF_LIBS) 		\
 	$(GTK_LIBS) 		\
+	$(NOTIFY_OSD_LIBS)	\
 	$(DBUS_LIBS)     	\
 	$(WNCK_LIBS)     	\
 	$(NULL)

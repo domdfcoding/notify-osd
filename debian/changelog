@@ -1,3 +1,23 @@
+notify-osd (0.9.14-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - Numerous bug-fixes
+    - Added a special debugging feature for displaying notification urgencies
+      if started with "DEBUG=1 /usr/lib/notify-osd/notify-osd", meant to help
+      with collecting data for the Do-Not-Disturb mode, testers are encouraged
+      to run with it enabled and report any applications tagging their
+      notifications with the wrong urgency-level
+    - Implemented a new fade-on-hover behaviour called "proximity-fade", this
+      monitors the mouse pointer and upon nearing the bubble it will fade out
+      based on the distance of the pointer to the bubble edges
+    - Trigger-values for under- and overshoot-animations have changed, this
+      makes it necessary to also update gnome-power-manager and
+      gnome-settings-daemon
+  * debian/control:
+    - updated libnotify requirement
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 22 Jun 2009 14:36:24 +0200
+
 notify-osd (0.9.13-0ubuntu1) karmic; urgency=low
 
   * New upstream version 

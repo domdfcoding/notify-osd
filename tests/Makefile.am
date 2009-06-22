@@ -43,14 +43,17 @@ test_modules_CFLAGS =		\
 	-Wall -Werror -std=c99  \
 	$(GLIB_CFLAGS)		\
 	$(GTK_CFLAGS)		\
+	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(WNCK_CFLAGS)		\
 	$(DBUS_CFLAGS)		\
+	$(LIBNOTIFY_CFLAGS)	\
 	-I$(top_srcdir)/src
 
 test_modules_LDADD =		\
 	$(GLIB_LIBS)		\
 	$(WNCK_LIBS)		\
 	$(DBUS_LIBS)		\
+	$(LIBNOTIFY_LIBS)	\
 	$(GTK_LIBS)		\
 	-lnotify
 

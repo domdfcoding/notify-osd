@@ -1,4 +1,4 @@
-AC_INIT(notify-osd, 0.9.12, dx-team@canonical.com)
+AC_INIT(notify-osd, 0.9.14, dx-team@canonical.com)
 
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_HEADERS(config.h)
@@ -38,6 +38,11 @@ PKG_CHECK_MODULES([GCONF], [gconf-2.0])
 PKG_CHECK_MODULES([WNCK], [libwnck-1.0])
 
 #
+# libnotify, used unit-tests 
+#
+PKG_CHECK_MODULES([LIBNOTIFY], [libnotify >= 0.4.5])
+
+#
 # dbus
 #
 PKG_CHECK_MODULES([DBUS], [dbus-glib-1 >= 0.76])
@@ -55,8 +60,68 @@ PKG_CHECK_MODULES(notify_osd,
 		  gtk+-2.0 >= 2.14)
 AC_SUBST(NOTIFY_OSD_CFLAGS)
 AC_SUBST(NOTIFY_OSD_LIBS)
-# example python module
-# AM_CHECK_PYMOD(gobject)
+
+#
+# checks for building C- or C#-examples
+#
+AC_DEFUN([CHECK_FOR_MONO_STUFF],
+[
+        NAME="gmcs"
+        AC_PATH_PROG(GMCS, $NAME, no)
+        AC_SUBST(GMCS)
+        if test "x$GMCS" = "xno"; then
+                AC_MSG_ERROR([You need to install '$NAME'])
+        fi
+
+        NAME="Mono.Posix"
+        AC_MSG_CHECKING([for Mono 2.0 GAC $NAME.dll])
+        if test -e "$(pkg-config --variable=libdir mono)/mono/2.0/$NAME.dll";
+        then
+                AC_MSG_RESULT([found])
+        else
+                AC_MSG_RESULT([not found])
+                AC_MSG_ERROR([missing reqired Mono 2.0 assembly $NAME.dll])
+        fi
+
+        NAME="notify-sharp"
+        AC_MSG_CHECKING([for Mono 2.0 CIL $NAME])
+        pkg-config --exists $NAME
+        if test "$?" == "0"
+        then
+                AC_MSG_RESULT([found])
+        else
+                AC_MSG_RESULT([not found])
+                AC_MSG_ERROR([missing reqired Mono 2.0 CIL $NAME])
+        fi
+])
+
+AC_ARG_WITH(examples, [  --with-examples=[[all/c/mono]]
+                          build C or C#-examples using libnotify
+                          demonstrating special features of notify-osd
+                          there are Python-examples too, but they don't
+                          need to be build])
+
+c_examples=no
+csharp_examples=no
+if test "x$with_examples" = "xc"; then
+        c_examples=yes
+        AC_MSG_NOTICE([Build with ANSI-C examples])
+fi
+if test "x$with_examples" = "xmono"; then
+        CHECK_FOR_MONO_STUFF
+        csharp_examples=yes
+        AC_MSG_NOTICE([Build with C-sharp examples])
+fi
+if test "x$with_examples" = "xall"; then
+        CHECK_FOR_MONO_STUFF
+        c_examples=yes
+        csharp_examples=yes
+        AC_MSG_NOTICE([Build with ANSI-C examples])
+        AC_MSG_NOTICE([Build with C-sharp examples])
+fi
+
+AM_CONDITIONAL(BUILD_C_EXAMPLES, test "x$c_examples" != "xno")
+AM_CONDITIONAL(BUILD_MONO_EXAMPLES, test "x$csharp_examples" != "xno")
 
 dnl CFLAGS
 CFLAGS="$CFLAGS -lm -Wall -Werror -std=c99"
@@ -70,3 +135,14 @@ data/Makefile
 data/icons/Makefile
 data/icons/scalable/Makefile
 ])
+
+echo ""
+echo "                 Notify OSD $VERSION"
+echo "             ============================"
+echo ""
+echo "                   prefix:   ${prefix}"
+echo ""
+echo "         Build C Examples:   ${c_examples}"
+echo ""
+echo "        Build C# Examples:   ${csharp_examples}"
+echo ""
