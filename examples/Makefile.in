@@ -32,16 +32,24 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = icon-only$(EXEEXT) sync-icon-only$(EXEEXT) \
-	icon-summary-body$(EXEEXT) icon-summary$(EXEEXT) \
-	icon-value$(EXEEXT) summary-body$(EXEEXT) \
-	summary-only$(EXEEXT) append-hint-example$(EXEEXT) \
-	update-notifications$(EXEEXT) icon-only.exe$(EXEEXT) \
-	sync-icon-only.exe$(EXEEXT) icon-summary-body.exe$(EXEEXT) \
-	icon-summary.exe$(EXEEXT) icon-value.exe$(EXEEXT) \
-	summary-body.exe$(EXEEXT) summary-only.exe$(EXEEXT) \
-	append-hint-example.exe$(EXEEXT) \
-	update-notifications.exe$(EXEEXT)
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@noinst_PROGRAMS = icon-only.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	sync-icon-only.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	icon-summary-body.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	icon-summary.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	icon-value.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	summary-body.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	summary-only.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	append-hint-example.exe$(EXEEXT) \
+@BUILD_C_EXAMPLES_FALSE@@BUILD_MONO_EXAMPLES_TRUE@	update-notifications.exe$(EXEEXT)
+@BUILD_C_EXAMPLES_TRUE@noinst_PROGRAMS = icon-only$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	sync-icon-only$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon-summary-body$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon-summary$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon-value$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	summary-body$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	summary-only$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	append-hint-example$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	update-notifications$(EXEEXT)
 subdir = examples
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -55,100 +63,132 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_append_hint_example_OBJECTS =  \
-	append_hint_example-append-hint-example.$(OBJEXT) \
-	append_hint_example-example-util.$(OBJEXT)
+am__append_hint_example_SOURCES_DIST = append-hint-example.c \
+	example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_append_hint_example_OBJECTS = append_hint_example-append-hint-example.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	append_hint_example-example-util.$(OBJEXT)
 append_hint_example_OBJECTS = $(am_append_hint_example_OBJECTS)
 append_hint_example_LDADD = $(LDADD)
 append_hint_example_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(append_hint_example_CFLAGS) $(CFLAGS) \
 	$(append_hint_example_LDFLAGS) $(LDFLAGS) -o $@
+am__append_hint_example_exe_SOURCES_DIST = append-hint-example.cs \
+	example-util.cs
 am_append_hint_example_exe_OBJECTS =
 append_hint_example_exe_OBJECTS =  \
 	$(am_append_hint_example_exe_OBJECTS)
 append_hint_example_exe_LDADD = $(LDADD)
-am_icon_only_OBJECTS = icon_only-example-util.$(OBJEXT) \
-	icon_only-icon-only.$(OBJEXT)
+am__icon_only_SOURCES_DIST = example-util.c example-util.h icon-only.c
+@BUILD_C_EXAMPLES_TRUE@am_icon_only_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	icon_only-example-util.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon_only-icon-only.$(OBJEXT)
 icon_only_OBJECTS = $(am_icon_only_OBJECTS)
 icon_only_LDADD = $(LDADD)
 icon_only_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(icon_only_CFLAGS) \
 	$(CFLAGS) $(icon_only_LDFLAGS) $(LDFLAGS) -o $@
+am__icon_only_exe_SOURCES_DIST = example-util.cs icon-only.cs
 am_icon_only_exe_OBJECTS =
 icon_only_exe_OBJECTS = $(am_icon_only_exe_OBJECTS)
 icon_only_exe_LDADD = $(LDADD)
-am_icon_summary_OBJECTS = icon_summary-icon-summary.$(OBJEXT) \
-	icon_summary-example-util.$(OBJEXT)
+am__icon_summary_SOURCES_DIST = icon-summary.c example-util.c \
+	example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_icon_summary_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	icon_summary-icon-summary.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon_summary-example-util.$(OBJEXT)
 icon_summary_OBJECTS = $(am_icon_summary_OBJECTS)
 icon_summary_LDADD = $(LDADD)
 icon_summary_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(icon_summary_CFLAGS) \
 	$(CFLAGS) $(icon_summary_LDFLAGS) $(LDFLAGS) -o $@
-am_icon_summary_body_OBJECTS =  \
-	icon_summary_body-icon-summary-body.$(OBJEXT) \
-	icon_summary_body-example-util.$(OBJEXT)
+am__icon_summary_body_SOURCES_DIST = icon-summary-body.c \
+	example-util.h example-util.c
+@BUILD_C_EXAMPLES_TRUE@am_icon_summary_body_OBJECTS = icon_summary_body-icon-summary-body.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon_summary_body-example-util.$(OBJEXT)
 icon_summary_body_OBJECTS = $(am_icon_summary_body_OBJECTS)
 icon_summary_body_LDADD = $(LDADD)
 icon_summary_body_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(icon_summary_body_CFLAGS) $(CFLAGS) \
 	$(icon_summary_body_LDFLAGS) $(LDFLAGS) -o $@
+am__icon_summary_body_exe_SOURCES_DIST = icon-summary-body.cs \
+	example-util.cs
 am_icon_summary_body_exe_OBJECTS =
 icon_summary_body_exe_OBJECTS = $(am_icon_summary_body_exe_OBJECTS)
 icon_summary_body_exe_LDADD = $(LDADD)
+am__icon_summary_exe_SOURCES_DIST = icon-summary.cs example-util.cs
 am_icon_summary_exe_OBJECTS =
 icon_summary_exe_OBJECTS = $(am_icon_summary_exe_OBJECTS)
 icon_summary_exe_LDADD = $(LDADD)
-am_icon_value_OBJECTS = icon_value-icon-value.$(OBJEXT) \
-	icon_value-example-util.$(OBJEXT)
+am__icon_value_SOURCES_DIST = icon-value.c example-util.c \
+	example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_icon_value_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	icon_value-icon-value.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon_value-example-util.$(OBJEXT)
 icon_value_OBJECTS = $(am_icon_value_OBJECTS)
 icon_value_LDADD = $(LDADD)
 icon_value_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(icon_value_CFLAGS) \
 	$(CFLAGS) $(icon_value_LDFLAGS) $(LDFLAGS) -o $@
+am__icon_value_exe_SOURCES_DIST = icon-value.cs example-util.cs
 am_icon_value_exe_OBJECTS =
 icon_value_exe_OBJECTS = $(am_icon_value_exe_OBJECTS)
 icon_value_exe_LDADD = $(LDADD)
-am_summary_body_OBJECTS = summary_body-summary-body.$(OBJEXT) \
-	summary_body-example-util.$(OBJEXT)
+am__summary_body_SOURCES_DIST = summary-body.c example-util.c \
+	example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_summary_body_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	summary_body-summary-body.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	summary_body-example-util.$(OBJEXT)
 summary_body_OBJECTS = $(am_summary_body_OBJECTS)
 summary_body_LDADD = $(LDADD)
 summary_body_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(summary_body_CFLAGS) \
 	$(CFLAGS) $(summary_body_LDFLAGS) $(LDFLAGS) -o $@
+am__summary_body_exe_SOURCES_DIST = summary-body.cs example-util.cs
 am_summary_body_exe_OBJECTS =
 summary_body_exe_OBJECTS = $(am_summary_body_exe_OBJECTS)
 summary_body_exe_LDADD = $(LDADD)
-am_summary_only_OBJECTS = summary_only-summary-only.$(OBJEXT) \
-	summary_only-example-util.$(OBJEXT)
+am__summary_only_SOURCES_DIST = summary-only.c example-util.c \
+	example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_summary_only_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	summary_only-summary-only.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	summary_only-example-util.$(OBJEXT)
 summary_only_OBJECTS = $(am_summary_only_OBJECTS)
 summary_only_LDADD = $(LDADD)
 summary_only_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(summary_only_CFLAGS) \
 	$(CFLAGS) $(summary_only_LDFLAGS) $(LDFLAGS) -o $@
+am__summary_only_exe_SOURCES_DIST = summary-only.cs example-util.cs
 am_summary_only_exe_OBJECTS =
 summary_only_exe_OBJECTS = $(am_summary_only_exe_OBJECTS)
 summary_only_exe_LDADD = $(LDADD)
-am_sync_icon_only_OBJECTS = sync_icon_only-sync-icon-only.$(OBJEXT) \
-	sync_icon_only-example-util.$(OBJEXT)
+am__sync_icon_only_SOURCES_DIST = sync-icon-only.c example-util.h \
+	example-util.c
+@BUILD_C_EXAMPLES_TRUE@am_sync_icon_only_OBJECTS = sync_icon_only-sync-icon-only.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	sync_icon_only-example-util.$(OBJEXT)
 sync_icon_only_OBJECTS = $(am_sync_icon_only_OBJECTS)
 sync_icon_only_LDADD = $(LDADD)
 sync_icon_only_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(sync_icon_only_CFLAGS) \
 	$(CFLAGS) $(sync_icon_only_LDFLAGS) $(LDFLAGS) -o $@
+am__sync_icon_only_exe_SOURCES_DIST = sync-icon-only.cs \
+	example-util.cs
 am_sync_icon_only_exe_OBJECTS =
 sync_icon_only_exe_OBJECTS = $(am_sync_icon_only_exe_OBJECTS)
 sync_icon_only_exe_LDADD = $(LDADD)
-am_update_notifications_OBJECTS =  \
-	update_notifications-update-notifications.$(OBJEXT) \
-	update_notifications-example-util.$(OBJEXT)
+am__update_notifications_SOURCES_DIST = update-notifications.c \
+	example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_update_notifications_OBJECTS = update_notifications-update-notifications.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	update_notifications-example-util.$(OBJEXT)
 update_notifications_OBJECTS = $(am_update_notifications_OBJECTS)
 update_notifications_LDADD = $(LDADD)
 update_notifications_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(update_notifications_CFLAGS) $(CFLAGS) \
 	$(update_notifications_LDFLAGS) $(LDFLAGS) -o $@
+am__update_notifications_exe_SOURCES_DIST = update-notifications.cs \
+	example-util.cs
 am_update_notifications_exe_OBJECTS =
 update_notifications_exe_OBJECTS =  \
 	$(am_update_notifications_exe_OBJECTS)
@@ -175,16 +215,24 @@ SOURCES = $(append_hint_example_SOURCES) \
 	$(summary_only_exe_SOURCES) $(sync_icon_only_SOURCES) \
 	$(sync_icon_only_exe_SOURCES) $(update_notifications_SOURCES) \
 	$(update_notifications_exe_SOURCES)
-DIST_SOURCES = $(append_hint_example_SOURCES) \
-	$(append_hint_example_exe_SOURCES) $(icon_only_SOURCES) \
-	$(icon_only_exe_SOURCES) $(icon_summary_SOURCES) \
-	$(icon_summary_body_SOURCES) $(icon_summary_body_exe_SOURCES) \
-	$(icon_summary_exe_SOURCES) $(icon_value_SOURCES) \
-	$(icon_value_exe_SOURCES) $(summary_body_SOURCES) \
-	$(summary_body_exe_SOURCES) $(summary_only_SOURCES) \
-	$(summary_only_exe_SOURCES) $(sync_icon_only_SOURCES) \
-	$(sync_icon_only_exe_SOURCES) $(update_notifications_SOURCES) \
-	$(update_notifications_exe_SOURCES)
+DIST_SOURCES = $(am__append_hint_example_SOURCES_DIST) \
+	$(am__append_hint_example_exe_SOURCES_DIST) \
+	$(am__icon_only_SOURCES_DIST) \
+	$(am__icon_only_exe_SOURCES_DIST) \
+	$(am__icon_summary_SOURCES_DIST) \
+	$(am__icon_summary_body_SOURCES_DIST) \
+	$(am__icon_summary_body_exe_SOURCES_DIST) \
+	$(am__icon_summary_exe_SOURCES_DIST) \
+	$(am__icon_value_SOURCES_DIST) \
+	$(am__icon_value_exe_SOURCES_DIST) \
+	$(am__summary_body_SOURCES_DIST) \
+	$(am__summary_body_exe_SOURCES_DIST) \
+	$(am__summary_only_SOURCES_DIST) \
+	$(am__summary_only_exe_SOURCES_DIST) \
+	$(am__sync_icon_only_SOURCES_DIST) \
+	$(am__sync_icon_only_exe_SOURCES_DIST) \
+	$(am__update_notifications_SOURCES_DIST) \
+	$(am__update_notifications_exe_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -219,6 +267,7 @@ GCONF_CFLAGS = @GCONF_CFLAGS@
 GCONF_LIBS = @GCONF_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
+GMCS = @GMCS@
 GREP = @GREP@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
@@ -229,6 +278,8 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBNOTIFY_CFLAGS = @LIBNOTIFY_CFLAGS@
+LIBNOTIFY_LIBS = @LIBNOTIFY_LIBS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -317,42 +368,42 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-icon_only_SOURCES = example-util.c icon-only.c
-sync_icon_only_SOURCES = sync-icon-only.c example-util.c
-icon_summary_body_SOURCES = icon-summary-body.c example-util.c
-icon_summary_SOURCES = icon-summary.c example-util.c
-icon_value_SOURCES = icon-value.c example-util.c
-summary_body_SOURCES = summary-body.c example-util.c
-summary_only_SOURCES = summary-only.c example-util.c
-append_hint_example_SOURCES = append-hint-example.c example-util.c
-update_notifications_SOURCES = update-notifications.c example-util.c
-icon_only_exe_SOURCES = example-util.cs icon-only.cs
-sync_icon_only_exe_SOURCES = sync-icon-only.cs example-util.cs
-icon_summary_body_exe_SOURCES = icon-summary-body.cs example-util.cs
-icon_summary_exe_SOURCES = icon-summary.cs example-util.cs
-icon_value_exe_SOURCES = icon-value.cs example-util.cs
-summary_body_exe_SOURCES = summary-body.cs example-util.cs
-summary_only_exe_SOURCES = summary-only.cs example-util.cs
-append_hint_example_exe_SOURCES = append-hint-example.cs example-util.cs
-update_notifications_exe_SOURCES = update-notifications.cs example-util.cs
-icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-sync_icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-icon_summary_body_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-icon_summary_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-icon_value_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-summary_body_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-summary_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-append_hint_example_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-update_notifications_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
-icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-sync_icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-icon_summary_body_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-icon_summary_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-icon_value_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-summary_body_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-summary_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-append_hint_example_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
-update_notifications_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_only_SOURCES = example-util.c example-util.h icon-only.c
+@BUILD_C_EXAMPLES_TRUE@sync_icon_only_SOURCES = sync-icon-only.c example-util.h example-util.c
+@BUILD_C_EXAMPLES_TRUE@icon_summary_body_SOURCES = icon-summary-body.c example-util.h example-util.c
+@BUILD_C_EXAMPLES_TRUE@icon_summary_SOURCES = icon-summary.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@icon_value_SOURCES = icon-value.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@summary_body_SOURCES = summary-body.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@summary_only_SOURCES = summary-only.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@append_hint_example_SOURCES = append-hint-example.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@update_notifications_SOURCES = update-notifications.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@sync_icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_summary_body_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_summary_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_value_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@summary_body_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@summary_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@append_hint_example_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@update_notifications_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@sync_icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_summary_body_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_summary_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_value_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@summary_body_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@summary_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@append_hint_example_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@update_notifications_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_MONO_EXAMPLES_TRUE@icon_only_exe_SOURCES = example-util.cs icon-only.cs
+@BUILD_MONO_EXAMPLES_TRUE@sync_icon_only_exe_SOURCES = sync-icon-only.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@icon_summary_body_exe_SOURCES = icon-summary-body.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@icon_summary_exe_SOURCES = icon-summary.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@icon_value_exe_SOURCES = icon-value.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@summary_body_exe_SOURCES = summary-body.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@summary_only_exe_SOURCES = summary-only.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@append_hint_example_exe_SOURCES = append-hint-example.cs example-util.cs
+@BUILD_MONO_EXAMPLES_TRUE@update_notifications_exe_SOURCES = update-notifications.cs example-util.cs
 all: all-am
 
 .SUFFIXES:
@@ -396,30 +447,57 @@ clean-noinstPROGRAMS:
 append-hint-example$(EXEEXT): $(append_hint_example_OBJECTS) $(append_hint_example_DEPENDENCIES) 
 	@rm -f append-hint-example$(EXEEXT)
 	$(append_hint_example_LINK) $(append_hint_example_OBJECTS) $(append_hint_example_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@append-hint-example.exe$(EXEEXT): $(append_hint_example_exe_OBJECTS) $(append_hint_example_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f append-hint-example.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(append_hint_example_exe_OBJECTS) $(append_hint_example_exe_LDADD) $(LIBS)
 icon-only$(EXEEXT): $(icon_only_OBJECTS) $(icon_only_DEPENDENCIES) 
 	@rm -f icon-only$(EXEEXT)
 	$(icon_only_LINK) $(icon_only_OBJECTS) $(icon_only_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@icon-only.exe$(EXEEXT): $(icon_only_exe_OBJECTS) $(icon_only_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f icon-only.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(icon_only_exe_OBJECTS) $(icon_only_exe_LDADD) $(LIBS)
 icon-summary$(EXEEXT): $(icon_summary_OBJECTS) $(icon_summary_DEPENDENCIES) 
 	@rm -f icon-summary$(EXEEXT)
 	$(icon_summary_LINK) $(icon_summary_OBJECTS) $(icon_summary_LDADD) $(LIBS)
 icon-summary-body$(EXEEXT): $(icon_summary_body_OBJECTS) $(icon_summary_body_DEPENDENCIES) 
 	@rm -f icon-summary-body$(EXEEXT)
 	$(icon_summary_body_LINK) $(icon_summary_body_OBJECTS) $(icon_summary_body_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@icon-summary-body.exe$(EXEEXT): $(icon_summary_body_exe_OBJECTS) $(icon_summary_body_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f icon-summary-body.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(icon_summary_body_exe_OBJECTS) $(icon_summary_body_exe_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@icon-summary.exe$(EXEEXT): $(icon_summary_exe_OBJECTS) $(icon_summary_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f icon-summary.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(icon_summary_exe_OBJECTS) $(icon_summary_exe_LDADD) $(LIBS)
 icon-value$(EXEEXT): $(icon_value_OBJECTS) $(icon_value_DEPENDENCIES) 
 	@rm -f icon-value$(EXEEXT)
 	$(icon_value_LINK) $(icon_value_OBJECTS) $(icon_value_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@icon-value.exe$(EXEEXT): $(icon_value_exe_OBJECTS) $(icon_value_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f icon-value.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(icon_value_exe_OBJECTS) $(icon_value_exe_LDADD) $(LIBS)
 summary-body$(EXEEXT): $(summary_body_OBJECTS) $(summary_body_DEPENDENCIES) 
 	@rm -f summary-body$(EXEEXT)
 	$(summary_body_LINK) $(summary_body_OBJECTS) $(summary_body_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@summary-body.exe$(EXEEXT): $(summary_body_exe_OBJECTS) $(summary_body_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f summary-body.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(summary_body_exe_OBJECTS) $(summary_body_exe_LDADD) $(LIBS)
 summary-only$(EXEEXT): $(summary_only_OBJECTS) $(summary_only_DEPENDENCIES) 
 	@rm -f summary-only$(EXEEXT)
 	$(summary_only_LINK) $(summary_only_OBJECTS) $(summary_only_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@summary-only.exe$(EXEEXT): $(summary_only_exe_OBJECTS) $(summary_only_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f summary-only.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(summary_only_exe_OBJECTS) $(summary_only_exe_LDADD) $(LIBS)
 sync-icon-only$(EXEEXT): $(sync_icon_only_OBJECTS) $(sync_icon_only_DEPENDENCIES) 
 	@rm -f sync-icon-only$(EXEEXT)
 	$(sync_icon_only_LINK) $(sync_icon_only_OBJECTS) $(sync_icon_only_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@sync-icon-only.exe$(EXEEXT): $(sync_icon_only_exe_OBJECTS) $(sync_icon_only_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f sync-icon-only.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(sync_icon_only_exe_OBJECTS) $(sync_icon_only_exe_LDADD) $(LIBS)
 update-notifications$(EXEEXT): $(update_notifications_OBJECTS) $(update_notifications_DEPENDENCIES) 
 	@rm -f update-notifications$(EXEEXT)
 	$(update_notifications_LINK) $(update_notifications_OBJECTS) $(update_notifications_LDADD) $(LIBS)
+@BUILD_MONO_EXAMPLES_FALSE@update-notifications.exe$(EXEEXT): $(update_notifications_exe_OBJECTS) $(update_notifications_exe_DEPENDENCIES) 
+@BUILD_MONO_EXAMPLES_FALSE@	@rm -f update-notifications.exe$(EXEEXT)
+@BUILD_MONO_EXAMPLES_FALSE@	$(LINK) $(update_notifications_exe_OBJECTS) $(update_notifications_exe_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -901,32 +979,32 @@ uninstall-am:
 	pdf pdf-am ps ps-am tags uninstall uninstall-am
 
 
-icon-only.exe: $(icon_only_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(icon_only_exe_SOURCES) -out:icon-only.exe
+@BUILD_MONO_EXAMPLES_TRUE@icon-only.exe: $(icon_only_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(icon_only_exe_SOURCES) -out:icon-only.exe
 
-sync-icon-only.exe: $(sync_icon_only_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(sync_icon_only_exe_SOURCES) -out:sync-icon-only.exe
+@BUILD_MONO_EXAMPLES_TRUE@sync-icon-only.exe: $(sync_icon_only_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(sync_icon_only_exe_SOURCES) -out:sync-icon-only.exe
 
-icon-summary-body.exe: $(icon_summary_body_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(icon_summary_body_exe_SOURCES) -out:icon-summary-body.exe
+@BUILD_MONO_EXAMPLES_TRUE@icon-summary-body.exe: $(icon_summary_body_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(icon_summary_body_exe_SOURCES) -out:icon-summary-body.exe
 
-icon-summary.exe: $(icon_summary_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(icon_summary_exe_SOURCES) -out:icon-summary.exe
+@BUILD_MONO_EXAMPLES_TRUE@icon-summary.exe: $(icon_summary_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(icon_summary_exe_SOURCES) -out:icon-summary.exe
 
-icon-value.exe: $(icon_value_exe_SOURCES)
-	gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(icon_value_exe_SOURCES) -out:icon-value.exe
+@BUILD_MONO_EXAMPLES_TRUE@icon-value.exe: $(icon_value_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(icon_value_exe_SOURCES) -out:icon-value.exe
 
-summary-body.exe: $(summary_body_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(summary_body_exe_SOURCES) -out:summary-body.exe
+@BUILD_MONO_EXAMPLES_TRUE@summary-body.exe: $(summary_body_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(summary_body_exe_SOURCES) -out:summary-body.exe
 
-summary-only.exe: $(summary_only_exe_SOURCES)
-	gmcs -pkg:notify-sharp $(summary_only_exe_SOURCES) -out:summary-only.exe
+@BUILD_MONO_EXAMPLES_TRUE@summary-only.exe: $(summary_only_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp $(summary_only_exe_SOURCES) -out:summary-only.exe
 
-append-hint-example.exe: $(append_hint_example_exe_SOURCES)
-	gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(append_hint_example_exe_SOURCES) -out:append-hint-example.exe
+@BUILD_MONO_EXAMPLES_TRUE@append-hint-example.exe: $(append_hint_example_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(append_hint_example_exe_SOURCES) -out:append-hint-example.exe
 
-update-notifications.exe: $(update_notifications_exe_SOURCES)
-	gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(update_notifications_exe_SOURCES) -out:update-notifications.exe
+@BUILD_MONO_EXAMPLES_TRUE@update-notifications.exe: $(update_notifications_exe_SOURCES)
+@BUILD_MONO_EXAMPLES_TRUE@		gmcs -pkg:notify-sharp -r:Mono.Posix.dll $(update_notifications_exe_SOURCES) -out:update-notifications.exe
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
