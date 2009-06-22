@@ -1,3 +1,9 @@
+notify-osd (0.9.14.1-0ubuntu1) karmic; urgency=low
+
+  * New upstream version
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 22 Jun 2009 15:40:02 +0200
+
 notify-osd (0.9.14-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
