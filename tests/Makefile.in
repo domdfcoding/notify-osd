@@ -37,7 +37,9 @@ noinst_PROGRAMS = test-modules$(EXEEXT) test-timeline$(EXEEXT) \
 	test-timeline-interpolate$(EXEEXT) \
 	test-timeline-rewind$(EXEEXT) \
 	test-timeline-smoothness$(EXEEXT) \
-	test-alpha-animation$(EXEEXT)
+	test-alpha-animation$(EXEEXT) test-raico$(EXEEXT) \
+	test-tile$(EXEEXT) test-grow-bubble$(EXEEXT) \
+	test-scroll-text$(EXEEXT)
 check_PROGRAMS = test-modules$(EXEEXT)
 TESTS = test-modules$(EXEEXT)
 subdir = tests
@@ -62,7 +64,20 @@ test_alpha_animation_OBJECTS = $(am_test_alpha_animation_OBJECTS)
 test_alpha_animation_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
 test_alpha_animation_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__objects_2 = test_modules-egg-fixed.$(OBJEXT) \
+am__objects_2 = test_grow_bubble-stack-blur.$(OBJEXT) \
+	test_grow_bubble-exponential-blur.$(OBJEXT) \
+	test_grow_bubble-gaussian-blur.$(OBJEXT) \
+	test_grow_bubble-raico-blur.$(OBJEXT)
+am__objects_3 = $(am__objects_2) test_grow_bubble-util.$(OBJEXT) \
+	test_grow_bubble-tile.$(OBJEXT)
+am_test_grow_bubble_OBJECTS = $(am__objects_3) \
+	test_grow_bubble-test-grow-bubble.$(OBJEXT)
+test_grow_bubble_OBJECTS = $(am_test_grow_bubble_OBJECTS)
+test_grow_bubble_DEPENDENCIES = $(am__DEPENDENCIES_1)
+test_grow_bubble_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_grow_bubble_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_4 = test_modules-egg-fixed.$(OBJEXT) \
 	test_modules-egg-units.$(OBJEXT) \
 	test_modules-egg-timeline.$(OBJEXT) \
 	test_modules-egg-timeout-pool.$(OBJEXT) \
@@ -73,10 +88,14 @@ am_test_modules_OBJECTS = test_modules-bubble.$(OBJEXT) \
 	test_modules-observer.$(OBJEXT) test_modules-stack.$(OBJEXT) \
 	test_modules-dbus.$(OBJEXT) test_modules-dnd.$(OBJEXT) \
 	test_modules-apport.$(OBJEXT) test_modules-util.$(OBJEXT) \
+	test_modules-stack-blur.$(OBJEXT) \
+	test_modules-exponential-blur.$(OBJEXT) \
+	test_modules-gaussian-blur.$(OBJEXT) \
+	test_modules-raico-blur.$(OBJEXT) test_modules-tile.$(OBJEXT) \
 	test_modules-bubble-window.$(OBJEXT) \
 	test_modules-bubble-window-accessible.$(OBJEXT) \
 	test_modules-bubble-window-accessible-factory.$(OBJEXT) \
-	test_modules-log.$(OBJEXT) $(am__objects_2) \
+	test_modules-log.$(OBJEXT) $(am__objects_4) \
 	test_modules-test-modules-main.$(OBJEXT) \
 	test_modules-test-apport.$(OBJEXT) \
 	test_modules-test-dbus.$(OBJEXT) \
@@ -95,6 +114,42 @@ test_modules_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 test_modules_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_modules_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_5 = test_raico-stack-blur.$(OBJEXT) \
+	test_raico-exponential-blur.$(OBJEXT) \
+	test_raico-gaussian-blur.$(OBJEXT) \
+	test_raico-raico-blur.$(OBJEXT)
+am_test_raico_OBJECTS = $(am__objects_5) \
+	test_raico-test-raico.$(OBJEXT)
+test_raico_OBJECTS = $(am_test_raico_OBJECTS)
+test_raico_DEPENDENCIES = $(am__DEPENDENCIES_1)
+test_raico_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_raico_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_6 = test_scroll_text-stack-blur.$(OBJEXT) \
+	test_scroll_text-exponential-blur.$(OBJEXT) \
+	test_scroll_text-gaussian-blur.$(OBJEXT) \
+	test_scroll_text-raico-blur.$(OBJEXT)
+am__objects_7 = $(am__objects_6) test_scroll_text-util.$(OBJEXT) \
+	test_scroll_text-tile.$(OBJEXT)
+am_test_scroll_text_OBJECTS = $(am__objects_7) \
+	test_scroll_text-test-scroll-text.$(OBJEXT)
+test_scroll_text_OBJECTS = $(am_test_scroll_text_OBJECTS)
+test_scroll_text_DEPENDENCIES = $(am__DEPENDENCIES_1)
+test_scroll_text_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_scroll_text_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_8 = test_tile-stack-blur.$(OBJEXT) \
+	test_tile-exponential-blur.$(OBJEXT) \
+	test_tile-gaussian-blur.$(OBJEXT) \
+	test_tile-raico-blur.$(OBJEXT)
+am__objects_9 = $(am__objects_8) test_tile-util.$(OBJEXT) \
+	test_tile-tile.$(OBJEXT)
+am_test_tile_OBJECTS = $(am__objects_9) test_tile-test-tile.$(OBJEXT)
+test_tile_OBJECTS = $(am_test_tile_OBJECTS)
+test_tile_DEPENDENCIES = $(am__DEPENDENCIES_1)
+test_tile_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_tile_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_test_timeline_OBJECTS = test-timeline.$(OBJEXT) $(am__objects_1)
 test_timeline_OBJECTS = $(am_test_timeline_OBJECTS)
@@ -135,13 +190,18 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(test_alpha_animation_SOURCES) $(test_modules_SOURCES) \
+SOURCES = $(test_alpha_animation_SOURCES) $(test_grow_bubble_SOURCES) \
+	$(test_modules_SOURCES) $(test_raico_SOURCES) \
+	$(test_scroll_text_SOURCES) $(test_tile_SOURCES) \
 	$(test_timeline_SOURCES) $(test_timeline_dup_frames_SOURCES) \
 	$(test_timeline_interpolate_SOURCES) \
 	$(test_timeline_rewind_SOURCES) \
 	$(test_timeline_smoothness_SOURCES)
-DIST_SOURCES = $(test_alpha_animation_SOURCES) $(test_modules_SOURCES) \
-	$(test_timeline_SOURCES) $(test_timeline_dup_frames_SOURCES) \
+DIST_SOURCES = $(test_alpha_animation_SOURCES) \
+	$(test_grow_bubble_SOURCES) $(test_modules_SOURCES) \
+	$(test_raico_SOURCES) $(test_scroll_text_SOURCES) \
+	$(test_tile_SOURCES) $(test_timeline_SOURCES) \
+	$(test_timeline_dup_frames_SOURCES) \
 	$(test_timeline_interpolate_SOURCES) \
 	$(test_timeline_rewind_SOURCES) \
 	$(test_timeline_smoothness_SOURCES)
@@ -289,7 +349,12 @@ test_modules_SOURCES = \
 	../src/dbus.c		                   \
 	../src/dnd.c		                   \
 	../src/apport.c		                   \
-	../src/util.c				\
+	../src/util.c				   \
+	../src/stack-blur.c			   \
+	../src/exponential-blur.c		   \
+	../src/gaussian-blur.c			   \
+	../src/raico-blur.c			   \
+	../src/tile.c				   \
 	../src/bubble-window.c                     \
 	../src/bubble-window-accessible.c          \
 	../src/bubble-window-accessible-factory.c  \
@@ -360,6 +425,73 @@ test_timeline_smoothness_SOURCES = ../egg/test-timeline-smoothness.c \
 test_alpha_animation_SOURCES = test-alpha-animation.c \
 	$(EGG_MODULES)
 
+RAICO_MODULES = \
+	../src/stack-blur.c \
+	../src/exponential-blur.c \
+	../src/gaussian-blur.c \
+	../src/raico-blur.c
+
+test_raico_SOURCES = \
+	$(RAICO_MODULES) \
+	test-raico.c
+
+test_raico_CFLAGS = \
+	-Wall -Werror -O0 -ggdb -std=c99  \
+	$(GTK_CFLAGS) \
+	-I$(top_srcdir)/src
+
+test_raico_LDADD = \
+	$(GTK_LIBS)
+
+TILE_MODULES = \
+	$(RAICO_MODULES) \
+	../src/util.c \
+	../src/tile.c
+
+test_tile_SOURCES = \
+	$(TILE_MODULES) \
+	test-tile.c
+
+test_tile_CFLAGS = \
+	-Wall -Werror -O0 -ggdb -std=c99  \
+	$(GTK_CFLAGS) \
+	-I$(top_srcdir)/src
+
+test_tile_LDADD = \
+	$(GTK_LIBS)
+
+GROW_BUBBLE_MODULES = \
+	$(RAICO_MODULES) \
+	../src/tile.c
+
+test_grow_bubble_SOURCES = \
+	$(TILE_MODULES) \
+	test-grow-bubble.c
+
+test_grow_bubble_CFLAGS = \
+	-Wall -Werror -O0 -ggdb -std=c99  \
+	$(GTK_CFLAGS) \
+	-I$(top_srcdir)/src
+
+test_grow_bubble_LDADD = \
+	$(GTK_LIBS)
+
+SCROLL_TEXT_MODULES = \
+	$(RAICO_MODULES) \
+	../src/tile.c
+
+test_scroll_text_SOURCES = \
+	$(TILE_MODULES) \
+	test-scroll-text.c
+
+test_scroll_text_CFLAGS = \
+	-Wall -Werror -O0 -ggdb -std=c99  \
+	$(GTK_CFLAGS) \
+	-I$(top_srcdir)/src
+
+test_scroll_text_LDADD = \
+	$(GTK_LIBS)
+
 all: all-am
 
 .SUFFIXES:
@@ -410,9 +542,21 @@ clean-noinstPROGRAMS:
 test-alpha-animation$(EXEEXT): $(test_alpha_animation_OBJECTS) $(test_alpha_animation_DEPENDENCIES) 
 	@rm -f test-alpha-animation$(EXEEXT)
 	$(LINK) $(test_alpha_animation_OBJECTS) $(test_alpha_animation_LDADD) $(LIBS)
+test-grow-bubble$(EXEEXT): $(test_grow_bubble_OBJECTS) $(test_grow_bubble_DEPENDENCIES) 
+	@rm -f test-grow-bubble$(EXEEXT)
+	$(test_grow_bubble_LINK) $(test_grow_bubble_OBJECTS) $(test_grow_bubble_LDADD) $(LIBS)
 test-modules$(EXEEXT): $(test_modules_OBJECTS) $(test_modules_DEPENDENCIES) 
 	@rm -f test-modules$(EXEEXT)
 	$(test_modules_LINK) $(test_modules_OBJECTS) $(test_modules_LDADD) $(LIBS)
+test-raico$(EXEEXT): $(test_raico_OBJECTS) $(test_raico_DEPENDENCIES) 
+	@rm -f test-raico$(EXEEXT)
+	$(test_raico_LINK) $(test_raico_OBJECTS) $(test_raico_LDADD) $(LIBS)
+test-scroll-text$(EXEEXT): $(test_scroll_text_OBJECTS) $(test_scroll_text_DEPENDENCIES) 
+	@rm -f test-scroll-text$(EXEEXT)
+	$(test_scroll_text_LINK) $(test_scroll_text_OBJECTS) $(test_scroll_text_LDADD) $(LIBS)
+test-tile$(EXEEXT): $(test_tile_OBJECTS) $(test_tile_DEPENDENCIES) 
+	@rm -f test-tile$(EXEEXT)
+	$(test_tile_LINK) $(test_tile_OBJECTS) $(test_tile_LDADD) $(LIBS)
 test-timeline$(EXEEXT): $(test_timeline_OBJECTS) $(test_timeline_DEPENDENCIES) 
 	@rm -f test-timeline$(EXEEXT)
 	$(LINK) $(test_timeline_OBJECTS) $(test_timeline_LDADD) $(LIBS)
@@ -447,6 +591,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-timeline-rewind.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-timeline-smoothness.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-timeline.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-exponential-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-gaussian-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-stack-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-test-grow-bubble.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_grow_bubble-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-apport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-bubble-window-accessible-factory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-bubble-window-accessible.Po@am__quote@
@@ -461,8 +612,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-egg-timeline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-egg-timeout-pool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-egg-units.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-exponential-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-gaussian-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-observer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-stack-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-apport.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-bubble.Po@am__quote@
@@ -476,7 +631,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-synchronous.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-text-filtering.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-withlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-exponential-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-gaussian-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-stack-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-test-raico.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-exponential-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-gaussian-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-stack-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-test-scroll-text.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_scroll_text-util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-exponential-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-gaussian-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-stack-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-test-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_tile-util.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -582,6 +757,104 @@ egg-hack.obj: ../egg/egg-hack.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-hack.c' object='egg-hack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o egg-hack.obj `if test -f '../egg/egg-hack.c'; then $(CYGPATH_W) '../egg/egg-hack.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-hack.c'; fi`
+
+test_grow_bubble-stack-blur.o: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-stack-blur.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-stack-blur.Tpo -c -o test_grow_bubble-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-stack-blur.Tpo $(DEPDIR)/test_grow_bubble-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_grow_bubble-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+
+test_grow_bubble-stack-blur.obj: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-stack-blur.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-stack-blur.Tpo -c -o test_grow_bubble-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-stack-blur.Tpo $(DEPDIR)/test_grow_bubble-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_grow_bubble-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+
+test_grow_bubble-exponential-blur.o: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-exponential-blur.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-exponential-blur.Tpo -c -o test_grow_bubble-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-exponential-blur.Tpo $(DEPDIR)/test_grow_bubble-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_grow_bubble-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+
+test_grow_bubble-exponential-blur.obj: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-exponential-blur.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-exponential-blur.Tpo -c -o test_grow_bubble-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-exponential-blur.Tpo $(DEPDIR)/test_grow_bubble-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_grow_bubble-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+
+test_grow_bubble-gaussian-blur.o: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-gaussian-blur.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-gaussian-blur.Tpo -c -o test_grow_bubble-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-gaussian-blur.Tpo $(DEPDIR)/test_grow_bubble-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_grow_bubble-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+
+test_grow_bubble-gaussian-blur.obj: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-gaussian-blur.Tpo -c -o test_grow_bubble-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-gaussian-blur.Tpo $(DEPDIR)/test_grow_bubble-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_grow_bubble-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+
+test_grow_bubble-raico-blur.o: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-raico-blur.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-raico-blur.Tpo -c -o test_grow_bubble-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-raico-blur.Tpo $(DEPDIR)/test_grow_bubble-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_grow_bubble-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+
+test_grow_bubble-raico-blur.obj: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-raico-blur.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-raico-blur.Tpo -c -o test_grow_bubble-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-raico-blur.Tpo $(DEPDIR)/test_grow_bubble-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_grow_bubble-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+
+test_grow_bubble-util.o: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-util.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-util.Tpo -c -o test_grow_bubble-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-util.Tpo $(DEPDIR)/test_grow_bubble-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_grow_bubble-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+
+test_grow_bubble-util.obj: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-util.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-util.Tpo -c -o test_grow_bubble-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-util.Tpo $(DEPDIR)/test_grow_bubble-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_grow_bubble-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+
+test_grow_bubble-tile.o: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-tile.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-tile.Tpo -c -o test_grow_bubble-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-tile.Tpo $(DEPDIR)/test_grow_bubble-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_grow_bubble-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+
+test_grow_bubble-tile.obj: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-tile.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-tile.Tpo -c -o test_grow_bubble-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-tile.Tpo $(DEPDIR)/test_grow_bubble-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_grow_bubble-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+
+test_grow_bubble-test-grow-bubble.o: test-grow-bubble.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-test-grow-bubble.o -MD -MP -MF $(DEPDIR)/test_grow_bubble-test-grow-bubble.Tpo -c -o test_grow_bubble-test-grow-bubble.o `test -f 'test-grow-bubble.c' || echo '$(srcdir)/'`test-grow-bubble.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-test-grow-bubble.Tpo $(DEPDIR)/test_grow_bubble-test-grow-bubble.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-grow-bubble.c' object='test_grow_bubble-test-grow-bubble.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-test-grow-bubble.o `test -f 'test-grow-bubble.c' || echo '$(srcdir)/'`test-grow-bubble.c
+
+test_grow_bubble-test-grow-bubble.obj: test-grow-bubble.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -MT test_grow_bubble-test-grow-bubble.obj -MD -MP -MF $(DEPDIR)/test_grow_bubble-test-grow-bubble.Tpo -c -o test_grow_bubble-test-grow-bubble.obj `if test -f 'test-grow-bubble.c'; then $(CYGPATH_W) 'test-grow-bubble.c'; else $(CYGPATH_W) '$(srcdir)/test-grow-bubble.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_grow_bubble-test-grow-bubble.Tpo $(DEPDIR)/test_grow_bubble-test-grow-bubble.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-grow-bubble.c' object='test_grow_bubble-test-grow-bubble.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_grow_bubble_CFLAGS) $(CFLAGS) -c -o test_grow_bubble-test-grow-bubble.obj `if test -f 'test-grow-bubble.c'; then $(CYGPATH_W) 'test-grow-bubble.c'; else $(CYGPATH_W) '$(srcdir)/test-grow-bubble.c'; fi`
 
 test_modules-bubble.o: ../src/bubble.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-bubble.o -MD -MP -MF $(DEPDIR)/test_modules-bubble.Tpo -c -o test_modules-bubble.o `test -f '../src/bubble.c' || echo '$(srcdir)/'`../src/bubble.c
@@ -694,6 +967,76 @@ test_modules-util.obj: ../src/util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_modules-util.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+
+test_modules-stack-blur.o: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-stack-blur.o -MD -MP -MF $(DEPDIR)/test_modules-stack-blur.Tpo -c -o test_modules-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-stack-blur.Tpo $(DEPDIR)/test_modules-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_modules-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+
+test_modules-stack-blur.obj: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-stack-blur.obj -MD -MP -MF $(DEPDIR)/test_modules-stack-blur.Tpo -c -o test_modules-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-stack-blur.Tpo $(DEPDIR)/test_modules-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_modules-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+
+test_modules-exponential-blur.o: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-exponential-blur.o -MD -MP -MF $(DEPDIR)/test_modules-exponential-blur.Tpo -c -o test_modules-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-exponential-blur.Tpo $(DEPDIR)/test_modules-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_modules-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+
+test_modules-exponential-blur.obj: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-exponential-blur.obj -MD -MP -MF $(DEPDIR)/test_modules-exponential-blur.Tpo -c -o test_modules-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-exponential-blur.Tpo $(DEPDIR)/test_modules-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_modules-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+
+test_modules-gaussian-blur.o: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-gaussian-blur.o -MD -MP -MF $(DEPDIR)/test_modules-gaussian-blur.Tpo -c -o test_modules-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-gaussian-blur.Tpo $(DEPDIR)/test_modules-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_modules-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+
+test_modules-gaussian-blur.obj: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/test_modules-gaussian-blur.Tpo -c -o test_modules-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-gaussian-blur.Tpo $(DEPDIR)/test_modules-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_modules-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+
+test_modules-raico-blur.o: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-raico-blur.o -MD -MP -MF $(DEPDIR)/test_modules-raico-blur.Tpo -c -o test_modules-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-raico-blur.Tpo $(DEPDIR)/test_modules-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_modules-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+
+test_modules-raico-blur.obj: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-raico-blur.obj -MD -MP -MF $(DEPDIR)/test_modules-raico-blur.Tpo -c -o test_modules-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-raico-blur.Tpo $(DEPDIR)/test_modules-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_modules-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+
+test_modules-tile.o: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-tile.o -MD -MP -MF $(DEPDIR)/test_modules-tile.Tpo -c -o test_modules-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-tile.Tpo $(DEPDIR)/test_modules-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_modules-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+
+test_modules-tile.obj: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-tile.obj -MD -MP -MF $(DEPDIR)/test_modules-tile.Tpo -c -o test_modules-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-tile.Tpo $(DEPDIR)/test_modules-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_modules-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
 
 test_modules-bubble-window.o: ../src/bubble-window.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-bubble-window.o -MD -MP -MF $(DEPDIR)/test_modules-bubble-window.Tpo -c -o test_modules-bubble-window.o `test -f '../src/bubble-window.c' || echo '$(srcdir)/'`../src/bubble-window.c
@@ -1002,6 +1345,272 @@ test_modules-test-text-filtering.obj: test-text-filtering.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-text-filtering.c' object='test_modules-test-text-filtering.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-test-text-filtering.obj `if test -f 'test-text-filtering.c'; then $(CYGPATH_W) 'test-text-filtering.c'; else $(CYGPATH_W) '$(srcdir)/test-text-filtering.c'; fi`
+
+test_raico-stack-blur.o: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-stack-blur.o -MD -MP -MF $(DEPDIR)/test_raico-stack-blur.Tpo -c -o test_raico-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-stack-blur.Tpo $(DEPDIR)/test_raico-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_raico-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+
+test_raico-stack-blur.obj: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-stack-blur.obj -MD -MP -MF $(DEPDIR)/test_raico-stack-blur.Tpo -c -o test_raico-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-stack-blur.Tpo $(DEPDIR)/test_raico-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_raico-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+
+test_raico-exponential-blur.o: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-exponential-blur.o -MD -MP -MF $(DEPDIR)/test_raico-exponential-blur.Tpo -c -o test_raico-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-exponential-blur.Tpo $(DEPDIR)/test_raico-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_raico-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+
+test_raico-exponential-blur.obj: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-exponential-blur.obj -MD -MP -MF $(DEPDIR)/test_raico-exponential-blur.Tpo -c -o test_raico-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-exponential-blur.Tpo $(DEPDIR)/test_raico-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_raico-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+
+test_raico-gaussian-blur.o: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-gaussian-blur.o -MD -MP -MF $(DEPDIR)/test_raico-gaussian-blur.Tpo -c -o test_raico-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-gaussian-blur.Tpo $(DEPDIR)/test_raico-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_raico-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+
+test_raico-gaussian-blur.obj: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/test_raico-gaussian-blur.Tpo -c -o test_raico-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-gaussian-blur.Tpo $(DEPDIR)/test_raico-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_raico-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+
+test_raico-raico-blur.o: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-raico-blur.o -MD -MP -MF $(DEPDIR)/test_raico-raico-blur.Tpo -c -o test_raico-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-raico-blur.Tpo $(DEPDIR)/test_raico-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_raico-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+
+test_raico-raico-blur.obj: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-raico-blur.obj -MD -MP -MF $(DEPDIR)/test_raico-raico-blur.Tpo -c -o test_raico-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-raico-blur.Tpo $(DEPDIR)/test_raico-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_raico-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+
+test_raico-test-raico.o: test-raico.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-test-raico.o -MD -MP -MF $(DEPDIR)/test_raico-test-raico.Tpo -c -o test_raico-test-raico.o `test -f 'test-raico.c' || echo '$(srcdir)/'`test-raico.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-test-raico.Tpo $(DEPDIR)/test_raico-test-raico.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-raico.c' object='test_raico-test-raico.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-test-raico.o `test -f 'test-raico.c' || echo '$(srcdir)/'`test-raico.c
+
+test_raico-test-raico.obj: test-raico.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -MT test_raico-test-raico.obj -MD -MP -MF $(DEPDIR)/test_raico-test-raico.Tpo -c -o test_raico-test-raico.obj `if test -f 'test-raico.c'; then $(CYGPATH_W) 'test-raico.c'; else $(CYGPATH_W) '$(srcdir)/test-raico.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_raico-test-raico.Tpo $(DEPDIR)/test_raico-test-raico.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-raico.c' object='test_raico-test-raico.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_raico_CFLAGS) $(CFLAGS) -c -o test_raico-test-raico.obj `if test -f 'test-raico.c'; then $(CYGPATH_W) 'test-raico.c'; else $(CYGPATH_W) '$(srcdir)/test-raico.c'; fi`
+
+test_scroll_text-stack-blur.o: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-stack-blur.o -MD -MP -MF $(DEPDIR)/test_scroll_text-stack-blur.Tpo -c -o test_scroll_text-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-stack-blur.Tpo $(DEPDIR)/test_scroll_text-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_scroll_text-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+
+test_scroll_text-stack-blur.obj: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-stack-blur.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-stack-blur.Tpo -c -o test_scroll_text-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-stack-blur.Tpo $(DEPDIR)/test_scroll_text-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_scroll_text-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+
+test_scroll_text-exponential-blur.o: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-exponential-blur.o -MD -MP -MF $(DEPDIR)/test_scroll_text-exponential-blur.Tpo -c -o test_scroll_text-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-exponential-blur.Tpo $(DEPDIR)/test_scroll_text-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_scroll_text-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+
+test_scroll_text-exponential-blur.obj: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-exponential-blur.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-exponential-blur.Tpo -c -o test_scroll_text-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-exponential-blur.Tpo $(DEPDIR)/test_scroll_text-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_scroll_text-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+
+test_scroll_text-gaussian-blur.o: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-gaussian-blur.o -MD -MP -MF $(DEPDIR)/test_scroll_text-gaussian-blur.Tpo -c -o test_scroll_text-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-gaussian-blur.Tpo $(DEPDIR)/test_scroll_text-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_scroll_text-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+
+test_scroll_text-gaussian-blur.obj: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-gaussian-blur.Tpo -c -o test_scroll_text-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-gaussian-blur.Tpo $(DEPDIR)/test_scroll_text-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_scroll_text-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+
+test_scroll_text-raico-blur.o: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-raico-blur.o -MD -MP -MF $(DEPDIR)/test_scroll_text-raico-blur.Tpo -c -o test_scroll_text-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-raico-blur.Tpo $(DEPDIR)/test_scroll_text-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_scroll_text-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+
+test_scroll_text-raico-blur.obj: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-raico-blur.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-raico-blur.Tpo -c -o test_scroll_text-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-raico-blur.Tpo $(DEPDIR)/test_scroll_text-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_scroll_text-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+
+test_scroll_text-util.o: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-util.o -MD -MP -MF $(DEPDIR)/test_scroll_text-util.Tpo -c -o test_scroll_text-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-util.Tpo $(DEPDIR)/test_scroll_text-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_scroll_text-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+
+test_scroll_text-util.obj: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-util.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-util.Tpo -c -o test_scroll_text-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-util.Tpo $(DEPDIR)/test_scroll_text-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_scroll_text-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+
+test_scroll_text-tile.o: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-tile.o -MD -MP -MF $(DEPDIR)/test_scroll_text-tile.Tpo -c -o test_scroll_text-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-tile.Tpo $(DEPDIR)/test_scroll_text-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_scroll_text-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+
+test_scroll_text-tile.obj: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-tile.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-tile.Tpo -c -o test_scroll_text-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-tile.Tpo $(DEPDIR)/test_scroll_text-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_scroll_text-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+
+test_scroll_text-test-scroll-text.o: test-scroll-text.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-test-scroll-text.o -MD -MP -MF $(DEPDIR)/test_scroll_text-test-scroll-text.Tpo -c -o test_scroll_text-test-scroll-text.o `test -f 'test-scroll-text.c' || echo '$(srcdir)/'`test-scroll-text.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-test-scroll-text.Tpo $(DEPDIR)/test_scroll_text-test-scroll-text.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-scroll-text.c' object='test_scroll_text-test-scroll-text.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-test-scroll-text.o `test -f 'test-scroll-text.c' || echo '$(srcdir)/'`test-scroll-text.c
+
+test_scroll_text-test-scroll-text.obj: test-scroll-text.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -MT test_scroll_text-test-scroll-text.obj -MD -MP -MF $(DEPDIR)/test_scroll_text-test-scroll-text.Tpo -c -o test_scroll_text-test-scroll-text.obj `if test -f 'test-scroll-text.c'; then $(CYGPATH_W) 'test-scroll-text.c'; else $(CYGPATH_W) '$(srcdir)/test-scroll-text.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_scroll_text-test-scroll-text.Tpo $(DEPDIR)/test_scroll_text-test-scroll-text.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-scroll-text.c' object='test_scroll_text-test-scroll-text.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_scroll_text_CFLAGS) $(CFLAGS) -c -o test_scroll_text-test-scroll-text.obj `if test -f 'test-scroll-text.c'; then $(CYGPATH_W) 'test-scroll-text.c'; else $(CYGPATH_W) '$(srcdir)/test-scroll-text.c'; fi`
+
+test_tile-stack-blur.o: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-stack-blur.o -MD -MP -MF $(DEPDIR)/test_tile-stack-blur.Tpo -c -o test_tile-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-stack-blur.Tpo $(DEPDIR)/test_tile-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_tile-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-stack-blur.o `test -f '../src/stack-blur.c' || echo '$(srcdir)/'`../src/stack-blur.c
+
+test_tile-stack-blur.obj: ../src/stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-stack-blur.obj -MD -MP -MF $(DEPDIR)/test_tile-stack-blur.Tpo -c -o test_tile-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-stack-blur.Tpo $(DEPDIR)/test_tile-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/stack-blur.c' object='test_tile-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-stack-blur.obj `if test -f '../src/stack-blur.c'; then $(CYGPATH_W) '../src/stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/stack-blur.c'; fi`
+
+test_tile-exponential-blur.o: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-exponential-blur.o -MD -MP -MF $(DEPDIR)/test_tile-exponential-blur.Tpo -c -o test_tile-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-exponential-blur.Tpo $(DEPDIR)/test_tile-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_tile-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-exponential-blur.o `test -f '../src/exponential-blur.c' || echo '$(srcdir)/'`../src/exponential-blur.c
+
+test_tile-exponential-blur.obj: ../src/exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-exponential-blur.obj -MD -MP -MF $(DEPDIR)/test_tile-exponential-blur.Tpo -c -o test_tile-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-exponential-blur.Tpo $(DEPDIR)/test_tile-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/exponential-blur.c' object='test_tile-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-exponential-blur.obj `if test -f '../src/exponential-blur.c'; then $(CYGPATH_W) '../src/exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/exponential-blur.c'; fi`
+
+test_tile-gaussian-blur.o: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-gaussian-blur.o -MD -MP -MF $(DEPDIR)/test_tile-gaussian-blur.Tpo -c -o test_tile-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-gaussian-blur.Tpo $(DEPDIR)/test_tile-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_tile-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-gaussian-blur.o `test -f '../src/gaussian-blur.c' || echo '$(srcdir)/'`../src/gaussian-blur.c
+
+test_tile-gaussian-blur.obj: ../src/gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/test_tile-gaussian-blur.Tpo -c -o test_tile-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-gaussian-blur.Tpo $(DEPDIR)/test_tile-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/gaussian-blur.c' object='test_tile-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-gaussian-blur.obj `if test -f '../src/gaussian-blur.c'; then $(CYGPATH_W) '../src/gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/gaussian-blur.c'; fi`
+
+test_tile-raico-blur.o: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-raico-blur.o -MD -MP -MF $(DEPDIR)/test_tile-raico-blur.Tpo -c -o test_tile-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-raico-blur.Tpo $(DEPDIR)/test_tile-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_tile-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-raico-blur.o `test -f '../src/raico-blur.c' || echo '$(srcdir)/'`../src/raico-blur.c
+
+test_tile-raico-blur.obj: ../src/raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-raico-blur.obj -MD -MP -MF $(DEPDIR)/test_tile-raico-blur.Tpo -c -o test_tile-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-raico-blur.Tpo $(DEPDIR)/test_tile-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/raico-blur.c' object='test_tile-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-raico-blur.obj `if test -f '../src/raico-blur.c'; then $(CYGPATH_W) '../src/raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/../src/raico-blur.c'; fi`
+
+test_tile-util.o: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-util.o -MD -MP -MF $(DEPDIR)/test_tile-util.Tpo -c -o test_tile-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-util.Tpo $(DEPDIR)/test_tile-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_tile-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-util.o `test -f '../src/util.c' || echo '$(srcdir)/'`../src/util.c
+
+test_tile-util.obj: ../src/util.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-util.obj -MD -MP -MF $(DEPDIR)/test_tile-util.Tpo -c -o test_tile-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-util.Tpo $(DEPDIR)/test_tile-util.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/util.c' object='test_tile-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-util.obj `if test -f '../src/util.c'; then $(CYGPATH_W) '../src/util.c'; else $(CYGPATH_W) '$(srcdir)/../src/util.c'; fi`
+
+test_tile-tile.o: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-tile.o -MD -MP -MF $(DEPDIR)/test_tile-tile.Tpo -c -o test_tile-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-tile.Tpo $(DEPDIR)/test_tile-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_tile-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-tile.o `test -f '../src/tile.c' || echo '$(srcdir)/'`../src/tile.c
+
+test_tile-tile.obj: ../src/tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-tile.obj -MD -MP -MF $(DEPDIR)/test_tile-tile.Tpo -c -o test_tile-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-tile.Tpo $(DEPDIR)/test_tile-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../src/tile.c' object='test_tile-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-tile.obj `if test -f '../src/tile.c'; then $(CYGPATH_W) '../src/tile.c'; else $(CYGPATH_W) '$(srcdir)/../src/tile.c'; fi`
+
+test_tile-test-tile.o: test-tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-test-tile.o -MD -MP -MF $(DEPDIR)/test_tile-test-tile.Tpo -c -o test_tile-test-tile.o `test -f 'test-tile.c' || echo '$(srcdir)/'`test-tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-test-tile.Tpo $(DEPDIR)/test_tile-test-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-tile.c' object='test_tile-test-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-test-tile.o `test -f 'test-tile.c' || echo '$(srcdir)/'`test-tile.c
+
+test_tile-test-tile.obj: test-tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -MT test_tile-test-tile.obj -MD -MP -MF $(DEPDIR)/test_tile-test-tile.Tpo -c -o test_tile-test-tile.obj `if test -f 'test-tile.c'; then $(CYGPATH_W) 'test-tile.c'; else $(CYGPATH_W) '$(srcdir)/test-tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_tile-test-tile.Tpo $(DEPDIR)/test_tile-test-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-tile.c' object='test_tile-test-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_tile_CFLAGS) $(CFLAGS) -c -o test_tile-test-tile.obj `if test -f 'test-tile.c'; then $(CYGPATH_W) 'test-tile.c'; else $(CYGPATH_W) '$(srcdir)/test-tile.c'; fi`
 
 test-timeline.o: ../egg/test-timeline.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT test-timeline.o -MD -MP -MF $(DEPDIR)/test-timeline.Tpo -c -o test-timeline.o `test -f '../egg/test-timeline.c' || echo '$(srcdir)/'`../egg/test-timeline.c

@@ -54,7 +54,9 @@ am__objects_2 = notify_osd-bubble.$(OBJEXT) \
 	notify_osd-observer.$(OBJEXT) notify_osd-stack.$(OBJEXT) \
 	notify_osd-dbus.$(OBJEXT) notify_osd-dnd.$(OBJEXT) \
 	notify_osd-apport.$(OBJEXT) notify_osd-log.$(OBJEXT) \
-	notify_osd-util.$(OBJEXT) notify_osd-bubble-window.$(OBJEXT) \
+	notify_osd-util.$(OBJEXT) notify_osd-gaussian-blur.$(OBJEXT) \
+	notify_osd-raico-blur.$(OBJEXT) notify_osd-tile.$(OBJEXT) \
+	notify_osd-bubble-window.$(OBJEXT) \
 	notify_osd-bubble-window-accessible.$(OBJEXT) \
 	notify_osd-bubble-window-accessible-factory.$(OBJEXT) \
 	notify_osd-egg-fixed.$(OBJEXT) notify_osd-egg-units.$(OBJEXT) \
@@ -252,6 +254,9 @@ notify_osd_sources = \
 	apport.c		\
 	log.c			\
 	util.c			\
+	gaussian-blur.c		\
+	raico-blur.c		\
+	tile.c			\
 	bubble-window.c		\
 	bubble-window-accessible.c \
 	bubble-window-accessible-factory.c \
@@ -274,6 +279,9 @@ notify_osd_headers = \
 	log.h			\
 	apport.h		\
 	util.h			\
+	gaussian-blur.h		\
+	raico-blur.h		\
+	tile.h			\
 	bubble-window.h \
 	bubble-window-accessible.h \
 	bubble-window-accessible-factory.h \
@@ -403,10 +411,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeout-pool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-units.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-gaussian-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-observer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-raico-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-util.Po@am__quote@
 
 .c.o:
@@ -569,6 +580,48 @@ notify_osd-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='notify_osd-util.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
+notify_osd-gaussian-blur.o: gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-gaussian-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-gaussian-blur.Tpo -c -o notify_osd-gaussian-blur.o `test -f 'gaussian-blur.c' || echo '$(srcdir)/'`gaussian-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-gaussian-blur.Tpo $(DEPDIR)/notify_osd-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gaussian-blur.c' object='notify_osd-gaussian-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-gaussian-blur.o `test -f 'gaussian-blur.c' || echo '$(srcdir)/'`gaussian-blur.c
+
+notify_osd-gaussian-blur.obj: gaussian-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-gaussian-blur.obj -MD -MP -MF $(DEPDIR)/notify_osd-gaussian-blur.Tpo -c -o notify_osd-gaussian-blur.obj `if test -f 'gaussian-blur.c'; then $(CYGPATH_W) 'gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/gaussian-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-gaussian-blur.Tpo $(DEPDIR)/notify_osd-gaussian-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gaussian-blur.c' object='notify_osd-gaussian-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-gaussian-blur.obj `if test -f 'gaussian-blur.c'; then $(CYGPATH_W) 'gaussian-blur.c'; else $(CYGPATH_W) '$(srcdir)/gaussian-blur.c'; fi`
+
+notify_osd-raico-blur.o: raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-raico-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-raico-blur.Tpo -c -o notify_osd-raico-blur.o `test -f 'raico-blur.c' || echo '$(srcdir)/'`raico-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-raico-blur.Tpo $(DEPDIR)/notify_osd-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='raico-blur.c' object='notify_osd-raico-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-raico-blur.o `test -f 'raico-blur.c' || echo '$(srcdir)/'`raico-blur.c
+
+notify_osd-raico-blur.obj: raico-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-raico-blur.obj -MD -MP -MF $(DEPDIR)/notify_osd-raico-blur.Tpo -c -o notify_osd-raico-blur.obj `if test -f 'raico-blur.c'; then $(CYGPATH_W) 'raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/raico-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-raico-blur.Tpo $(DEPDIR)/notify_osd-raico-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='raico-blur.c' object='notify_osd-raico-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-raico-blur.obj `if test -f 'raico-blur.c'; then $(CYGPATH_W) 'raico-blur.c'; else $(CYGPATH_W) '$(srcdir)/raico-blur.c'; fi`
+
+notify_osd-tile.o: tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-tile.o -MD -MP -MF $(DEPDIR)/notify_osd-tile.Tpo -c -o notify_osd-tile.o `test -f 'tile.c' || echo '$(srcdir)/'`tile.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-tile.Tpo $(DEPDIR)/notify_osd-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tile.c' object='notify_osd-tile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-tile.o `test -f 'tile.c' || echo '$(srcdir)/'`tile.c
+
+notify_osd-tile.obj: tile.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-tile.obj -MD -MP -MF $(DEPDIR)/notify_osd-tile.Tpo -c -o notify_osd-tile.obj `if test -f 'tile.c'; then $(CYGPATH_W) 'tile.c'; else $(CYGPATH_W) '$(srcdir)/tile.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-tile.Tpo $(DEPDIR)/notify_osd-tile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='tile.c' object='notify_osd-tile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-tile.obj `if test -f 'tile.c'; then $(CYGPATH_W) 'tile.c'; else $(CYGPATH_W) '$(srcdir)/tile.c'; fi`
 
 notify_osd-bubble-window.o: bubble-window.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-bubble-window.o -MD -MP -MF $(DEPDIR)/notify_osd-bubble-window.Tpo -c -o notify_osd-bubble-window.o `test -f 'bubble-window.c' || echo '$(srcdir)/'`bubble-window.c

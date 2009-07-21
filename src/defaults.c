@@ -66,6 +66,8 @@ enum
 	PROP_CONTENT_SHADOW_COLOR,
 	PROP_MARGIN_SIZE,
 	PROP_ICON_SIZE,
+	PROP_GAUGE_SIZE,
+	PROP_GAUGE_OUTLINE_WIDTH,
 	PROP_FADE_IN_TIMEOUT,
 	PROP_FADE_OUT_TIMEOUT,
 	PROP_ON_SCREEN_TIMEOUT,
@@ -76,7 +78,9 @@ enum
 	PROP_TEXT_BODY_COLOR,
 	PROP_TEXT_BODY_WEIGHT,
 	PROP_TEXT_BODY_SIZE,
-	PROP_PIXELS_PER_EM
+	PROP_PIXELS_PER_EM,
+	PROP_SYSTEM_FONT_SIZE,
+	PROP_SCREEN_DPI
 };
 
 enum
@@ -103,7 +107,7 @@ enum
 /* these values are interpreted as em-measurements and do comply to the 
  * visual guide for jaunty-notifications */
 #define DEFAULT_DESKTOP_BOTTOM_GAP    6.0f
-#define DEFAULT_BUBBLE_WIDTH         23.0f
+#define DEFAULT_BUBBLE_WIDTH         24.0f
 #define DEFAULT_BUBBLE_MIN_HEIGHT     5.0f
 #define DEFAULT_BUBBLE_MAX_HEIGHT    12.2f
 #define DEFAULT_BUBBLE_VERT_GAP       0.5f
@@ -116,16 +120,20 @@ enum
 #define DEFAULT_BUBBLE_CORNER_RADIUS 0.375f
 #define DEFAULT_CONTENT_SHADOW_SIZE  0.125f
 #define DEFAULT_CONTENT_SHADOW_COLOR "#000000"
-#define DEFAULT_MARGIN_SIZE          1.4f
-#define DEFAULT_ICON_SIZE            4.0f
+#define DEFAULT_MARGIN_SIZE          1.0f
+#define DEFAULT_ICON_SIZE            3.0f
+#define DEFAULT_GAUGE_SIZE           0.625f
+#define DEFAULT_GAUGE_OUTLINE_WIDTH  0.125f
 #define DEFAULT_TEXT_FONT_FACE       "Sans"
 #define DEFAULT_TEXT_TITLE_COLOR     "#ffffff"
 #define DEFAULT_TEXT_TITLE_WEIGHT    TEXT_WEIGHT_BOLD
-#define DEFAULT_TEXT_TITLE_SIZE      0.95f
+#define DEFAULT_TEXT_TITLE_SIZE      1.0f
 #define DEFAULT_TEXT_BODY_COLOR      "#eaeaea"
 #define DEFAULT_TEXT_BODY_WEIGHT     TEXT_WEIGHT_NORMAL
 #define DEFAULT_TEXT_BODY_SIZE       0.8f
-#define DEFAULT_PIXELS_PER_EM        10
+#define DEFAULT_PIXELS_PER_EM        10.0f
+#define DEFAULT_SYSTEM_FONT_SIZE     10.0f
+#define DEFAULT_SCREEN_DPI           72.0f
 
 /* these values are interpreted as milliseconds-measurements and do comply to
  * the visual guide for jaunty-notifications */
@@ -161,7 +169,7 @@ _get_font_size_dpi (Defaults* self)
 	gint       points        = 0;
 	GString*   font_face     = NULL;
 	gdouble    dpi           = 0.0f;
-	gint       pixels_per_em = 0;
+	gdouble    pixels_per_em = 0;
 
 	if (!IS_DEFAULTS (self))
 		return;
@@ -222,6 +230,9 @@ _get_font_size_dpi (Defaults* self)
 		g_string_free (font_face, TRUE);
 	}
 
+	/* update stored system-font size (in pt!) */
+	g_object_set (self, "system-font-size", (gdouble) points, NULL);
+
 	/* determine current system DPI-setting */
 	error = NULL;
 	dpi = gconf_client_get_float (self->context, GCONF_FONT_DPI, &error);
@@ -232,8 +243,20 @@ _get_font_size_dpi (Defaults* self)
 	}
 
 	/* update stored DPI-value */
-	pixels_per_em = (gint) ((gdouble) points * 1.0f / 72.0f * dpi);
-	g_object_set (self, "pixels-per-em", (gint) pixels_per_em, NULL);
+	pixels_per_em = (gdouble) points * dpi / 72.0f;
+	g_object_set (self, "pixels-per-em", pixels_per_em, NULL);
+	g_object_set (self, "screen-dpi", dpi, NULL);
+
+	if (g_getenv ("DEBUG"))
+		g_print ("font-size: %dpt\ndpi: %3.1f\npixels/EM: %2.2f\nwidth: %d px\ntitle-height: %2.2f pt\nbody-height: %2.2f pt\n\n",
+			 points,
+			 defaults_get_screen_dpi (self),
+			 pixels_per_em,
+			 (gint) (pixels_per_em * DEFAULT_BUBBLE_WIDTH),
+			 defaults_get_system_font_size (self) *
+			 defaults_get_text_title_size (self),
+			 defaults_get_system_font_size (self) *
+			 defaults_get_text_body_size (self));
 }
 
 static void
@@ -530,13 +553,13 @@ defaults_constructed (GObject* gobject)
 	new_bubble_width = 3.0f * margin_size +
 			   icon_size +
 			   20.0f * average_char_width;
-	if (new_bubble_width > bubble_width)
+	/*if (new_bubble_width > bubble_width)
 	{
 		g_object_set (self,
 			      "bubble-width",
 			      new_bubble_width,
 			      NULL);
-	}
+	}*/
 
 	/* FIXME: calling this here causes a segfault */
 	/* chain up to the parent class */
@@ -815,6 +838,14 @@ defaults_get_property (GObject*    gobject,
 			g_value_set_double (value, defaults->icon_size);
 		break;
 
+		case PROP_GAUGE_SIZE:
+			g_value_set_double (value, defaults->gauge_size);
+		break;
+
+		case PROP_GAUGE_OUTLINE_WIDTH:
+			g_value_set_double (value, defaults->gauge_outline_width);
+		break;
+
 		case PROP_FADE_IN_TIMEOUT:
 			g_value_set_int (value, defaults->fade_in_timeout);
 		break;
@@ -859,7 +890,15 @@ defaults_get_property (GObject*    gobject,
 		break;
 
 		case PROP_PIXELS_PER_EM:
-			g_value_set_int (value, defaults->pixels_per_em);
+			g_value_set_double (value, defaults->pixels_per_em);
+		break;
+
+		case PROP_SYSTEM_FONT_SIZE:
+			g_value_set_double (value, defaults->system_font_size);
+		break;
+
+		case PROP_SCREEN_DPI:
+			g_value_set_double (value, defaults->screen_dpi);
 		break;
 
 		default :
@@ -1001,6 +1040,14 @@ defaults_set_property (GObject*      gobject,
 			defaults->icon_size = g_value_get_double (value);
 		break;
 
+		case PROP_GAUGE_SIZE:
+			defaults->gauge_size = g_value_get_double (value);
+		break;
+
+		case PROP_GAUGE_OUTLINE_WIDTH:
+			defaults->gauge_outline_width = g_value_get_double (value);
+		break;
+
 		case PROP_FADE_IN_TIMEOUT:
 			defaults->fade_in_timeout = g_value_get_int (value);
 		break;
@@ -1059,7 +1106,15 @@ defaults_set_property (GObject*      gobject,
 		break;
 
 		case PROP_PIXELS_PER_EM:
-			defaults->pixels_per_em = g_value_get_int (value);
+			defaults->pixels_per_em = g_value_get_double (value);
+		break;
+
+		case PROP_SYSTEM_FONT_SIZE:
+			defaults->system_font_size = g_value_get_double (value);
+		break;
+
+		case PROP_SCREEN_DPI:
+			defaults->screen_dpi = g_value_get_double (value);
 		break;
 
 		default :
@@ -1097,6 +1152,8 @@ defaults_class_init (DefaultsClass* klass)
 	GParamSpec*   property_content_shadow_color;
 	GParamSpec*   property_margin_size;
 	GParamSpec*   property_icon_size;
+	GParamSpec*   property_gauge_size;
+	GParamSpec*   property_gauge_outline_width;
 	GParamSpec*   property_fade_in_timeout;
 	GParamSpec*   property_fade_out_timeout;
 	GParamSpec*   property_on_screen_timeout;
@@ -1108,6 +1165,8 @@ defaults_class_init (DefaultsClass* klass)
 	GParamSpec*   property_text_body_weight;
 	GParamSpec*   property_text_body_size;
 	GParamSpec*   property_pixels_per_em;
+	GParamSpec*   property_system_font_size;
+	GParamSpec*   property_screen_dpi;
 
 	gobject_class->constructed  = defaults_constructed;
 	gobject_class->dispose      = defaults_dispose;
@@ -1415,6 +1474,32 @@ defaults_class_init (DefaultsClass* klass)
 					 PROP_ICON_SIZE,
 					 property_icon_size);
 
+	property_gauge_size = g_param_spec_double (
+				"gauge-size",
+				"gauge-size",
+				"Size/height (in em) of gauge/indicator",
+				0.5f,
+				1.0f,
+				DEFAULT_GAUGE_SIZE,
+				G_PARAM_CONSTRUCT |
+				G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class,
+					 PROP_GAUGE_SIZE,
+					 property_gauge_size);
+
+	property_gauge_outline_width = g_param_spec_double (
+				"gauge-outline-width",
+				"gauge-outline-width",
+				"Width/thickness (in em) of gauge-outline",
+				0.1f,
+				0.2f,
+				DEFAULT_GAUGE_OUTLINE_WIDTH,
+				G_PARAM_CONSTRUCT |
+				G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class,
+					 PROP_GAUGE_OUTLINE_WIDTH,
+					 property_gauge_outline_width);
+
 	property_fade_in_timeout = g_param_spec_int (
 				"fade-in-timeout",
 				"fade-in-timeout",
@@ -1539,18 +1624,45 @@ defaults_class_init (DefaultsClass* klass)
 					 PROP_TEXT_BODY_SIZE,
 					 property_text_body_size);
 
-	property_pixels_per_em = g_param_spec_int (
+	property_pixels_per_em = g_param_spec_double (
 				"pixels-per-em",
 				"pixels-per-em",
 				"Number of pixels for one em-unit",
-				1,
-				100,
+				1.0f,
+				100.0f,
 				DEFAULT_PIXELS_PER_EM,
 				G_PARAM_CONSTRUCT |
 				G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class,
 					 PROP_PIXELS_PER_EM,
 					 property_pixels_per_em);
+
+	property_system_font_size = g_param_spec_double (
+				"system-font-size",
+				"system-font-size",
+				"System font-size in pt",
+				1.0f,
+				100.0f,
+				DEFAULT_SYSTEM_FONT_SIZE,
+				G_PARAM_CONSTRUCT |
+				G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class,
+					 PROP_SYSTEM_FONT_SIZE,
+					 property_system_font_size);
+
+	property_screen_dpi = g_param_spec_double (
+				"screen-dpi",
+				"screen-dpi",
+				"Screen DPI value",
+				10.0f,
+				600.0f,
+				DEFAULT_SCREEN_DPI,
+				G_PARAM_CONSTRUCT |
+				G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class,
+					 PROP_SCREEN_DPI,
+					 property_screen_dpi);
+
 }
 
 /*-- public API --------------------------------------------------------------*/
@@ -1912,6 +2024,32 @@ defaults_get_icon_size (Defaults* self)
 	return icon_size;
 }
 
+gdouble
+defaults_get_gauge_size (Defaults* self)
+{
+	gdouble gauge_size;
+
+	if (!self || !IS_DEFAULTS (self))
+		return 0.0f;
+
+	g_object_get (self, "gauge-size", &gauge_size, NULL);
+
+	return gauge_size;
+}
+
+gdouble
+defaults_get_gauge_outline_width (Defaults* self)
+{
+	gdouble gauge_outline_width;
+
+	if (!self || !IS_DEFAULTS (self))
+		return 0.0f;
+
+	g_object_get (self, "gauge-outline-width", &gauge_outline_width, NULL);
+
+	return gauge_outline_width;
+}
+
 gint
 defaults_get_fade_in_timeout (Defaults* self)
 {
@@ -2046,17 +2184,43 @@ defaults_get_text_body_size (Defaults* self)
 
 /* we use the normal font-height in pixels ("pixels-per-em") as the measurement
  * for 1 em, thus it should _not_ be called before defaults_constructed() */
-gint
+gdouble
 defaults_get_pixel_per_em (Defaults* self)
 {
 	if (!self || !IS_DEFAULTS (self))
-		return 0;
+		return 0.0f;
 
-	gint pixels_per_em;
+	gdouble pixels_per_em;
 
 	g_object_get (self, "pixels-per-em", &pixels_per_em, NULL);
 
 	return pixels_per_em;
+}
+
+gdouble
+defaults_get_system_font_size (Defaults* self)
+{
+	if (!self || !IS_DEFAULTS (self))
+		return 0.0f;
+
+	gdouble system_font_size;
+
+	g_object_get (self, "system-font-size", &system_font_size, NULL);
+
+	return system_font_size;
+}
+
+gdouble
+defaults_get_screen_dpi (Defaults* self)
+{
+	if (!self || !IS_DEFAULTS (self))
+		return 0.0f;
+
+	gdouble screen_dpi;
+
+	g_object_get (self, "screen-dpi", &screen_dpi, NULL);
+
+	return screen_dpi;
 }
 
 static gboolean

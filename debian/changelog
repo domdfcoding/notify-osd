@@ -1,3 +1,23 @@
+notify-osd (0.9.15-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - fixed wrong default values for bubble-width, margin- and icon-size
+    - fixed regressions introduced by the move to the surface- and blur-cache
+    - improved drawing of gauge/indicator
+    - tweaked rendering of layout-grid, added display of layout-grid to 
+      debug-mode of notify-osd
+    - refactored rendering code for bubble
+    - migrated rendering of drop-shadow, background, icon, title, 
+      body and gauge to surface/blur-cache
+    - added surface- and blur-cache
+    - added debug-output for font-size, screen-dpi, pixels/EM and 
+      bubble-width in pixels
+    - fixed rounding errors in pixel-per-em calculation, changed default bubble 
+      width to 24 EMs, fixed title- and body-text height, 
+      fixes LP: #336110 and LP: #391190
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 21 Jul 2009 10:46:15 +0200
+
 notify-osd (0.9.14.1-0ubuntu1) karmic; urgency=low
 
   * New upstream version
