@@ -48,8 +48,8 @@ G_BEGIN_DECLS
  * example use:
  *   PIXEL2EM(42, defaults) - that will returns a gdouble
  *   EM2PIXEL(0.375, defaults) - that will return a gint */
-#define PIXELS2EM(pixel_value, d) ((gdouble) ((gdouble) pixel_value / (gdouble) defaults_get_pixel_per_em(d)))
-#define EM2PIXELS(em_value, d) ((gint) (em_value * (gdouble) defaults_get_pixel_per_em(d)))
+#define PIXELS2EM(pixel_value, d) ((gdouble) ((gdouble) pixel_value / defaults_get_pixel_per_em(d)))
+#define EM2PIXELS(em_value, d) ((gint) (em_value * defaults_get_pixel_per_em(d)))
 
 typedef struct _Defaults      Defaults;
 typedef struct _DefaultsClass DefaultsClass;
@@ -85,6 +85,8 @@ struct _Defaults
 	GString*     content_shadow_color;
 	gdouble      margin_size;
 	gdouble      icon_size;
+	gdouble      gauge_size;
+	gdouble      gauge_outline_width;
 	gint         fade_in_timeout;
 	gint         fade_out_timeout;
 	gint         on_screen_timeout;
@@ -95,7 +97,9 @@ struct _Defaults
 	GString*     text_body_color;
 	gint         text_body_weight;
 	gdouble      text_body_size;
-	gint         pixels_per_em;
+	gdouble      pixels_per_em;
+	gdouble      system_font_size;
+	gdouble      screen_dpi;
 };
 
 /* class structure */
@@ -186,6 +190,12 @@ defaults_get_margin_size (Defaults* self);
 gdouble
 defaults_get_icon_size (Defaults* self);
 
+gdouble
+defaults_get_gauge_size (Defaults* self);
+
+gdouble
+defaults_get_gauge_outline_width (Defaults* self);
+
 gint
 defaults_get_fade_in_timeout (Defaults* self);
 
@@ -216,8 +226,14 @@ defaults_get_text_body_weight (Defaults* self);
 gdouble
 defaults_get_text_body_size (Defaults* self);
 
-gint
+gdouble
 defaults_get_pixel_per_em (Defaults* self);
+
+gdouble
+defaults_get_system_font_size (Defaults* self);
+
+gdouble
+defaults_get_screen_dpi (Defaults* self);
 
 void
 defaults_refresh_screen_dimension_properties (Defaults *self);
