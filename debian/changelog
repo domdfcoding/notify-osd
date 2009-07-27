@@ -1,3 +1,13 @@
+notify-osd (0.9.15-0ubuntu2) karmic; urgency=low
+
+  (cherry-pick rev 357 from lp:~asac/notify-osd/lp378193_tile_memleak)
+  * fix LP: #378193 - huge memory leak in notify-osd; turned out the biggest share of
+     memory leak was due to tile objects not properly destroyed in bubble.c; refactoring code a bit
+     to prevent this in future
+     - update src/bubble.c
+
+ -- Alexander Sack <asac@ubuntu.com>  Mon, 27 Jul 2009 17:53:28 +0200
+
 notify-osd (0.9.15-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
