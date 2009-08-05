@@ -50,11 +50,14 @@ notify_osdPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(notify_osd_PROGRAMS)
 am__objects_1 =
 am__objects_2 = notify_osd-bubble.$(OBJEXT) \
-	notify_osd-defaults.$(OBJEXT) notify_osd-main.$(OBJEXT) \
+	notify_osd-defaults.$(OBJEXT) \
+	notify_osd-notification.$(OBJEXT) notify_osd-main.$(OBJEXT) \
 	notify_osd-observer.$(OBJEXT) notify_osd-stack.$(OBJEXT) \
 	notify_osd-dbus.$(OBJEXT) notify_osd-dnd.$(OBJEXT) \
 	notify_osd-apport.$(OBJEXT) notify_osd-log.$(OBJEXT) \
-	notify_osd-util.$(OBJEXT) notify_osd-gaussian-blur.$(OBJEXT) \
+	notify_osd-util.$(OBJEXT) notify_osd-stack-blur.$(OBJEXT) \
+	notify_osd-exponential-blur.$(OBJEXT) \
+	notify_osd-gaussian-blur.$(OBJEXT) \
 	notify_osd-raico-blur.$(OBJEXT) notify_osd-tile.$(OBJEXT) \
 	notify_osd-bubble-window.$(OBJEXT) \
 	notify_osd-bubble-window-accessible.$(OBJEXT) \
@@ -220,6 +223,7 @@ notify_osd_CFLAGS = \
 	$(DBUS_CFLAGS)		\
 	-DWNCK_I_KNOW_THIS_IS_UNSTABLE \
 	$(WNCK_CFLAGS)		\
+	$(INCLUDES)		\
 	$(NULL)
 
 notify_osd_LIBS = @notify_osd_LIBS@
@@ -240,12 +244,14 @@ NULL =
 INCLUDES = \
 	-I.			\
 	-I$(srcdir)		\
+	-I$(top_srcdir)		\
 	$(NULL)
 
 notify_osddir = $(libexecdir)
 notify_osd_sources = \
 	bubble.c		\
 	defaults.c		\
+	notification.c		\
 	main.c			\
 	observer.c		\
 	stack.c			\
@@ -254,44 +260,49 @@ notify_osd_sources = \
 	apport.c		\
 	log.c			\
 	util.c			\
-	gaussian-blur.c		\
-	raico-blur.c		\
-	tile.c			\
-	bubble-window.c		\
-	bubble-window-accessible.c \
-	bubble-window-accessible-factory.c \
-	../egg/egg-fixed.c		\
-	../egg/egg-units.c		\
-	../egg/egg-timeline.c		\
-	../egg/egg-timeout-pool.c	\
-	../egg/egg-alpha.c		\
-	../egg/egg-hack.c		\
+	stack-blur.c				\
+	exponential-blur.c			\
+	gaussian-blur.c				\
+	raico-blur.c				\
+	tile.c					\
+	bubble-window.c				\
+	bubble-window-accessible.c		\
+	bubble-window-accessible-factory.c	\
+	$(top_srcdir)/egg/egg-fixed.c		\
+	$(top_srcdir)/egg/egg-units.c		\
+	$(top_srcdir)/egg/egg-timeline.c	\
+	$(top_srcdir)/egg/egg-timeout-pool.c	\
+	$(top_srcdir)/egg/egg-alpha.c		\
+	$(top_srcdir)/egg/egg-hack.c		\
 	$(NULL)
 
 notify_osd_headers = \
-	bubble.h		\
-	defaults.h		\
-	observer.h		\
-	stack.h			\
-	stack-glue.h		\
-	dbus.h			\
-	dnd.h			\
-	log.h			\
-	apport.h		\
-	util.h			\
-	gaussian-blur.h		\
-	raico-blur.h		\
-	tile.h			\
-	bubble-window.h \
-	bubble-window-accessible.h \
-	bubble-window-accessible-factory.h \
-	../egg/egg-fixed.h		\
-	../egg/egg-units.h		\
-	../egg/egg-timeline.h		\
-	../egg/egg-timeout-pool.h	\
-	../egg/egg-alpha.h		\
-	../egg/egg-debug.h		\
-	../egg/egg-hack.h		\
+	bubble.h				\
+	defaults.h				\
+	notification.h				\
+	observer.h				\
+	stack.h					\
+	stack-glue.h				\
+	dbus.h					\
+	dnd.h					\
+	log.h					\
+	apport.h				\
+	util.h					\
+	stack-blur.h				\
+	exponential-blur.h			\
+	gaussian-blur.h				\
+	raico-blur.h				\
+	tile.h					\
+	bubble-window.h				\
+	bubble-window-accessible.h		\
+	bubble-window-accessible-factory.h	\
+	$(top_srcdir)/egg/egg-fixed.h		\
+	$(top_srcdir)/egg/egg-units.h		\
+	$(top_srcdir)/egg/egg-timeline.h	\
+	$(top_srcdir)/egg/egg-timeout-pool.h	\
+	$(top_srcdir)/egg/egg-alpha.h		\
+	$(top_srcdir)/egg/egg-debug.h		\
+	$(top_srcdir)/egg/egg-hack.h		\
 	$(NULL)
 
 notify_osd_SOURCES = \
@@ -317,14 +328,12 @@ BUILT_SOURCES = \
 	stack-glue.h
 
 EXTRA_DIST = \
-	notify-osd.xml		\
-	dialog.c		\
-	display.c		\
+	notify-osd.xml	\
+	dialog.c	\
+	display.c	\
 	$(NULL)
 
-CLEANFILES = \
-	$(NULL)
-
+DISTCLEANFILES = $(BUILT_SOURCES)
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -411,11 +420,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeline.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-timeout-pool.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-units.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-exponential-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-gaussian-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-notification.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-observer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-raico-blur.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-tile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-util.Po@am__quote@
@@ -468,6 +480,20 @@ notify_osd-defaults.obj: defaults.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='defaults.c' object='notify_osd-defaults.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-defaults.obj `if test -f 'defaults.c'; then $(CYGPATH_W) 'defaults.c'; else $(CYGPATH_W) '$(srcdir)/defaults.c'; fi`
+
+notify_osd-notification.o: notification.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-notification.o -MD -MP -MF $(DEPDIR)/notify_osd-notification.Tpo -c -o notify_osd-notification.o `test -f 'notification.c' || echo '$(srcdir)/'`notification.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-notification.Tpo $(DEPDIR)/notify_osd-notification.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='notification.c' object='notify_osd-notification.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-notification.o `test -f 'notification.c' || echo '$(srcdir)/'`notification.c
+
+notify_osd-notification.obj: notification.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-notification.obj -MD -MP -MF $(DEPDIR)/notify_osd-notification.Tpo -c -o notify_osd-notification.obj `if test -f 'notification.c'; then $(CYGPATH_W) 'notification.c'; else $(CYGPATH_W) '$(srcdir)/notification.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-notification.Tpo $(DEPDIR)/notify_osd-notification.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='notification.c' object='notify_osd-notification.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-notification.obj `if test -f 'notification.c'; then $(CYGPATH_W) 'notification.c'; else $(CYGPATH_W) '$(srcdir)/notification.c'; fi`
 
 notify_osd-main.o: main.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-main.o -MD -MP -MF $(DEPDIR)/notify_osd-main.Tpo -c -o notify_osd-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
@@ -581,6 +607,34 @@ notify_osd-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
 
+notify_osd-stack-blur.o: stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-stack-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-stack-blur.Tpo -c -o notify_osd-stack-blur.o `test -f 'stack-blur.c' || echo '$(srcdir)/'`stack-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-stack-blur.Tpo $(DEPDIR)/notify_osd-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='stack-blur.c' object='notify_osd-stack-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-stack-blur.o `test -f 'stack-blur.c' || echo '$(srcdir)/'`stack-blur.c
+
+notify_osd-stack-blur.obj: stack-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-stack-blur.obj -MD -MP -MF $(DEPDIR)/notify_osd-stack-blur.Tpo -c -o notify_osd-stack-blur.obj `if test -f 'stack-blur.c'; then $(CYGPATH_W) 'stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/stack-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-stack-blur.Tpo $(DEPDIR)/notify_osd-stack-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='stack-blur.c' object='notify_osd-stack-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-stack-blur.obj `if test -f 'stack-blur.c'; then $(CYGPATH_W) 'stack-blur.c'; else $(CYGPATH_W) '$(srcdir)/stack-blur.c'; fi`
+
+notify_osd-exponential-blur.o: exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-exponential-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-exponential-blur.Tpo -c -o notify_osd-exponential-blur.o `test -f 'exponential-blur.c' || echo '$(srcdir)/'`exponential-blur.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-exponential-blur.Tpo $(DEPDIR)/notify_osd-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='exponential-blur.c' object='notify_osd-exponential-blur.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-exponential-blur.o `test -f 'exponential-blur.c' || echo '$(srcdir)/'`exponential-blur.c
+
+notify_osd-exponential-blur.obj: exponential-blur.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-exponential-blur.obj -MD -MP -MF $(DEPDIR)/notify_osd-exponential-blur.Tpo -c -o notify_osd-exponential-blur.obj `if test -f 'exponential-blur.c'; then $(CYGPATH_W) 'exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/exponential-blur.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-exponential-blur.Tpo $(DEPDIR)/notify_osd-exponential-blur.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='exponential-blur.c' object='notify_osd-exponential-blur.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-exponential-blur.obj `if test -f 'exponential-blur.c'; then $(CYGPATH_W) 'exponential-blur.c'; else $(CYGPATH_W) '$(srcdir)/exponential-blur.c'; fi`
+
 notify_osd-gaussian-blur.o: gaussian-blur.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-gaussian-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-gaussian-blur.Tpo -c -o notify_osd-gaussian-blur.o `test -f 'gaussian-blur.c' || echo '$(srcdir)/'`gaussian-blur.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-gaussian-blur.Tpo $(DEPDIR)/notify_osd-gaussian-blur.Po
@@ -665,89 +719,89 @@ notify_osd-bubble-window-accessible-factory.obj: bubble-window-accessible-factor
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-bubble-window-accessible-factory.obj `if test -f 'bubble-window-accessible-factory.c'; then $(CYGPATH_W) 'bubble-window-accessible-factory.c'; else $(CYGPATH_W) '$(srcdir)/bubble-window-accessible-factory.c'; fi`
 
-notify_osd-egg-fixed.o: ../egg/egg-fixed.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-fixed.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-fixed.Tpo -c -o notify_osd-egg-fixed.o `test -f '../egg/egg-fixed.c' || echo '$(srcdir)/'`../egg/egg-fixed.c
+notify_osd-egg-fixed.o: $(top_srcdir)/egg/egg-fixed.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-fixed.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-fixed.Tpo -c -o notify_osd-egg-fixed.o `test -f '$(top_srcdir)/egg/egg-fixed.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-fixed.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-fixed.Tpo $(DEPDIR)/notify_osd-egg-fixed.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-fixed.c' object='notify_osd-egg-fixed.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-fixed.c' object='notify_osd-egg-fixed.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-fixed.o `test -f '../egg/egg-fixed.c' || echo '$(srcdir)/'`../egg/egg-fixed.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-fixed.o `test -f '$(top_srcdir)/egg/egg-fixed.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-fixed.c
 
-notify_osd-egg-fixed.obj: ../egg/egg-fixed.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-fixed.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-fixed.Tpo -c -o notify_osd-egg-fixed.obj `if test -f '../egg/egg-fixed.c'; then $(CYGPATH_W) '../egg/egg-fixed.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-fixed.c'; fi`
+notify_osd-egg-fixed.obj: $(top_srcdir)/egg/egg-fixed.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-fixed.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-fixed.Tpo -c -o notify_osd-egg-fixed.obj `if test -f '$(top_srcdir)/egg/egg-fixed.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-fixed.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-fixed.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-fixed.Tpo $(DEPDIR)/notify_osd-egg-fixed.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-fixed.c' object='notify_osd-egg-fixed.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-fixed.c' object='notify_osd-egg-fixed.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-fixed.obj `if test -f '../egg/egg-fixed.c'; then $(CYGPATH_W) '../egg/egg-fixed.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-fixed.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-fixed.obj `if test -f '$(top_srcdir)/egg/egg-fixed.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-fixed.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-fixed.c'; fi`
 
-notify_osd-egg-units.o: ../egg/egg-units.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-units.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-units.Tpo -c -o notify_osd-egg-units.o `test -f '../egg/egg-units.c' || echo '$(srcdir)/'`../egg/egg-units.c
+notify_osd-egg-units.o: $(top_srcdir)/egg/egg-units.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-units.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-units.Tpo -c -o notify_osd-egg-units.o `test -f '$(top_srcdir)/egg/egg-units.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-units.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-units.Tpo $(DEPDIR)/notify_osd-egg-units.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-units.c' object='notify_osd-egg-units.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-units.c' object='notify_osd-egg-units.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-units.o `test -f '../egg/egg-units.c' || echo '$(srcdir)/'`../egg/egg-units.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-units.o `test -f '$(top_srcdir)/egg/egg-units.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-units.c
 
-notify_osd-egg-units.obj: ../egg/egg-units.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-units.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-units.Tpo -c -o notify_osd-egg-units.obj `if test -f '../egg/egg-units.c'; then $(CYGPATH_W) '../egg/egg-units.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-units.c'; fi`
+notify_osd-egg-units.obj: $(top_srcdir)/egg/egg-units.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-units.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-units.Tpo -c -o notify_osd-egg-units.obj `if test -f '$(top_srcdir)/egg/egg-units.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-units.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-units.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-units.Tpo $(DEPDIR)/notify_osd-egg-units.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-units.c' object='notify_osd-egg-units.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-units.c' object='notify_osd-egg-units.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-units.obj `if test -f '../egg/egg-units.c'; then $(CYGPATH_W) '../egg/egg-units.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-units.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-units.obj `if test -f '$(top_srcdir)/egg/egg-units.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-units.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-units.c'; fi`
 
-notify_osd-egg-timeline.o: ../egg/egg-timeline.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeline.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeline.Tpo -c -o notify_osd-egg-timeline.o `test -f '../egg/egg-timeline.c' || echo '$(srcdir)/'`../egg/egg-timeline.c
+notify_osd-egg-timeline.o: $(top_srcdir)/egg/egg-timeline.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeline.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeline.Tpo -c -o notify_osd-egg-timeline.o `test -f '$(top_srcdir)/egg/egg-timeline.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-timeline.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-timeline.Tpo $(DEPDIR)/notify_osd-egg-timeline.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-timeline.c' object='notify_osd-egg-timeline.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-timeline.c' object='notify_osd-egg-timeline.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeline.o `test -f '../egg/egg-timeline.c' || echo '$(srcdir)/'`../egg/egg-timeline.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeline.o `test -f '$(top_srcdir)/egg/egg-timeline.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-timeline.c
 
-notify_osd-egg-timeline.obj: ../egg/egg-timeline.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeline.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeline.Tpo -c -o notify_osd-egg-timeline.obj `if test -f '../egg/egg-timeline.c'; then $(CYGPATH_W) '../egg/egg-timeline.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-timeline.c'; fi`
+notify_osd-egg-timeline.obj: $(top_srcdir)/egg/egg-timeline.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeline.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeline.Tpo -c -o notify_osd-egg-timeline.obj `if test -f '$(top_srcdir)/egg/egg-timeline.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-timeline.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-timeline.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-timeline.Tpo $(DEPDIR)/notify_osd-egg-timeline.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-timeline.c' object='notify_osd-egg-timeline.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-timeline.c' object='notify_osd-egg-timeline.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeline.obj `if test -f '../egg/egg-timeline.c'; then $(CYGPATH_W) '../egg/egg-timeline.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-timeline.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeline.obj `if test -f '$(top_srcdir)/egg/egg-timeline.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-timeline.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-timeline.c'; fi`
 
-notify_osd-egg-timeout-pool.o: ../egg/egg-timeout-pool.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeout-pool.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo -c -o notify_osd-egg-timeout-pool.o `test -f '../egg/egg-timeout-pool.c' || echo '$(srcdir)/'`../egg/egg-timeout-pool.c
+notify_osd-egg-timeout-pool.o: $(top_srcdir)/egg/egg-timeout-pool.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeout-pool.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo -c -o notify_osd-egg-timeout-pool.o `test -f '$(top_srcdir)/egg/egg-timeout-pool.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-timeout-pool.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo $(DEPDIR)/notify_osd-egg-timeout-pool.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-timeout-pool.c' object='notify_osd-egg-timeout-pool.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-timeout-pool.c' object='notify_osd-egg-timeout-pool.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeout-pool.o `test -f '../egg/egg-timeout-pool.c' || echo '$(srcdir)/'`../egg/egg-timeout-pool.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeout-pool.o `test -f '$(top_srcdir)/egg/egg-timeout-pool.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-timeout-pool.c
 
-notify_osd-egg-timeout-pool.obj: ../egg/egg-timeout-pool.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeout-pool.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo -c -o notify_osd-egg-timeout-pool.obj `if test -f '../egg/egg-timeout-pool.c'; then $(CYGPATH_W) '../egg/egg-timeout-pool.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-timeout-pool.c'; fi`
+notify_osd-egg-timeout-pool.obj: $(top_srcdir)/egg/egg-timeout-pool.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-timeout-pool.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo -c -o notify_osd-egg-timeout-pool.obj `if test -f '$(top_srcdir)/egg/egg-timeout-pool.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-timeout-pool.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-timeout-pool.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-timeout-pool.Tpo $(DEPDIR)/notify_osd-egg-timeout-pool.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-timeout-pool.c' object='notify_osd-egg-timeout-pool.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-timeout-pool.c' object='notify_osd-egg-timeout-pool.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeout-pool.obj `if test -f '../egg/egg-timeout-pool.c'; then $(CYGPATH_W) '../egg/egg-timeout-pool.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-timeout-pool.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-timeout-pool.obj `if test -f '$(top_srcdir)/egg/egg-timeout-pool.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-timeout-pool.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-timeout-pool.c'; fi`
 
-notify_osd-egg-alpha.o: ../egg/egg-alpha.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-alpha.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-alpha.Tpo -c -o notify_osd-egg-alpha.o `test -f '../egg/egg-alpha.c' || echo '$(srcdir)/'`../egg/egg-alpha.c
+notify_osd-egg-alpha.o: $(top_srcdir)/egg/egg-alpha.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-alpha.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-alpha.Tpo -c -o notify_osd-egg-alpha.o `test -f '$(top_srcdir)/egg/egg-alpha.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-alpha.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-alpha.Tpo $(DEPDIR)/notify_osd-egg-alpha.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-alpha.c' object='notify_osd-egg-alpha.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-alpha.c' object='notify_osd-egg-alpha.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-alpha.o `test -f '../egg/egg-alpha.c' || echo '$(srcdir)/'`../egg/egg-alpha.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-alpha.o `test -f '$(top_srcdir)/egg/egg-alpha.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-alpha.c
 
-notify_osd-egg-alpha.obj: ../egg/egg-alpha.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-alpha.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-alpha.Tpo -c -o notify_osd-egg-alpha.obj `if test -f '../egg/egg-alpha.c'; then $(CYGPATH_W) '../egg/egg-alpha.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-alpha.c'; fi`
+notify_osd-egg-alpha.obj: $(top_srcdir)/egg/egg-alpha.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-alpha.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-alpha.Tpo -c -o notify_osd-egg-alpha.obj `if test -f '$(top_srcdir)/egg/egg-alpha.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-alpha.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-alpha.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-alpha.Tpo $(DEPDIR)/notify_osd-egg-alpha.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-alpha.c' object='notify_osd-egg-alpha.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-alpha.c' object='notify_osd-egg-alpha.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-alpha.obj `if test -f '../egg/egg-alpha.c'; then $(CYGPATH_W) '../egg/egg-alpha.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-alpha.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-alpha.obj `if test -f '$(top_srcdir)/egg/egg-alpha.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-alpha.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-alpha.c'; fi`
 
-notify_osd-egg-hack.o: ../egg/egg-hack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-hack.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-hack.Tpo -c -o notify_osd-egg-hack.o `test -f '../egg/egg-hack.c' || echo '$(srcdir)/'`../egg/egg-hack.c
+notify_osd-egg-hack.o: $(top_srcdir)/egg/egg-hack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-hack.o -MD -MP -MF $(DEPDIR)/notify_osd-egg-hack.Tpo -c -o notify_osd-egg-hack.o `test -f '$(top_srcdir)/egg/egg-hack.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-hack.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-hack.Tpo $(DEPDIR)/notify_osd-egg-hack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-hack.c' object='notify_osd-egg-hack.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-hack.c' object='notify_osd-egg-hack.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-hack.o `test -f '../egg/egg-hack.c' || echo '$(srcdir)/'`../egg/egg-hack.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-hack.o `test -f '$(top_srcdir)/egg/egg-hack.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-hack.c
 
-notify_osd-egg-hack.obj: ../egg/egg-hack.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-hack.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-hack.Tpo -c -o notify_osd-egg-hack.obj `if test -f '../egg/egg-hack.c'; then $(CYGPATH_W) '../egg/egg-hack.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-hack.c'; fi`
+notify_osd-egg-hack.obj: $(top_srcdir)/egg/egg-hack.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-egg-hack.obj -MD -MP -MF $(DEPDIR)/notify_osd-egg-hack.Tpo -c -o notify_osd-egg-hack.obj `if test -f '$(top_srcdir)/egg/egg-hack.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-hack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-hack.c'; fi`
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-egg-hack.Tpo $(DEPDIR)/notify_osd-egg-hack.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='../egg/egg-hack.c' object='notify_osd-egg-hack.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/egg/egg-hack.c' object='notify_osd-egg-hack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-hack.obj `if test -f '../egg/egg-hack.c'; then $(CYGPATH_W) '../egg/egg-hack.c'; else $(CYGPATH_W) '$(srcdir)/../egg/egg-hack.c'; fi`
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-egg-hack.obj `if test -f '$(top_srcdir)/egg/egg-hack.c'; then $(CYGPATH_W) '$(top_srcdir)/egg/egg-hack.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/egg/egg-hack.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -857,10 +911,10 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"

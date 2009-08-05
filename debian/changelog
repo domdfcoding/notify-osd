@@ -1,3 +1,17 @@
+notify-osd (0.9.16-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - further preparation for refactoring of class Bubble and Stack
+    - mem-leak fixes and fix for LP: #378193 by Alexander Sack
+    - much code-refactoring
+    - adapted to 0.10 fd.o spec
+    - lots of autotools-related fixes and improvements
+    - added ATK interface by Eitan Isaacson
+    - fix by Chow Loong Jin for LP: #401809
+    - added support for image_data and image_path
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 05 Aug 2009 08:49:17 +0100
+
 notify-osd (0.9.15-0ubuntu2) karmic; urgency=low
 
   (cherry-pick rev 357 from lp:~asac/notify-osd/lp378193_tile_memleak)

@@ -28,6 +28,8 @@
 
 #include <string.h>
 #include <glib.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #include <pango/pango.h>
 #include <cairo.h>
 
@@ -110,6 +112,20 @@ filter_text (const gchar *text)
 	return text6;
 }
 
+gboolean
+destroy_cloned_surface (cairo_surface_t* surface)
+{
+	gboolean finalref = FALSE;
+	g_return_val_if_fail (surface, FALSE);
+
+	if (cairo_surface_get_reference_count  (surface) == 1) {
+		g_free (cairo_image_surface_get_data (surface));
+		finalref = TRUE;
+	}
+	cairo_surface_destroy (surface);
+	return finalref;
+}
+
 cairo_surface_t*
 copy_surface (cairo_surface_t* orig)
 {
@@ -143,4 +159,74 @@ copy_surface (cairo_surface_t* orig)
 						    stride);
 
 	return copy;
+}
+
+// code of get_wm_name() based in large chunks on www.amsn-project.net
+gchar*
+get_wm_name (Display* dpy)
+{
+	int            screen;
+	Atom           type;
+	int            format;
+	unsigned long  bytes_returned;
+	unsigned long  n_returned;
+	unsigned char* buffer;
+        Window*        child;
+        Window         root;
+	Atom           supwmcheck;
+	Atom           wmname;
+
+	if (!dpy)
+		return NULL;
+
+	screen = DefaultScreen (dpy);
+	root = RootWindow (dpy, screen);
+	supwmcheck = XInternAtom (dpy, "_NET_SUPPORTING_WM_CHECK", False);
+	wmname = XInternAtom (dpy, "_NET_WM_NAME", False);
+
+	XGetWindowProperty (dpy,
+			    root,
+			    supwmcheck,
+			    0,
+			    8,
+			    False,
+			    AnyPropertyType,
+			    &type,
+			    &format,
+			    &n_returned,
+			    &bytes_returned,
+			    &buffer);
+
+	child = (Window*) buffer;
+
+	if (n_returned != 1)
+		return NULL;
+
+        XGetWindowProperty (dpy,
+			    *child,
+			    wmname,
+			    0,
+			    128,
+			    False,
+			    AnyPropertyType,
+			    &type,
+			    &format,
+			    &n_returned,
+			    &bytes_returned,
+			    &buffer);
+
+	if (n_returned == 0)
+		return NULL;
+
+	XFree (child);
+
+	// example wm-names as reported by get_wm_name()
+	//
+	//  compiz
+	//  Metacity
+	//  Xfwm4
+	//  KWin
+	//  xmonad
+
+	return (gchar*) buffer;
 }

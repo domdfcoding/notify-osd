@@ -14,6 +14,7 @@
 //
 // Contributor(s):
 //    Frederic "fredp" Peters <fpeters@gnome.org> (icon-only fix, rev. 204)
+//    Eitan Isaacson <eitan@ascender.com> (ATK interface for a11y, rev. 351)
 //
 // This program is free software: you can redistribute it and/or modify it
 // under the terms of the GNU General Public License version 3, as published
@@ -58,19 +59,11 @@ G_DEFINE_TYPE (Bubble, bubble, G_TYPE_OBJECT);
 struct _BubblePrivate {
 	BubbleLayout     layout;
 	GtkWidget*       widget;
-	GString*         title;
-	GString*         message_body;
-	guint            id;
-	GdkPixbuf*       icon_pixbuf;
 	gboolean         visible;
 	guint            timer_id;
-	guint            timeout;
 	gboolean         mouse_over;
 	gfloat           distance;
-	gint             value; // "empty": -2, valid range: -1..101, -1/101 trigger "over/undershoot"-effect
 	gchar*           synchronous;
-	gchar*           sender;
-	guint            urgency;
 	gboolean         composited;
 	EggAlpha*        alpha;
 	EggTimeline*     timeline;
@@ -89,12 +82,25 @@ struct _BubblePrivate {
 	gboolean         append;
 	gboolean         icon_only;
 	gint             future_height;
+
+	// these will be replaced by notification_t* later on
+	GString*         title;
+	GString*         message_body;
+	guint            id;
+	GdkPixbuf*       icon_pixbuf;
+	gint             value; // "empty": -2, valid range: -1..101, -1/101 trigger "over/undershoot"-effect
+	gchar*           sender;
+	guint            timeout;
+	guint            urgency;
+	//notification_t* notification;
 };
 
 enum
 {
 	TIMED_OUT,
 	VALUE_CHANGED,
+	MESSAGE_BODY_DELETED,
+	MESSAGE_BODY_INSERTED,
 	LAST_SIGNAL
 };
 
@@ -361,13 +367,18 @@ _draw_shadow (cairo_t* cr,
 	tmp_surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 						  4 * shadow_radius,
 						  4 * shadow_radius);
-	if (cairo_surface_status (tmp_surface) != CAIRO_STATUS_SUCCESS)
+	if (cairo_surface_status (tmp_surface) != CAIRO_STATUS_SUCCESS) {
+		if (tmp_surface)
+			cairo_surface_destroy (tmp_surface);
 		return;
+	}
 
 	cr_surf = cairo_create (tmp_surface);
 	if (cairo_status (cr_surf) != CAIRO_STATUS_SUCCESS)
 	{
 		cairo_surface_destroy (tmp_surface);
+		if (cr_surf)
+			cairo_destroy (cr_surf);
 		return;
 	}
 
@@ -406,6 +417,8 @@ _draw_shadow (cairo_t* cr,
 	{
 		cairo_surface_destroy (tmp_surface);
 		cairo_surface_destroy (new_surface);
+		if (pattern)
+			cairo_pattern_destroy (pattern);
 		return;
 	}
 
@@ -493,6 +506,130 @@ _copy_surface (cairo_surface_t* orig)
 	return copy;
 }
 
+static void
+_draw_layout_grid (cairo_t* cr,
+		  Bubble*  bubble)
+{
+	Defaults* d = bubble->defaults;
+
+	if (!cr)
+		return;
+
+	cairo_set_line_width (cr, 1.0f);
+	cairo_set_source_rgba (cr, 1.0f, 0.5f, 0.25f, 1.0f);
+
+	// all vertical grid lines
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (2 * defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (2 * defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d) -
+		       EM2PIXELS (defaults_get_margin_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d) -
+		       EM2PIXELS (defaults_get_margin_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+
+	// all horizontal grid lines
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_margin_size (d), d) +
+		       EM2PIXELS (defaults_get_icon_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d) -
+		       EM2PIXELS (defaults_get_margin_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d) -
+		       EM2PIXELS (defaults_get_margin_size (d), d));
+	cairo_move_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+	cairo_line_to (cr,
+		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
+		       EM2PIXELS (defaults_get_bubble_width (d), d),
+		       0.5f + (gdouble) bubble_get_height (bubble) -
+		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
+
+	cairo_stroke (cr);
+}
+
 void
 _refresh_background (Bubble* self)
 {
@@ -522,14 +659,21 @@ _refresh_background (Bubble* self)
 			3 * EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
 			3 * EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
 
-	if (cairo_surface_status (scratch) != CAIRO_STATUS_SUCCESS)
+	g_return_if_fail (scratch);
+
+	if (cairo_surface_status (scratch) != CAIRO_STATUS_SUCCESS) {
+		if (scratch)
+			cairo_surface_destroy (scratch);
 		return;
+	}
 
 	// create drawing context for that temp. scratch surface
 	cr = cairo_create (scratch);
 	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
 	{
 		cairo_surface_destroy (scratch);
+		if (cr)
+			cairo_destroy (cr);
 		return;
 	}
 
@@ -624,8 +768,8 @@ _refresh_background (Bubble* self)
 	if (priv->tile_background_part)
 		tile_destroy (priv->tile_background_part);
 	priv->tile_background_part = tile_new_for_padding (normal, blurred);
-	cairo_surface_destroy (normal);
-	cairo_surface_destroy (blurred);
+	destroy_cloned_surface (normal);
+	destroy_cloned_surface (blurred);
 
 	// create surface(s) for full shadow/background tile
 	if (priv->composited)
@@ -634,14 +778,19 @@ _refresh_background (Bubble* self)
 		normal = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 						     width,
 						     height);
-		if (cairo_surface_status (normal) != CAIRO_STATUS_SUCCESS)
+		if (cairo_surface_status (normal) != CAIRO_STATUS_SUCCESS) {
+			if (normal)
+				cairo_surface_destroy (normal);
 			return;
+		}
 
 		blurred = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
 						      width,
 						      height);
 		if (cairo_surface_status (blurred) != CAIRO_STATUS_SUCCESS)
 		{
+			if (blurred)
+				cairo_surface_destroy (blurred);
 			cairo_surface_destroy (normal);
 			return;
 		}
@@ -652,8 +801,11 @@ _refresh_background (Bubble* self)
 		normal = cairo_image_surface_create (CAIRO_FORMAT_RGB24,
 						     width,
 						     height);
-		if (cairo_surface_status (normal) != CAIRO_STATUS_SUCCESS)
+		if (cairo_surface_status (normal) != CAIRO_STATUS_SUCCESS) {
+			if (normal)
+				cairo_surface_destroy (normal);
 			return;
+		}
 	}
 
 	// use tile for top-left background-part to fill the full bg-surface
@@ -665,6 +817,8 @@ _refresh_background (Bubble* self)
 		{
 			cairo_surface_destroy (normal);
 			cairo_surface_destroy (blurred);
+			if (cr)
+				cairo_destroy (cr);
 			return;
 		}
 
@@ -1067,9 +1221,12 @@ _render_background (Bubble*  self,
 		    alpha_normal,
 		    alpha_blur);
 
-	// urgency-indication bar
+	// layout-grid and urgency-indication bar
 	if (g_getenv ("DEBUG"))
 	{
+		// for debugging layout and positioning issues
+		_draw_layout_grid (cr, self);
+
 		switch (bubble_get_urgency (self))
 		{
 			// low urgency-bar is painted blue
@@ -1365,130 +1522,6 @@ _set_bg_blur (GtkWidget* window,
 	}
 }
 
-static void
-draw_layout_grid (cairo_t* cr,
-		  Bubble*  bubble)
-{
-	Defaults* d = bubble->defaults;
-
-	if (!cr)
-		return;
-
-	cairo_set_line_width (cr, 1.0f);
-	cairo_set_source_rgba (cr, 1.0f, 0.5f, 0.25f, 1.0f);
-
-	// all vertical grid lines
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (2 * defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (2 * defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d) -
-		       EM2PIXELS (defaults_get_margin_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d) -
-		       EM2PIXELS (defaults_get_margin_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-
-	// all horizontal grid lines
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_margin_size (d), d) +
-		       EM2PIXELS (defaults_get_icon_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d) -
-		       EM2PIXELS (defaults_get_margin_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d) -
-		       EM2PIXELS (defaults_get_margin_size (d), d));
-	cairo_move_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-	cairo_line_to (cr,
-		       0.5f + EM2PIXELS (defaults_get_bubble_shadow_size (d), d) +
-		       EM2PIXELS (defaults_get_bubble_width (d), d),
-		       0.5f + (gdouble) bubble_get_height (bubble) -
-		       EM2PIXELS (defaults_get_bubble_shadow_size (d), d));
-
-	cairo_stroke (cr);
-}
-
 static
 void
 screen_changed_handler (GtkWidget* window,
@@ -1672,13 +1705,9 @@ expose_handler (GtkWidget*      window,
 
         // render drop-shadow and bubble-background
 	_render_background (bubble, cr, priv->distance, 1.0f - priv->distance);
-
+    
 	// render content of bubble depending on layout
 	_render_layout (bubble, cr, priv->distance, 1.0f - priv->distance);
-
-	// for debugging layout and positioning issues draw the layout-grid
-	if (g_getenv ("DEBUG"))
-		draw_layout_grid (cr, bubble);
 
 	cairo_destroy (cr);
 
@@ -1766,11 +1795,10 @@ load_icon (const gchar* filename,
 						   &error);
 		if (error)
 		{
-			g_object_unref (buffer);
+			g_print ("loading icon '%s' caused error: '%s'",
+				 filename,
+				 error->message);
 			pixbuf = NULL;
-			g_warning ("loading icon '%s' caused error: '%s'",
-				   filename,
-				   error->message);
 		}
 		else
 		{
@@ -1875,14 +1903,12 @@ pointer_update (Bubble* bubble)
 static void
 bubble_dispose (GObject* gobject)
 {
-	/* chain up to the parent class */
-	G_OBJECT_CLASS (bubble_parent_class)->dispose (gobject);
-}
+	BubblePrivate* priv;
 
-static void
-bubble_finalize (GObject* gobject)
-{
-	BubblePrivate* priv = GET_PRIVATE (gobject);
+	if (!gobject || !IS_BUBBLE (gobject))
+		return;
+
+	priv = GET_PRIVATE (gobject);
 
 	if (GTK_IS_WIDGET (priv->widget))
 	{
@@ -1952,6 +1978,49 @@ bubble_finalize (GObject* gobject)
 		priv->timer_id = 0;
 	}
 
+	if (priv->tile_background_part)
+	{
+		tile_destroy (priv->tile_background_part);
+		priv->tile_background_part = NULL;
+	}
+
+	if (priv->tile_background)
+	{
+		tile_destroy (priv->tile_background);
+		priv->tile_background = NULL;
+	}
+
+	if (priv->tile_icon)
+	{
+		tile_destroy (priv->tile_icon);
+		priv->tile_icon = NULL;
+	}
+
+	if (priv->tile_title)
+	{
+		tile_destroy (priv->tile_title);
+		priv->tile_title = NULL;
+	}
+
+	if (priv->tile_body)
+	{
+		tile_destroy (priv->tile_body);
+		priv->tile_body = NULL;
+	}
+
+	if (priv->tile_indicator)
+	{
+		tile_destroy (priv->tile_indicator);
+		priv->tile_indicator = NULL;
+	}
+
+	// chain up to the parent class
+	G_OBJECT_CLASS (bubble_parent_class)->dispose (gobject);
+}
+
+static void
+bubble_finalize (GObject* gobject)
+{
 	// chain up to the parent class
 	G_OBJECT_CLASS (bubble_parent_class)->finalize (gobject);
 }
@@ -2029,6 +2098,30 @@ bubble_class_init (BubbleClass* klass)
 		G_TYPE_NONE,
 		1,
         G_TYPE_INT);
+
+    g_bubble_signals[MESSAGE_BODY_DELETED] = g_signal_new (
+		"message-body-deleted",
+		G_OBJECT_CLASS_TYPE (gobject_class),
+		G_SIGNAL_RUN_LAST,
+		G_STRUCT_OFFSET (BubbleClass, message_body_deleted),
+		NULL,
+		NULL,
+		g_cclosure_marshal_VOID__STRING,
+		G_TYPE_NONE,
+		1,
+        G_TYPE_STRING);
+
+    g_bubble_signals[MESSAGE_BODY_INSERTED] = g_signal_new (
+		"message-body-inserted",
+		G_OBJECT_CLASS_TYPE (gobject_class),
+		G_SIGNAL_RUN_LAST,
+		G_STRUCT_OFFSET (BubbleClass, message_body_inserted),
+		NULL,
+		NULL,
+		g_cclosure_marshal_VOID__STRING,
+		G_TYPE_NONE,
+		1,
+        G_TYPE_STRING);
 }
 
 //-- public API ----------------------------------------------------------------
@@ -2149,32 +2242,6 @@ bubble_get_sender (Bubble* self)
 }
 
 void
-bubble_del (Bubble* self)
-{
-	BubblePrivate* priv;
-
-	if (!self || !IS_BUBBLE (self))
-		return;
-
-	priv = GET_PRIVATE (self);
-
-	if (priv->tile_background_part)
-		tile_destroy (priv->tile_background_part);
-	if (priv->tile_background)
-		tile_destroy (priv->tile_background);
-	if (priv->tile_icon)
-		tile_destroy (priv->tile_icon);
-	if (priv->tile_title)
-		tile_destroy (priv->tile_title);
-	if (priv->tile_body)
-		tile_destroy (priv->tile_body);
-	if (priv->tile_indicator)
-		tile_destroy (priv->tile_indicator);
-
-	g_object_unref (self);
-}
-
-void
 bubble_set_title (Bubble*      self,
 		  const gchar* title)
 {
@@ -2189,6 +2256,10 @@ bubble_set_title (Bubble*      self,
 		g_string_free (priv->title, TRUE);
 
 	priv->title = g_string_new (title);
+
+	g_object_notify (
+		G_OBJECT (gtk_widget_get_accessible (GET_PRIVATE(self)->widget)), 
+		"accessible-name");
 }
 
 const gchar*
@@ -2212,13 +2283,24 @@ bubble_set_message_body (Bubble*      self,
 
 	priv = GET_PRIVATE (self);
 
-	if (priv->message_body)
+	if (priv->message_body->len != 0)
+	{
+		g_signal_emit (self,
+			       g_bubble_signals[MESSAGE_BODY_DELETED], 
+			       0,
+			       priv->message_body->str);
 		g_string_free (priv->message_body, TRUE);
+	}
 
 	/* filter out any HTML/markup if possible */
 	text = filter_text (body);
 
 	priv->message_body = g_string_new (text);
+
+	g_signal_emit (self, g_bubble_signals[MESSAGE_BODY_INSERTED], 0, text);
+	g_object_notify (G_OBJECT (gtk_widget_get_accessible (priv->widget)), 
+					 "accessible-description");
+
 	g_free (text);
 }
 
@@ -2928,13 +3010,19 @@ _calc_title_height (Bubble* self,
 	priv = GET_PRIVATE (self);
 
 	surface = cairo_image_surface_create (CAIRO_FORMAT_A1, 1, 1);
-	if (cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS)
+	if (cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS) {
+		if (surface)
+			cairo_surface_destroy (surface);
 		return 0;
+	}
 
 	cr = cairo_create (surface);
 	cairo_surface_destroy (surface);
-	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
+	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS) {
+		if (cr)
+			cairo_destroy (cr);
 		return 0;
+	}
 
 	layout = pango_cairo_create_layout (cr);
 	desc = pango_font_description_new ();
@@ -3000,8 +3088,11 @@ _calc_body_height (Bubble* self,
 	priv = GET_PRIVATE (self);
 
 	cr = gdk_cairo_create (priv->widget->window);
-	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS)
+	if (cairo_status (cr) != CAIRO_STATUS_SUCCESS) {
+		if (cr)
+			cairo_destroy (cr);
 		return 0;
+	}
 
 	layout = pango_cairo_create_layout (cr);
 	desc = pango_font_description_new ();
@@ -3481,6 +3572,12 @@ bubble_append_message_body (Bubble*      self,
 
 	/* append text to current message-body */
 	g_string_append (GET_PRIVATE (self)->message_body, text);
+
+	g_signal_emit (self, g_bubble_signals[MESSAGE_BODY_INSERTED], 0, text);
+
+	g_object_notify (
+		G_OBJECT (gtk_widget_get_accessible (GET_PRIVATE(self)->widget)), 
+		"accessible-description");
 
 	g_free ((gpointer) text);
 }
