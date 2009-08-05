@@ -12,6 +12,9 @@
 **    Mirco "MacSlow" Mueller <mirco.mueller@canonical.com>
 **    David Barth <david.barth@canonical.com>
 **
+** Contributor(s):
+**    Chow Loong Jin <hyperair@gmail.com> (fix for LP: #401809, rev. 349)
+**
 ** This program is free software: you can redistribute it and/or modify it
 ** under the terms of the GNU General Public License version 3, as published
 ** by the Free Software Foundation.
@@ -34,6 +37,7 @@
 #include <gconf/gconf-client.h>
 #include <libwnck/application.h>
 #include <libwnck/class-group.h>
+#include <libwnck/window.h>
 #include <libwnck/workspace.h>
 
 #include "defaults.h"
@@ -133,7 +137,7 @@ enum
 #define DEFAULT_TEXT_BODY_SIZE       0.8f
 #define DEFAULT_PIXELS_PER_EM        10.0f
 #define DEFAULT_SYSTEM_FONT_SIZE     10.0f
-#define DEFAULT_SCREEN_DPI           72.0f
+#define DEFAULT_SCREEN_DPI           96.0f
 
 /* these values are interpreted as milliseconds-measurements and do comply to
  * the visual guide for jaunty-notifications */
@@ -238,8 +242,8 @@ _get_font_size_dpi (Defaults* self)
 	dpi = gconf_client_get_float (self->context, GCONF_FONT_DPI, &error);
 	if (error)
 	{
-		/* if something went wrong, assume 72 DPI and continue */
-		dpi = 72.0f;
+		// if something went wrong, assume 96 DPI and continue
+		dpi = DEFAULT_SCREEN_DPI;
 	}
 
 	/* update stored DPI-value */
@@ -582,14 +586,62 @@ defaults_dispose (GObject* gobject)
 	gconf_client_remove_dir (defaults->context, GCONF_FONT_TREE, NULL);
 	g_object_unref (defaults->context);
 
-	/* chain up to the parent class */
+	if (defaults->bubble_shadow_color)
+	{
+		g_string_free (defaults->bubble_shadow_color, TRUE);
+		defaults->bubble_shadow_color = NULL;
+	}
+
+	if (defaults->bubble_bg_color)
+	{
+		g_string_free (defaults->bubble_bg_color, TRUE);
+		defaults->bubble_bg_color = NULL;
+	}
+
+	if (defaults->bubble_bg_opacity)
+	{
+		g_string_free (defaults->bubble_bg_opacity, TRUE);
+		defaults->bubble_bg_opacity = NULL;
+	}
+
+	if (defaults->bubble_hover_opacity)
+	{
+		g_string_free (defaults->bubble_hover_opacity, TRUE);
+		defaults->bubble_hover_opacity = NULL;
+	}
+
+	if (defaults->content_shadow_color)
+	{
+		g_string_free (defaults->content_shadow_color, TRUE);
+		defaults->content_shadow_color = NULL;
+	}
+
+	if (defaults->text_font_face)
+	{
+		g_string_free (defaults->text_font_face, TRUE);
+		defaults->text_font_face = NULL;
+	}
+
+	if (defaults->text_title_color)
+	{
+		g_string_free (defaults->text_title_color, TRUE);
+		defaults->text_title_color = NULL;
+	}
+
+	if (defaults->text_body_color)
+	{
+		g_string_free (defaults->text_body_color, TRUE);
+		defaults->text_body_color = NULL;
+	}
+
+	// chain up to the parent class
 	G_OBJECT_CLASS (defaults_parent_class)->dispose (gobject);
 }
 
 static void
 defaults_finalize (GObject* gobject)
 {
-	/* chain up to the parent class */
+	// chain up to the parent class
 	G_OBJECT_CLASS (defaults_parent_class)->finalize (gobject);
 }
 
@@ -1675,12 +1727,6 @@ defaults_new (void)
 	return this;
 }
 
-void
-defaults_del (Defaults* self)
-{
-	g_object_unref (self);
-}
-
 gint
 defaults_get_desktop_width (Defaults* self)
 {
@@ -2268,8 +2314,8 @@ _window_look_for_top_panel_attributes (GdkWindow *win)
 		goto failed;
 
 	/* discard dialog windows like panel properties or the applet directory... */
-	if (gdk_window_get_type_hint (win)
-	    != GDK_WINDOW_TYPE_HINT_DOCK)
+	if (wnck_window_get_window_type (wnck_window_get (GDK_WINDOW_XWINDOW (win)))
+	    != WNCK_WINDOW_DOCK)
 		goto failed;
 
 	/* select only the top panel */

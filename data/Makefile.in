@@ -201,9 +201,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = icons
-servicedir = /usr/share/dbus-1/services
+servicedir = $(datadir)/dbus-1/services
 service_DATA = org.freedesktop.Notifications.service
 EXTRA_DIST = org.freedesktop.Notifications.service.in
+CLEANFILES = org.freedesktop.Notifications.service
 all: all-recursive
 
 .SUFFIXES:
@@ -458,6 +459,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -539,7 +541,7 @@ uninstall-am: uninstall-serviceDATA
 
 
 org.freedesktop.Notifications.service: org.freedesktop.Notifications.service.in
-	sed "s_@LIBEXECDIR@_$(libexecdir)_" $< > $@
+	sed "s,@LIBEXECDIR@,$(libexecdir)," $< > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
