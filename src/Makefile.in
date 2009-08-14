@@ -55,7 +55,8 @@ am__objects_2 = notify_osd-bubble.$(OBJEXT) \
 	notify_osd-observer.$(OBJEXT) notify_osd-stack.$(OBJEXT) \
 	notify_osd-dbus.$(OBJEXT) notify_osd-dnd.$(OBJEXT) \
 	notify_osd-apport.$(OBJEXT) notify_osd-log.$(OBJEXT) \
-	notify_osd-util.$(OBJEXT) notify_osd-stack-blur.$(OBJEXT) \
+	notify_osd-util.$(OBJEXT) notify_osd-timings.$(OBJEXT) \
+	notify_osd-stack-blur.$(OBJEXT) \
 	notify_osd-exponential-blur.$(OBJEXT) \
 	notify_osd-gaussian-blur.$(OBJEXT) \
 	notify_osd-raico-blur.$(OBJEXT) notify_osd-tile.$(OBJEXT) \
@@ -260,6 +261,7 @@ notify_osd_sources = \
 	apport.c		\
 	log.c			\
 	util.c			\
+	timings.c		\
 	stack-blur.c				\
 	exponential-blur.c			\
 	gaussian-blur.c				\
@@ -288,6 +290,7 @@ notify_osd_headers = \
 	log.h					\
 	apport.h				\
 	util.h					\
+	timings.h				\
 	stack-blur.h				\
 	exponential-blur.h			\
 	gaussian-blur.h				\
@@ -430,6 +433,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-timings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-util.Po@am__quote@
 
 .c.o:
@@ -606,6 +610,20 @@ notify_osd-util.obj: util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='notify_osd-util.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-util.obj `if test -f 'util.c'; then $(CYGPATH_W) 'util.c'; else $(CYGPATH_W) '$(srcdir)/util.c'; fi`
+
+notify_osd-timings.o: timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-timings.o -MD -MP -MF $(DEPDIR)/notify_osd-timings.Tpo -c -o notify_osd-timings.o `test -f 'timings.c' || echo '$(srcdir)/'`timings.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-timings.Tpo $(DEPDIR)/notify_osd-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='timings.c' object='notify_osd-timings.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-timings.o `test -f 'timings.c' || echo '$(srcdir)/'`timings.c
+
+notify_osd-timings.obj: timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-timings.obj -MD -MP -MF $(DEPDIR)/notify_osd-timings.Tpo -c -o notify_osd-timings.obj `if test -f 'timings.c'; then $(CYGPATH_W) 'timings.c'; else $(CYGPATH_W) '$(srcdir)/timings.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-timings.Tpo $(DEPDIR)/notify_osd-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='timings.c' object='notify_osd-timings.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-timings.obj `if test -f 'timings.c'; then $(CYGPATH_W) 'timings.c'; else $(CYGPATH_W) '$(srcdir)/timings.c'; fi`
 
 notify_osd-stack-blur.o: stack-blur.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-stack-blur.o -MD -MP -MF $(DEPDIR)/notify_osd-stack-blur.Tpo -c -o notify_osd-stack-blur.o `test -f 'stack-blur.c' || echo '$(srcdir)/'`stack-blur.c
