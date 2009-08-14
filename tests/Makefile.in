@@ -96,8 +96,8 @@ am_test_modules_OBJECTS = test_modules-bubble.$(OBJEXT) \
 	test_modules-bubble-window.$(OBJEXT) \
 	test_modules-bubble-window-accessible.$(OBJEXT) \
 	test_modules-bubble-window-accessible-factory.$(OBJEXT) \
-	test_modules-log.$(OBJEXT) $(am__objects_4) \
-	test_modules-test-modules-main.$(OBJEXT) \
+	test_modules-log.$(OBJEXT) test_modules-timings.$(OBJEXT) \
+	$(am__objects_4) test_modules-test-modules-main.$(OBJEXT) \
 	test_modules-test-apport.$(OBJEXT) \
 	test_modules-test-dbus.$(OBJEXT) \
 	test_modules-test-withlib.$(OBJEXT) \
@@ -109,6 +109,7 @@ am_test_modules_OBJECTS = test_modules-bubble.$(OBJEXT) \
 	test_modules-test-synchronous.$(OBJEXT) \
 	test_modules-test-dnd.$(OBJEXT) \
 	test_modules-test-stack.$(OBJEXT) \
+	test_modules-test-timings.$(OBJEXT) \
 	test_modules-test-text-filtering.$(OBJEXT)
 test_modules_OBJECTS = $(am_test_modules_OBJECTS)
 test_modules_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -362,6 +363,7 @@ test_modules_SOURCES = \
 	$(top_srcdir)/src/bubble-window-accessible.c		\
 	$(top_srcdir)/src/bubble-window-accessible-factory.c	\
 	$(top_srcdir)/src/log.c					\
+	$(top_srcdir)/src/timings.c				\
 	$(EGG_MODULES)						\
 	test-modules-main.c					\
 	test-apport.c						\
@@ -375,6 +377,7 @@ test_modules_SOURCES = \
 	test-synchronous.c					\
 	test-dnd.c						\
 	test-stack.c						\
+	test-timings.c						\
 	test-text-filtering.c
 
 test_modules_CFLAGS = \
@@ -642,8 +645,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-stack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-synchronous.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-text-filtering.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-timings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-test-withlib.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-tile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-timings.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-exponential-blur.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_raico-gaussian-blur.Po@am__quote@
@@ -1120,6 +1125,20 @@ test_modules-log.obj: $(top_srcdir)/src/log.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-log.obj `if test -f '$(top_srcdir)/src/log.c'; then $(CYGPATH_W) '$(top_srcdir)/src/log.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/log.c'; fi`
 
+test_modules-timings.o: $(top_srcdir)/src/timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-timings.o -MD -MP -MF $(DEPDIR)/test_modules-timings.Tpo -c -o test_modules-timings.o `test -f '$(top_srcdir)/src/timings.c' || echo '$(srcdir)/'`$(top_srcdir)/src/timings.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-timings.Tpo $(DEPDIR)/test_modules-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/timings.c' object='test_modules-timings.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-timings.o `test -f '$(top_srcdir)/src/timings.c' || echo '$(srcdir)/'`$(top_srcdir)/src/timings.c
+
+test_modules-timings.obj: $(top_srcdir)/src/timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-timings.obj -MD -MP -MF $(DEPDIR)/test_modules-timings.Tpo -c -o test_modules-timings.obj `if test -f '$(top_srcdir)/src/timings.c'; then $(CYGPATH_W) '$(top_srcdir)/src/timings.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/timings.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-timings.Tpo $(DEPDIR)/test_modules-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/timings.c' object='test_modules-timings.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-timings.obj `if test -f '$(top_srcdir)/src/timings.c'; then $(CYGPATH_W) '$(top_srcdir)/src/timings.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/timings.c'; fi`
+
 test_modules-egg-fixed.o: $(top_srcdir)/egg/egg-fixed.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-egg-fixed.o -MD -MP -MF $(DEPDIR)/test_modules-egg-fixed.Tpo -c -o test_modules-egg-fixed.o `test -f '$(top_srcdir)/egg/egg-fixed.c' || echo '$(srcdir)/'`$(top_srcdir)/egg/egg-fixed.c
 @am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-egg-fixed.Tpo $(DEPDIR)/test_modules-egg-fixed.Po
@@ -1371,6 +1390,20 @@ test_modules-test-stack.obj: test-stack.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-stack.c' object='test_modules-test-stack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-test-stack.obj `if test -f 'test-stack.c'; then $(CYGPATH_W) 'test-stack.c'; else $(CYGPATH_W) '$(srcdir)/test-stack.c'; fi`
+
+test_modules-test-timings.o: test-timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-test-timings.o -MD -MP -MF $(DEPDIR)/test_modules-test-timings.Tpo -c -o test_modules-test-timings.o `test -f 'test-timings.c' || echo '$(srcdir)/'`test-timings.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-test-timings.Tpo $(DEPDIR)/test_modules-test-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-timings.c' object='test_modules-test-timings.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-test-timings.o `test -f 'test-timings.c' || echo '$(srcdir)/'`test-timings.c
+
+test_modules-test-timings.obj: test-timings.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-test-timings.obj -MD -MP -MF $(DEPDIR)/test_modules-test-timings.Tpo -c -o test_modules-test-timings.obj `if test -f 'test-timings.c'; then $(CYGPATH_W) 'test-timings.c'; else $(CYGPATH_W) '$(srcdir)/test-timings.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-test-timings.Tpo $(DEPDIR)/test_modules-test-timings.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-timings.c' object='test_modules-test-timings.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-test-timings.obj `if test -f 'test-timings.c'; then $(CYGPATH_W) 'test-timings.c'; else $(CYGPATH_W) '$(srcdir)/test-timings.c'; fi`
 
 test_modules-test-text-filtering.o: test-text-filtering.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-test-text-filtering.o -MD -MP -MF $(DEPDIR)/test_modules-test-text-filtering.Tpo -c -o test_modules-test-text-filtering.o `test -f 'test-text-filtering.c' || echo '$(srcdir)/'`test-text-filtering.c

@@ -1,3 +1,14 @@
+notify-osd (0.9.17-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - added timings-object in preparation for coming 
+      "animations and durations" work
+    - patch from Eitan Isaacson fixing LP: #409810
+    - patch from Aurélien Gateau extending text-filtering to handle newlines and
+      some HTML-tags
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 14 Aug 2009 17:58:40 +0200
+
 notify-osd (0.9.16-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
