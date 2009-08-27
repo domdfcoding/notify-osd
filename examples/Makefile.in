@@ -368,6 +368,19 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+EXTRA_DIST = append-hint-example.py	\
+	     icon-only.py		\
+	     icon-summary-body.py	\
+	     icon-summary.py		\
+	     icon-value.py		\
+	     low-urgency.py		\
+	     normal-urgency.py		\
+	     summary-body.py		\
+	     summary-only.py		\
+	     sync-icon-only.py		\
+	     update-notifications.py	\
+	     urgent-urgency.py
+
 @BUILD_C_EXAMPLES_TRUE@icon_only_SOURCES = example-util.c example-util.h icon-only.c
 @BUILD_C_EXAMPLES_TRUE@sync_icon_only_SOURCES = sync-icon-only.c example-util.h example-util.c
 @BUILD_C_EXAMPLES_TRUE@icon_summary_body_SOURCES = icon-summary-body.c example-util.h example-util.c

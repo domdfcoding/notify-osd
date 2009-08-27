@@ -18,6 +18,7 @@ GCOV_CFLAGS = -fprofile-arcs -ftest-coverage
 test_modules_SOURCES =						\
 	$(top_srcdir)/src/bubble.c				\
 	$(top_srcdir)/src/defaults.c				\
+	$(top_srcdir)/src/dialog.c				\
 	$(top_srcdir)/src/notification.c			\
 	$(top_srcdir)/src/observer.c				\
 	$(top_srcdir)/src/stack.c				\
@@ -80,13 +81,19 @@ EGG_MODULES = \
 	$(top_srcdir)/egg/egg-alpha.c	\
 	$(top_srcdir)/egg/egg-hack.c
 
+VALGRIND_FLAGS = \
+	--tool=memcheck --suppressions=$(srcdir)/tests.suppression \
+	--leak-check=yes --show-reachable=yes
+
+OLD_ENVIRONMENT = $(ENV)
+
 AM_CFLAGS = \
 	$(GCOV_CFLAGS) \
 	-Wall -Werror -std=c99  \
 	$(GLIB_CFLAGS)		\
 	-I$(top_srcdir)/src -I$(top_srcdir)/egg -I$(top_srcdir)
 
-LDADD = $(GLIB_LIBS)
+LDADD = $(GLIB_LIBS) -lm
 
 test_timeline_SOURCES = $(top_srcdir)/egg/test-timeline.c \
 	$(EGG_MODULES)
@@ -173,6 +180,8 @@ test_scroll_text_CFLAGS = \
 test_scroll_text_LDADD = \
 	$(GTK_LIBS)
 
+check-valgrind:
+	$(MAKE) $(AM_MAKEFLAGS) check G_SLICE=always-malloc G_DEBUG=gc-friendly TESTS_ENVIRONMENT='$(OLD_ENVIRONMENT) $(top_builddir)/libtool --mode=execute valgrind $(VALGRIND_FLAGS)' 2>&1 | tee valgrind-log
 test: test-modules
 	gtester -o=test-modules.xml -k ./test-modules
 
@@ -188,4 +197,3 @@ test-report-display: test-report-html
 distclean-local:
 	rm -rf *.gcno
 	rm -rf *.gcda
-

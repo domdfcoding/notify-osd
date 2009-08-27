@@ -1,3 +1,16 @@
+EXTRA_DIST = append-hint-example.py	\
+	     icon-only.py		\
+	     icon-summary-body.py	\
+	     icon-summary.py		\
+	     icon-value.py		\
+	     low-urgency.py		\
+	     normal-urgency.py		\
+	     summary-body.py		\
+	     summary-only.py		\
+	     sync-icon-only.py		\
+	     update-notifications.py	\
+	     urgent-urgency.py
+
 if BUILD_C_EXAMPLES
 noinst_PROGRAMS = icon-only		  \
 		  sync-icon-only	  \
