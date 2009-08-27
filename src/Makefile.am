@@ -17,6 +17,7 @@ notify_osd_PROGRAMS = \
 notify_osd_sources =		\
 	bubble.c		\
 	defaults.c		\
+	dialog.c		\
 	notification.c		\
 	main.c			\
 	observer.c		\
@@ -46,6 +47,7 @@ notify_osd_sources =		\
 notify_osd_headers =				\
 	bubble.h				\
 	defaults.h				\
+	dialog.h				\
 	notification.h				\
 	observer.h				\
 	stack.h					\
@@ -101,7 +103,7 @@ notify_osd_CFLAGS = 		\
 	$(NULL)
 
 notify_osd_LDFLAGS = 		\
-	-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions \
+	-Xlinker -lm -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions \
 	$(NULL)
 
 # this comes from distutils.sysconfig.get_config_var('LINKFORSHARED')

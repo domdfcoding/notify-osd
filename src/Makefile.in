@@ -50,7 +50,7 @@ notify_osdPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(notify_osd_PROGRAMS)
 am__objects_1 =
 am__objects_2 = notify_osd-bubble.$(OBJEXT) \
-	notify_osd-defaults.$(OBJEXT) \
+	notify_osd-defaults.$(OBJEXT) notify_osd-dialog.$(OBJEXT) \
 	notify_osd-notification.$(OBJEXT) notify_osd-main.$(OBJEXT) \
 	notify_osd-observer.$(OBJEXT) notify_osd-stack.$(OBJEXT) \
 	notify_osd-dbus.$(OBJEXT) notify_osd-dnd.$(OBJEXT) \
@@ -252,6 +252,7 @@ notify_osddir = $(libexecdir)
 notify_osd_sources = \
 	bubble.c		\
 	defaults.c		\
+	dialog.c		\
 	notification.c		\
 	main.c			\
 	observer.c		\
@@ -281,6 +282,7 @@ notify_osd_sources = \
 notify_osd_headers = \
 	bubble.h				\
 	defaults.h				\
+	dialog.h				\
 	notification.h				\
 	observer.h				\
 	stack.h					\
@@ -416,6 +418,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-bubble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-dbus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-defaults.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-dnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-alpha.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_osd-egg-fixed.Po@am__quote@
@@ -484,6 +487,20 @@ notify_osd-defaults.obj: defaults.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='defaults.c' object='notify_osd-defaults.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-defaults.obj `if test -f 'defaults.c'; then $(CYGPATH_W) 'defaults.c'; else $(CYGPATH_W) '$(srcdir)/defaults.c'; fi`
+
+notify_osd-dialog.o: dialog.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-dialog.o -MD -MP -MF $(DEPDIR)/notify_osd-dialog.Tpo -c -o notify_osd-dialog.o `test -f 'dialog.c' || echo '$(srcdir)/'`dialog.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-dialog.Tpo $(DEPDIR)/notify_osd-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dialog.c' object='notify_osd-dialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-dialog.o `test -f 'dialog.c' || echo '$(srcdir)/'`dialog.c
+
+notify_osd-dialog.obj: dialog.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-dialog.obj -MD -MP -MF $(DEPDIR)/notify_osd-dialog.Tpo -c -o notify_osd-dialog.obj `if test -f 'dialog.c'; then $(CYGPATH_W) 'dialog.c'; else $(CYGPATH_W) '$(srcdir)/dialog.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/notify_osd-dialog.Tpo $(DEPDIR)/notify_osd-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='dialog.c' object='notify_osd-dialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -c -o notify_osd-dialog.obj `if test -f 'dialog.c'; then $(CYGPATH_W) 'dialog.c'; else $(CYGPATH_W) '$(srcdir)/dialog.c'; fi`
 
 notify_osd-notification.o: notification.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(notify_osd_CFLAGS) $(CFLAGS) -MT notify_osd-notification.o -MD -MP -MF $(DEPDIR)/notify_osd-notification.Tpo -c -o notify_osd-notification.o `test -f 'notification.c' || echo '$(srcdir)/'`notification.c

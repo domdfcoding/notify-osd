@@ -84,7 +84,7 @@ am__objects_4 = test_modules-egg-fixed.$(OBJEXT) \
 	test_modules-egg-alpha.$(OBJEXT) \
 	test_modules-egg-hack.$(OBJEXT)
 am_test_modules_OBJECTS = test_modules-bubble.$(OBJEXT) \
-	test_modules-defaults.$(OBJEXT) \
+	test_modules-defaults.$(OBJEXT) test_modules-dialog.$(OBJEXT) \
 	test_modules-notification.$(OBJEXT) \
 	test_modules-observer.$(OBJEXT) test_modules-stack.$(OBJEXT) \
 	test_modules-dbus.$(OBJEXT) test_modules-dnd.$(OBJEXT) \
@@ -347,6 +347,7 @@ GCOV_CFLAGS = -fprofile-arcs -ftest-coverage
 test_modules_SOURCES = \
 	$(top_srcdir)/src/bubble.c				\
 	$(top_srcdir)/src/defaults.c				\
+	$(top_srcdir)/src/dialog.c				\
 	$(top_srcdir)/src/notification.c			\
 	$(top_srcdir)/src/observer.c				\
 	$(top_srcdir)/src/stack.c				\
@@ -618,6 +619,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-bubble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-dbus.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-defaults.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-dnd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-egg-alpha.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_modules-egg-fixed.Po@am__quote@
@@ -900,6 +902,20 @@ test_modules-defaults.obj: $(top_srcdir)/src/defaults.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/defaults.c' object='test_modules-defaults.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-defaults.obj `if test -f '$(top_srcdir)/src/defaults.c'; then $(CYGPATH_W) '$(top_srcdir)/src/defaults.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/defaults.c'; fi`
+
+test_modules-dialog.o: $(top_srcdir)/src/dialog.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-dialog.o -MD -MP -MF $(DEPDIR)/test_modules-dialog.Tpo -c -o test_modules-dialog.o `test -f '$(top_srcdir)/src/dialog.c' || echo '$(srcdir)/'`$(top_srcdir)/src/dialog.c
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-dialog.Tpo $(DEPDIR)/test_modules-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/dialog.c' object='test_modules-dialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-dialog.o `test -f '$(top_srcdir)/src/dialog.c' || echo '$(srcdir)/'`$(top_srcdir)/src/dialog.c
+
+test_modules-dialog.obj: $(top_srcdir)/src/dialog.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-dialog.obj -MD -MP -MF $(DEPDIR)/test_modules-dialog.Tpo -c -o test_modules-dialog.obj `if test -f '$(top_srcdir)/src/dialog.c'; then $(CYGPATH_W) '$(top_srcdir)/src/dialog.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/dialog.c'; fi`
+@am__fastdepCC_TRUE@	mv -f $(DEPDIR)/test_modules-dialog.Tpo $(DEPDIR)/test_modules-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/dialog.c' object='test_modules-dialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -c -o test_modules-dialog.obj `if test -f '$(top_srcdir)/src/dialog.c'; then $(CYGPATH_W) '$(top_srcdir)/src/dialog.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/dialog.c'; fi`
 
 test_modules-notification.o: $(top_srcdir)/src/notification.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_modules_CFLAGS) $(CFLAGS) -MT test_modules-notification.o -MD -MP -MF $(DEPDIR)/test_modules-notification.Tpo -c -o test_modules-notification.o `test -f '$(top_srcdir)/src/notification.c' || echo '$(srcdir)/'`$(top_srcdir)/src/notification.c
