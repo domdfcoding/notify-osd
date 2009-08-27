@@ -1,3 +1,20 @@
+notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
+
+  * New upstream version: (LP: #420046)
+    - updated sizing-factor of body-text height to be 0.9 EMs (of system-wide 
+      setting) according to https://wiki.ubuntu.com/NotifyOSD#Body%20text
+    - implemented fade-prevention when bubble is opened while mouse-pointer 
+      is over it/within proximity-fade area
+    - fade-out value now set to 40% as stated in 
+      https://wiki.ubuntu.com/NotifyOSD#Interaction
+    - added support for automake-1.11's slient output
+    - added valgrind make-rule
+    - experiment with centering bubbles vertically, sync. bubble always goes 
+      above center-line, async. one always below it
+    - ensure GErrors are correctly freed
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 27 Aug 2009 20:42:39 +0200
+
 notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
 
   * New upstream version: (lp: #417384) 
