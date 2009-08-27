@@ -660,6 +660,8 @@ uninstall-am:
 test:		check
 tests:		check
 test-report:	check
+check-valgrind: all
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) check-valgrind
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
