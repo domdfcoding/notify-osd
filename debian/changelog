@@ -1,3 +1,12 @@
+notify-osd (0.9.20-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - added support for integer gconf-key "/apps/notify-osd/gravity"
+    - supported values are 1 (NorthEast, top-right) and 2 (East, vertically centered at right of screen)
+    - switch back default positioning to NorthEast (top-right)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 01 Sep 2009 16:02:26 +0200
+
 notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
 
   * New upstream version: (LP: #420046)
@@ -13,7 +22,7 @@ notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
       above center-line, async. one always below it
     - ensure GErrors are correctly freed
 
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 27 Aug 2009 20:42:39 +0200
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 27 Aug 2009 20:47:56 +0200
 
 notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
 
