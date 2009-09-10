@@ -1,3 +1,13 @@
+notify-osd (0.9.21-0ubuntu1) karmic; urgency=low
+
+  * New upstream version (LP: #427434)
+    - Using a fixed slot-allocation scheme now. This means async 
+      bubbles (e.g. volume) always appear in the top slot/position 
+      and sync. bubbles (e.g. IM-message notification) always appear 
+      in the bottom slot/position.
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 10 Sep 2009 12:51:58 -0400
+
 notify-osd (0.9.20-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
