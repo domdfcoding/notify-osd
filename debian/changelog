@@ -1,3 +1,10 @@
+notify-osd (0.9.21-0ubuntu3) karmic; urgency=low
+
+  * debian/control: Drop dependency on human-icon-theme, and instead recommend
+    the new notify-osd-icons | human-icon-theme.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 24 Sep 2009 12:37:38 +0200
+
 notify-osd (0.9.21-0ubuntu2) karmic; urgency=low
 
   * Correctly rebase on the current upstream version
