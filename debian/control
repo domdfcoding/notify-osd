@@ -19,7 +19,7 @@ Homepage: https://launchpad.net/notify-osd
 Package: notify-osd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: notify-osd-icons | human-icon-theme
+Recommends: notify-osd-icons
 Conflicts: notify-daemon, alsdorf (<< 0.8-0ubuntu2)
 Replaces: notify-daemon, alsdorf (<< 0.8-0ubuntu2)
 Provides: notification-daemon
