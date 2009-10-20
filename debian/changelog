@@ -1,3 +1,16 @@
+notify-osd (0.9.24-0ubuntu1) karmic; urgency=low
+
+  * New upstream version:
+    - fixed regression for newline-character replacement in the text_filter
+    - fixed fonts issues (LP: #396736)
+    - fixed crasher (LP: #425508
+    - fixed another crasher (LP: #437088) 
+    - added workaround for icon-name-prefix substitution
+    - fixed accidentally deleted drawing of drop-shadow for title-text
+    - avoid re-executing glow-/dim-effect when synchronizing timeouts of bubbles
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 20 Oct 2009 11:23:14 +0200
+
 notify-osd (0.9.23-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
