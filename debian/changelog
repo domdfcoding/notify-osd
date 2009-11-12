@@ -1,3 +1,10 @@
+notify-osd (0.9.24-0ubuntu2) lucid; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in:
+    - set debug on in lucid 
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 12 Nov 2009 12:47:45 -0600
+
 notify-osd (0.9.24-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
