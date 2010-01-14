@@ -1,3 +1,10 @@
+notify-osd (0.9.24-0ubuntu3) lucid; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in:
+    - enough debugging now, turn to non debug by default...
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 14 Jan 2010 11:10:45 +0100
+
 notify-osd (0.9.24-0ubuntu2) lucid; urgency=low
 
   * data/org.freedesktop.Notifications.service.in:
