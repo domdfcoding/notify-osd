@@ -1,3 +1,14 @@
+notify-osd (0.9.25-0ubuntu1) lucid; urgency=low
+
+  * New upstream version:
+    - conditional refresh of blurred tiles, prevent regeneration of 
+      tiles if title, body, icon or value didn't change
+    - font-sizes with fractional parts don't cause bubble to become tiny anymore
+      (fixes LP: #396736, LP: #457655, LP: #458413, LP: #459290, LP: #459689)
+    - all but drop-shadow use the faster exponential blur now
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 05 Feb 2010 12:41:32 -0800
+
 notify-osd (0.9.24-0ubuntu3) lucid; urgency=low
 
   * data/org.freedesktop.Notifications.service.in:
