@@ -1,3 +1,14 @@
+notify-osd (0.9.26-0ubuntu1) lucid; urgency=low
+
+  * New upstream version:
+    - Because the newer/different blur-algorithm is used now, the
+      blur-radius for the over-/under-shoot throbbing for icon and
+      value-indicator needed to be decreased, fixes LP: #527756
+    - Merged in lp:~qense/notify-osd/fix-465801 from Sense Hofstede
+      fixing LP: #465801, makes storing notify-osd.log more f.d.o-compliant
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 05 Mar 2010 17:37:37 +0100
+
 notify-osd (0.9.25-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
