@@ -1,3 +1,14 @@
+notify-osd (0.9.27-0ubuntu1) lucid; urgency=low
+
+  * New upstream version:
+    - Small maintainance release to fix LP: #525546, so appending works 
+      correctly. This release is also a prerequisite for fixing nm-applet bug 
+      LP: #460144  (or papercut LP: #530041).
+    - updates to the title- and body-tiles (surface/blur-cache) were 
+      not always done correctly (lp: #525546) 
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 09 Mar 2010 16:12:46 +0100
+
 notify-osd (0.9.26-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
