@@ -1,3 +1,10 @@
+notify-osd (0.9.27-0ubuntu3) lucid; urgency=low
+
+  * Backported change from Mirco Müller to fix click through being broken since
+    the gtk update (lp: #546650)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 30 Mar 2010 19:29:49 +0200
+
 notify-osd (0.9.27-0ubuntu2) lucid; urgency=low
 
   * data/org.freedesktop.Notifications.service.in: Use notify-osd for guest
