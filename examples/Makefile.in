@@ -51,7 +51,8 @@ host_triplet = @host@
 @BUILD_C_EXAMPLES_TRUE@	summary-body$(EXEEXT) \
 @BUILD_C_EXAMPLES_TRUE@	summary-only$(EXEEXT) \
 @BUILD_C_EXAMPLES_TRUE@	append-hint-example$(EXEEXT) \
-@BUILD_C_EXAMPLES_TRUE@	update-notifications$(EXEEXT)
+@BUILD_C_EXAMPLES_TRUE@	update-notifications$(EXEEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon-updating$(EXEEXT)
 subdir = examples
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -127,6 +128,16 @@ am__icon_summary_exe_SOURCES_DIST = icon-summary.cs example-util.cs
 am_icon_summary_exe_OBJECTS =
 icon_summary_exe_OBJECTS = $(am_icon_summary_exe_OBJECTS)
 icon_summary_exe_LDADD = $(LDADD)
+am__icon_updating_SOURCES_DIST = icon-updating.c example-util.c \
+	example-util.h
+@BUILD_C_EXAMPLES_TRUE@am_icon_updating_OBJECTS =  \
+@BUILD_C_EXAMPLES_TRUE@	icon_updating-icon-updating.$(OBJEXT) \
+@BUILD_C_EXAMPLES_TRUE@	icon_updating-example-util.$(OBJEXT)
+icon_updating_OBJECTS = $(am_icon_updating_OBJECTS)
+icon_updating_LDADD = $(LDADD)
+icon_updating_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(icon_updating_CFLAGS) \
+	$(CFLAGS) $(icon_updating_LDFLAGS) $(LDFLAGS) -o $@
 am__icon_value_SOURCES_DIST = icon-value.c example-util.c \
 	example-util.h
 @BUILD_C_EXAMPLES_TRUE@am_icon_value_OBJECTS =  \
@@ -230,11 +241,12 @@ SOURCES = $(append_hint_example_SOURCES) \
 	$(append_hint_example_exe_SOURCES) $(icon_only_SOURCES) \
 	$(icon_only_exe_SOURCES) $(icon_summary_SOURCES) \
 	$(icon_summary_body_SOURCES) $(icon_summary_body_exe_SOURCES) \
-	$(icon_summary_exe_SOURCES) $(icon_value_SOURCES) \
-	$(icon_value_exe_SOURCES) $(summary_body_SOURCES) \
-	$(summary_body_exe_SOURCES) $(summary_only_SOURCES) \
-	$(summary_only_exe_SOURCES) $(sync_icon_only_SOURCES) \
-	$(sync_icon_only_exe_SOURCES) $(update_notifications_SOURCES) \
+	$(icon_summary_exe_SOURCES) $(icon_updating_SOURCES) \
+	$(icon_value_SOURCES) $(icon_value_exe_SOURCES) \
+	$(summary_body_SOURCES) $(summary_body_exe_SOURCES) \
+	$(summary_only_SOURCES) $(summary_only_exe_SOURCES) \
+	$(sync_icon_only_SOURCES) $(sync_icon_only_exe_SOURCES) \
+	$(update_notifications_SOURCES) \
 	$(update_notifications_exe_SOURCES)
 DIST_SOURCES = $(am__append_hint_example_SOURCES_DIST) \
 	$(am__append_hint_example_exe_SOURCES_DIST) \
@@ -244,6 +256,7 @@ DIST_SOURCES = $(am__append_hint_example_SOURCES_DIST) \
 	$(am__icon_summary_body_SOURCES_DIST) \
 	$(am__icon_summary_body_exe_SOURCES_DIST) \
 	$(am__icon_summary_exe_SOURCES_DIST) \
+	$(am__icon_updating_SOURCES_DIST) \
 	$(am__icon_value_SOURCES_DIST) \
 	$(am__icon_value_exe_SOURCES_DIST) \
 	$(am__summary_body_SOURCES_DIST) \
@@ -413,6 +426,7 @@ EXTRA_DIST = append-hint-example.py	\
 @BUILD_C_EXAMPLES_TRUE@summary_only_SOURCES = summary-only.c example-util.c example-util.h
 @BUILD_C_EXAMPLES_TRUE@append_hint_example_SOURCES = append-hint-example.c example-util.c example-util.h
 @BUILD_C_EXAMPLES_TRUE@update_notifications_SOURCES = update-notifications.c example-util.c example-util.h
+@BUILD_C_EXAMPLES_TRUE@icon_updating_SOURCES = icon-updating.c example-util.c example-util.h
 @BUILD_C_EXAMPLES_TRUE@icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@sync_icon_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@icon_summary_body_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
@@ -422,6 +436,7 @@ EXTRA_DIST = append-hint-example.py	\
 @BUILD_C_EXAMPLES_TRUE@summary_only_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@append_hint_example_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@update_notifications_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_updating_CFLAGS = -I. -O0 -ggdb -Wall -Werror `pkg-config --cflags libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@sync_icon_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@icon_summary_body_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
@@ -431,6 +446,7 @@ EXTRA_DIST = append-hint-example.py	\
 @BUILD_C_EXAMPLES_TRUE@summary_only_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@append_hint_example_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
 @BUILD_C_EXAMPLES_TRUE@update_notifications_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
+@BUILD_C_EXAMPLES_TRUE@icon_updating_LDFLAGS = `pkg-config --libs libnotify glib-2.0`
 @BUILD_MONO_EXAMPLES_TRUE@icon_only_exe_SOURCES = example-util.cs icon-only.cs
 @BUILD_MONO_EXAMPLES_TRUE@sync_icon_only_exe_SOURCES = sync-icon-only.cs example-util.cs
 @BUILD_MONO_EXAMPLES_TRUE@icon_summary_body_exe_SOURCES = icon-summary-body.cs example-util.cs
@@ -507,6 +523,9 @@ icon-summary-body$(EXEEXT): $(icon_summary_body_OBJECTS) $(icon_summary_body_DEP
 @BUILD_MONO_EXAMPLES_FALSE@icon-summary.exe$(EXEEXT): $(icon_summary_exe_OBJECTS) $(icon_summary_exe_DEPENDENCIES) 
 @BUILD_MONO_EXAMPLES_FALSE@	@rm -f icon-summary.exe$(EXEEXT)
 @BUILD_MONO_EXAMPLES_FALSE@	$(AM_V_CCLD)$(LINK) $(icon_summary_exe_OBJECTS) $(icon_summary_exe_LDADD) $(LIBS)
+icon-updating$(EXEEXT): $(icon_updating_OBJECTS) $(icon_updating_DEPENDENCIES) 
+	@rm -f icon-updating$(EXEEXT)
+	$(AM_V_CCLD)$(icon_updating_LINK) $(icon_updating_OBJECTS) $(icon_updating_LDADD) $(LIBS)
 icon-value$(EXEEXT): $(icon_value_OBJECTS) $(icon_value_DEPENDENCIES) 
 	@rm -f icon-value$(EXEEXT)
 	$(AM_V_CCLD)$(icon_value_LINK) $(icon_value_OBJECTS) $(icon_value_LDADD) $(LIBS)
@@ -552,6 +571,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_summary-icon-summary.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_summary_body-example-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_summary_body-icon-summary-body.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_updating-example-util.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_updating-icon-updating.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_value-example-util.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/icon_value-icon-value.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/summary_body-example-util.Po@am__quote@
@@ -714,6 +735,38 @@ icon_summary_body-example-util.obj: example-util.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example-util.c' object='icon_summary_body-example-util.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_summary_body_CFLAGS) $(CFLAGS) -c -o icon_summary_body-example-util.obj `if test -f 'example-util.c'; then $(CYGPATH_W) 'example-util.c'; else $(CYGPATH_W) '$(srcdir)/example-util.c'; fi`
+
+icon_updating-icon-updating.o: icon-updating.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -MT icon_updating-icon-updating.o -MD -MP -MF $(DEPDIR)/icon_updating-icon-updating.Tpo -c -o icon_updating-icon-updating.o `test -f 'icon-updating.c' || echo '$(srcdir)/'`icon-updating.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/icon_updating-icon-updating.Tpo $(DEPDIR)/icon_updating-icon-updating.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='icon-updating.c' object='icon_updating-icon-updating.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -c -o icon_updating-icon-updating.o `test -f 'icon-updating.c' || echo '$(srcdir)/'`icon-updating.c
+
+icon_updating-icon-updating.obj: icon-updating.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -MT icon_updating-icon-updating.obj -MD -MP -MF $(DEPDIR)/icon_updating-icon-updating.Tpo -c -o icon_updating-icon-updating.obj `if test -f 'icon-updating.c'; then $(CYGPATH_W) 'icon-updating.c'; else $(CYGPATH_W) '$(srcdir)/icon-updating.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/icon_updating-icon-updating.Tpo $(DEPDIR)/icon_updating-icon-updating.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='icon-updating.c' object='icon_updating-icon-updating.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -c -o icon_updating-icon-updating.obj `if test -f 'icon-updating.c'; then $(CYGPATH_W) 'icon-updating.c'; else $(CYGPATH_W) '$(srcdir)/icon-updating.c'; fi`
+
+icon_updating-example-util.o: example-util.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -MT icon_updating-example-util.o -MD -MP -MF $(DEPDIR)/icon_updating-example-util.Tpo -c -o icon_updating-example-util.o `test -f 'example-util.c' || echo '$(srcdir)/'`example-util.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/icon_updating-example-util.Tpo $(DEPDIR)/icon_updating-example-util.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example-util.c' object='icon_updating-example-util.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -c -o icon_updating-example-util.o `test -f 'example-util.c' || echo '$(srcdir)/'`example-util.c
+
+icon_updating-example-util.obj: example-util.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -MT icon_updating-example-util.obj -MD -MP -MF $(DEPDIR)/icon_updating-example-util.Tpo -c -o icon_updating-example-util.obj `if test -f 'example-util.c'; then $(CYGPATH_W) 'example-util.c'; else $(CYGPATH_W) '$(srcdir)/example-util.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/icon_updating-example-util.Tpo $(DEPDIR)/icon_updating-example-util.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='example-util.c' object='icon_updating-example-util.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_updating_CFLAGS) $(CFLAGS) -c -o icon_updating-example-util.obj `if test -f 'example-util.c'; then $(CYGPATH_W) 'example-util.c'; else $(CYGPATH_W) '$(srcdir)/example-util.c'; fi`
 
 icon_value-icon-value.o: icon-value.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(icon_value_CFLAGS) $(CFLAGS) -MT icon_value-icon-value.o -MD -MP -MF $(DEPDIR)/icon_value-icon-value.Tpo -c -o icon_value-icon-value.o `test -f 'icon-value.c' || echo '$(srcdir)/'`icon-value.c
