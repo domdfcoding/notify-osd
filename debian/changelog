@@ -1,3 +1,17 @@
+notify-osd (0.9.29-0ubuntu1) lucid; urgency=low
+
+  * New upstream version:
+    - change the way the "empty" 1x1 pixel large input-mask is created
+    - fixed the masking out of the bubble on mouse-over for the non-composited 
+      desktop (lp: #546650)
+    - reset the stored filename (or path) of an icon, when an icon is passed 
+      via a hint (lp: #451086)
+    - added C-example testing updating the icon of a notification 
+      using all three possible approaches 
+      (image_path hint, image_data hint, icon-parameter)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 08 Apr 2010 12:47:50 +0200
+
 notify-osd (0.9.27-0ubuntu3) lucid; urgency=low
 
   * Backported change from Mirco Müller to fix click through being broken since
