@@ -1,3 +1,9 @@
+notify-osd (0.9.29-0ubuntu2) lucid; urgency=low
+
+  * Backport change from Mirco Müller to fix double bubbles issue (lp: #559109)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 14 Apr 2010 12:50:49 +0200
+
 notify-osd (0.9.29-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
