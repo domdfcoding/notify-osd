@@ -1,3 +1,10 @@
+notify-osd (0.9.29-0ubuntu3) maverick; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in:
+    - exec notify-osd in UNE session (LP: #600508)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Thu, 01 Jul 2010 14:17:17 +0200
+
 notify-osd (0.9.29-0ubuntu2) lucid; urgency=low
 
   * Backport change from Mirco Müller to fix double bubbles issue (lp: #559109)
