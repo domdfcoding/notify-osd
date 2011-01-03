@@ -1,3 +1,13 @@
+notify-osd (0.9.29-0ubuntu4) natty; urgency=low
+
+  * Rebuild to get SVGs optimized.
+  * Cherrypick lp:~pitti/notify-osd/link-gcc-4.5 to get this package buildable
+    with the Natty toolchain.
+  * debian/rules: Use autoreconf.mk, add dh-autoreconf build dependency. This
+    will pick up above change.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 03 Jan 2011 13:25:03 +0100
+
 notify-osd (0.9.29-0ubuntu3) maverick; urgency=low
 
   * data/org.freedesktop.Notifications.service.in:
