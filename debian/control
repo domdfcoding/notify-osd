@@ -5,6 +5,7 @@ Maintainer: DX Team <dx-team@lists.ubuntu.com>
 Build-Depends: cdbs (>= 0.4.41),
  debhelper (>= 5),
  dh-autoreconf,
+ gnome-common,
  libglib2.0-dev (>= 2.4),
  libgtk2.0-dev (>= 2.4),
  libdbus-1-dev (>= 0.36),
