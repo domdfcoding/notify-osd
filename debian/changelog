@@ -1,3 +1,9 @@
+notify-osd (0.9.29-0ubuntu5) natty; urgency=low
+
+  * Add missing gnome-common build dependency to fix autoreconf'ing.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 03 Jan 2011 14:34:36 +0100
+
 notify-osd (0.9.29-0ubuntu4) natty; urgency=low
 
   * Rebuild to get SVGs optimized.
