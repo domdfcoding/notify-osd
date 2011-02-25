@@ -1,3 +1,18 @@
+notify-osd (0.9.30-0ubuntu1) natty; urgency=low
+
+  * New upstream release
+    - multi-monitor related fixes for correctly positioning the 
+      notification-bubbles 
+    - Notification borders are cut off on the right bottom side (LP: #724842)
+    - Two notification bubbles at the same time (LP: #559109)
+    - Fallback alert has leftmost button as default (LP: #353843)
+    - should build without GTK deprecation (LP: #655232)
+    - Black border in the notifications when effects are turned 
+      off (LP: #654921)
+    - Notify-osd needs to pause the timer during mouse-over (LP: #500663)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Fri, 25 Feb 2011 10:04:57 -0500
+
 notify-osd (0.9.29-0ubuntu5) natty; urgency=low
 
   * Add missing gnome-common build dependency to fix autoreconf'ing.
