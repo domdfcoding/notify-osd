@@ -1,3 +1,9 @@
+notify-osd (0.9.30-0ubuntu2) natty; urgency=low
+
+  * The "gnome-classic" sessions should use notify-osd (lp: #716136)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 09 Mar 2011 16:40:09 +0100
+
 notify-osd (0.9.30-0ubuntu1) natty; urgency=low
 
   * New upstream release
