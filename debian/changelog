@@ -1,3 +1,9 @@
+notify-osd (0.9.30-0ubuntu3) natty; urgency=low
+
+  * gnome-2d and unity-2d should use notify-osd as well (LP: #748970)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 04 Apr 2011 15:21:11 +0200
+
 notify-osd (0.9.30-0ubuntu2) natty; urgency=low
 
   * The "gnome-classic" sessions should use notify-osd (lp: #716136)
