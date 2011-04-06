@@ -1,3 +1,10 @@
+notify-osd (0.9.30-0ubuntu4) natty; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in:
+    - fix typo
+
+ -- Didier Roche <didrocks@ubuntu.com>  Wed, 06 Apr 2011 09:09:58 +0200
+
 notify-osd (0.9.30-0ubuntu3) natty; urgency=low
 
   * gnome-2d and unity-2d should use notify-osd as well (LP: #748970)
