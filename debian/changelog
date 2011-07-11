@@ -1,3 +1,12 @@
+notify-osd (0.9.31-0ubuntu1) oneiric; urgency=low
+
+  * New upstream version:
+    - use gtk3 (lp: #655232)
+  * debian/control: 
+    - updated the build-depends
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 11 Jul 2011 18:24:23 +0200
+
 notify-osd (0.9.30-0ubuntu4) natty; urgency=low
 
   * data/org.freedesktop.Notifications.service.in:
