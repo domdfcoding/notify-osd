@@ -1,3 +1,10 @@
+notify-osd (0.9.31-0ubuntu2) oneiric; urgency=low
+
+  * data/org.freedesktop.Notifications.service.in: Update for recently renamed
+    sessions.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 10 Aug 2011 11:09:53 +0200
+
 notify-osd (0.9.31-0ubuntu1) oneiric; urgency=low
 
   * New upstream version:
