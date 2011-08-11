@@ -1,3 +1,12 @@
+notify-osd (0.9.32-0ubuntu1) oneiric; urgency=low
+
+  * New upstream version
+    - ported to gsettings
+  * debian/control
+    - Dropped build depends for libgconf2-dev
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 10 Aug 2011 22:30:03 -0400
+
 notify-osd (0.9.31-0ubuntu2) oneiric; urgency=low
 
   * data/org.freedesktop.Notifications.service.in: Update for recently renamed
