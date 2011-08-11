@@ -12,7 +12,6 @@ Build-Depends: cdbs (>= 0.4.41),
  libdbus-glib-1-dev (>= 0.60),
  libwnck-3-dev,
  libnotify-dev (>= 0.6.1),
- libgconf2-dev,
  intltool
 Standards-Version: 3.9.2
 Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/notify-osd/ubuntu

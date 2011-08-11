@@ -148,12 +148,12 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
-GCONF_CFLAGS = @GCONF_CFLAGS@
-GCONF_LIBS = @GCONF_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
+GLIB_COMPILE_SCHEMAS = @GLIB_COMPILE_SCHEMAS@
 GLIB_LIBS = @GLIB_LIBS@
 GMCS = @GMCS@
 GREP = @GREP@
+GSETTINGS_DISABLE_SCHEMAS_COMPILE = @GSETTINGS_DISABLE_SCHEMAS_COMPILE@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_LIBS = @GTK_LIBS@
 INSTALL = @INSTALL@
@@ -229,6 +229,7 @@ datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+gsettingsschemadir = @gsettingsschemadir@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
@@ -260,7 +261,10 @@ top_srcdir = @top_srcdir@
 SUBDIRS = icons
 servicedir = $(datadir)/dbus-1/services
 service_DATA = org.freedesktop.Notifications.service
-EXTRA_DIST = org.freedesktop.Notifications.service.in
+gsettings_SCHEMAS = com.canonical.NotifyOSD.gschema.xml
+EXTRA_DIST = org.freedesktop.Notifications.service.in \
+	   com.canonical.NotifyOSD.gschema.xml
+
 CLEANFILES = org.freedesktop.Notifications.service
 all: all-recursive
 
@@ -633,6 +637,7 @@ uninstall-am: uninstall-serviceDATA
 	tags tags-recursive uninstall uninstall-am \
 	uninstall-serviceDATA
 
+@GSETTINGS_RULES@
 
 org.freedesktop.Notifications.service: org.freedesktop.Notifications.service.in
 	sed "s,@LIBEXECDIR@,$(libexecdir)," $< > $@
