@@ -1,3 +1,11 @@
+notify-osd (0.9.32-0ubuntu2) oneiric; urgency=low
+
+  * debian/control: Remove obsolete conflicts/replaces.
+  * debian/control: Add Replaces: notification-daemon, as they (will) both
+    ship the D-BUS activation file. (See LP #819506)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Fri, 19 Aug 2011 18:23:18 +0200
+
 notify-osd (0.9.32-0ubuntu1) oneiric; urgency=low
 
   * New upstream version
