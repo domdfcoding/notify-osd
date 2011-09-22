@@ -1,3 +1,11 @@
+notify-osd (0.9.32-0ubuntu3) oneiric; urgency=low
+
+  * Merged gconf -> gsettings convert fix from trunk (LP: #827897)
+  * src/Makefile.am
+    - Add -lm to LDADD to fix FTBFS
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 22 Sep 2011 12:19:01 -0400
+
 notify-osd (0.9.32-0ubuntu2) oneiric; urgency=low
 
   * debian/control: Remove obsolete conflicts/replaces.
