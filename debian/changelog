@@ -1,3 +1,10 @@
+notify-osd (0.9.32-0ubuntu4) precise; urgency=low
+
+  * src/log.c: don't log unless the LOG environment variable is set
+    (lp: #904835)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 16 Dec 2011 18:59:28 +0100
+
 notify-osd (0.9.32-0ubuntu3) oneiric; urgency=low
 
   * Merged gconf -> gsettings convert fix from trunk (LP: #827897)
