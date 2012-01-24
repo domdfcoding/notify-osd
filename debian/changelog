@@ -1,3 +1,14 @@
+notify-osd (0.9.32-0ubuntu5) precise; urgency=low
+
+  * Fix unnecessary wakeups on every keyboard/focus event:
+    - configure.in: Check if wnck_shutdown() is available.
+    - src/dnd.c: Call wnck_shutdown() (if available) when we are done with
+      fullscreen window checking.
+    - https://code.launchpad.net/~pitti/notify-osd/wnck_shutdown/+merge/89836
+    - LP: #915389
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Tue, 24 Jan 2012 09:23:55 +0100
+
 notify-osd (0.9.32-0ubuntu4) precise; urgency=low
 
   * src/log.c: don't log unless the LOG environment variable is set
