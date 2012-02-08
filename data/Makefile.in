@@ -83,8 +83,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(servicedir)"
-DATA = $(service_DATA)
+am__installdirs = "$(DESTDIR)$(convertdir)" "$(DESTDIR)$(servicedir)"
+DATA = $(convert_DATA) $(service_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -163,6 +163,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBM = @LIBM@
 LIBNOTIFY_CFLAGS = @LIBNOTIFY_CFLAGS@
 LIBNOTIFY_LIBS = @LIBNOTIFY_LIBS@
 LIBOBJS = @LIBOBJS@
@@ -263,8 +264,9 @@ servicedir = $(datadir)/dbus-1/services
 service_DATA = org.freedesktop.Notifications.service
 gsettings_SCHEMAS = com.canonical.NotifyOSD.gschema.xml
 EXTRA_DIST = org.freedesktop.Notifications.service.in \
-	   com.canonical.NotifyOSD.gschema.xml
-
+	com.canonical.NotifyOSD.gschema.xml $(convert_DATA)
+convertdir = $(datadir)/GConf/gsettings
+convert_DATA = notify-osd.convert
 CLEANFILES = org.freedesktop.Notifications.service
 all: all-recursive
 
@@ -305,6 +307,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-convertDATA: $(convert_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(convertdir)" || $(MKDIR_P) "$(DESTDIR)$(convertdir)"
+	@list='$(convert_DATA)'; test -n "$(convertdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(convertdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(convertdir)" || exit $$?; \
+	done
+
+uninstall-convertDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(convert_DATA)'; test -n "$(convertdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	test -n "$$files" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(convertdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(convertdir)" && rm -f $$files
 install-serviceDATA: $(service_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(servicedir)" || $(MKDIR_P) "$(DESTDIR)$(servicedir)"
@@ -524,7 +546,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(servicedir)"; do \
+	for dir in "$(DESTDIR)$(convertdir)" "$(DESTDIR)$(servicedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -573,7 +595,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-serviceDATA
+install-data-am: install-convertDATA install-serviceDATA
 
 install-dvi: install-dvi-recursive
 
@@ -617,7 +639,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-serviceDATA
+uninstall-am: uninstall-convertDATA uninstall-serviceDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
 	install-am install-strip tags-recursive
@@ -626,16 +648,16 @@ uninstall-am: uninstall-serviceDATA
 	all all-am check check-am clean clean-generic clean-libtool \
 	ctags ctags-recursive distclean distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-serviceDATA install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-recursive uninstall uninstall-am \
-	uninstall-serviceDATA
+	html-am info info-am install install-am install-convertDATA \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-serviceDATA \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags tags-recursive uninstall uninstall-am \
+	uninstall-convertDATA uninstall-serviceDATA
 
 @GSETTINGS_RULES@
 

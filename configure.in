@@ -1,4 +1,4 @@
-AC_INIT(notify-osd, 0.9.31, dx-team@canonical.com)
+AC_INIT(notify-osd, 0.9.33, dx-team@canonical.com)
 
 AC_CONFIG_SRCDIR(src/main.c)
 AC_CONFIG_HEADERS(config.h)
@@ -72,6 +72,13 @@ AM_PATH_GTK_3_0
 PKG_CHECK_MODULES([NOTIFY_OSD], [pixman-1 gtk+-3.0 >= 3.1.6])
 AC_SUBST(NOTIFY_OSD_CFLAGS)
 AC_SUBST(NOTIFY_OSD_LIBS)
+
+#
+# libm
+#
+
+AC_CHECK_LIBM
+AC_SUBST(LIBM)
 
 #
 # checks for building C- or C#-examples
