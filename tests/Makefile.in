@@ -80,7 +80,8 @@ am_test_grow_bubble_OBJECTS = $(am__objects_3) \
 	test_grow_bubble-test-grow-bubble.$(OBJEXT)
 test_grow_bubble_OBJECTS = $(am_test_grow_bubble_OBJECTS)
 test_grow_bubble_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 test_grow_bubble_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(test_grow_bubble_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
@@ -123,7 +124,8 @@ test_modules_OBJECTS = $(am_test_modules_OBJECTS)
 test_modules_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 test_modules_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_modules_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -134,7 +136,8 @@ am__objects_5 = test_raico-stack-blur.$(OBJEXT) \
 am_test_raico_OBJECTS = $(am__objects_5) \
 	test_raico-test-raico.$(OBJEXT)
 test_raico_OBJECTS = $(am_test_raico_OBJECTS)
-test_raico_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+test_raico_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 test_raico_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_raico_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -148,7 +151,8 @@ am_test_scroll_text_OBJECTS = $(am__objects_7) \
 	test_scroll_text-test-scroll-text.$(OBJEXT)
 test_scroll_text_OBJECTS = $(am_test_scroll_text_OBJECTS)
 test_scroll_text_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 test_scroll_text_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(test_scroll_text_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
@@ -162,7 +166,7 @@ am__objects_9 = $(am__objects_8) test_tile-util.$(OBJEXT) \
 am_test_tile_OBJECTS = $(am__objects_9) test_tile-test-tile.$(OBJEXT)
 test_tile_OBJECTS = $(am_test_tile_OBJECTS)
 test_tile_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 test_tile_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_tile_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -283,6 +287,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBM = @LIBM@
 LIBNOTIFY_CFLAGS = @LIBNOTIFY_CFLAGS@
 LIBNOTIFY_LIBS = @LIBNOTIFY_LIBS@
 LIBOBJS = @LIBOBJS@
@@ -430,6 +435,7 @@ test_modules_CFLAGS = \
 	-I$(top_srcdir)/
 
 test_modules_LDADD = \
+	$(LIBM)			\
 	$(X_LIBS)		\
 	$(GLIB_LIBS)		\
 	$(WNCK_LIBS)		\
@@ -494,6 +500,7 @@ test_raico_CFLAGS = \
 	-I$(top_srcdir)/
 
 test_raico_LDADD = \
+	$(LIBM) \
 	$(NOTIFY_OSD_LIBS) \
 	$(GTK_LIBS)
 
@@ -513,6 +520,7 @@ test_tile_CFLAGS = \
 	-I$(top_srcdir)
 
 test_tile_LDADD = \
+	$(LIBM) \
 	$(X_LIBS) \
 	$(NOTIFY_OSD_LIBS) \
 	$(GTK_LIBS)
@@ -532,6 +540,7 @@ test_grow_bubble_CFLAGS = \
 	-I$(top_srcdir)
 
 test_grow_bubble_LDADD = \
+	$(LIBM) \
 	$(X_LIBS) \
 	$(NOTIFY_OSD_LIBS) \
 	$(GTK_LIBS)
@@ -551,6 +560,7 @@ test_scroll_text_CFLAGS = \
 	-I$(top_srcdir)/
 
 test_scroll_text_LDADD = \
+	$(LIBM) \
 	$(X_LIBS) \
 	$(NOTIFY_OSD_LIBS) \
 	$(GTK_LIBS)

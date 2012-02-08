@@ -1,3 +1,17 @@
+notify-osd (0.9.33-0ubuntu1) precise; urgency=low
+
+  * New upstream release:
+    - change background colour to use the same median colour used in 
+      the unity dash (lp: #810325)
+    - should migrate the user gconf keys values to gsettings (lp: #827897)
+    - accessibility broken due to recent GTK3 changes (lp: #856071)
+    - keeps on writing to .cache/notify-osd.log and waking up my drive
+      (lp: #904835)
+    - wakes up for every key/focus event after showing the first bubble
+      (lp: #915389)
+      
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 08 Feb 2012 21:08:41 +0100
+
 notify-osd (0.9.32-0ubuntu5) precise; urgency=low
 
   * Fix unnecessary wakeups on every keyboard/focus event:
