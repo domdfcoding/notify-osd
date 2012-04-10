@@ -1,3 +1,9 @@
+notify-osd (0.9.34-0ubuntu2) precise; urgency=low
+
+  * Backport Cimi's color tweaks improvements (lp: #977974)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 10 Apr 2012 15:19:23 +0200
+
 notify-osd (0.9.34-0ubuntu1) precise; urgency=low
 
   * New upstream release
