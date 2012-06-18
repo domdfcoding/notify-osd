@@ -1,3 +1,10 @@
+notify-osd (0.9.34-0ubuntu3) quantal; urgency=low
+
+  * debian/source_notify-osd.py: Drop tabs to fix compatibility with Python 3.
+    Thanks Edward Donovan! (LP: #1013171)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 18 Jun 2012 15:05:56 +0200
+
 notify-osd (0.9.34-0ubuntu2) precise; urgency=low
 
   * Backport Cimi's color tweaks improvements (lp: #977974)

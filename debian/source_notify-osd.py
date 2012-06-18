@@ -80,4 +80,4 @@ if __name__ == '__main__':
     report = {}
     add_info(report)
     for key in report:
-        print '[%s]\n%s' % (key, report[key])
+        print('[%s]\n%s' % (key, report[key]))
