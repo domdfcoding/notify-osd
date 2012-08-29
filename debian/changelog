@@ -1,3 +1,9 @@
+notify-osd (0.9.34-0ubuntu4) quantal; urgency=low
+
+  * When running without a compositor, don't show a dark black border
+
+ -- Michael Terry <mterry@ubuntu.com>  Wed, 29 Aug 2012 10:04:31 -0400
+
 notify-osd (0.9.34-0ubuntu3) quantal; urgency=low
 
   * debian/source_notify-osd.py: Drop tabs to fix compatibility with Python 3.
