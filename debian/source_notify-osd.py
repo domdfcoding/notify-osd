@@ -70,9 +70,9 @@ def add_info(report):
     report['setxkbmap'] = apport.hookutils.command_output(['setxkbmap', '-print'])
     report['setxkbmap'] = apport.hookutils.command_output(['xkbcomp', ':0', '-w0', '-'])
 
-    report['WindowManager'] = apport.hookutils.command_output(['gconftool-2','--get','/desktop/gnome/session/required_components/windowmanager'])
-    report['IconTheme'] = apport.hookutils.command_output(['gconftool-2','--get','/desktop/gnome/interface/icon_theme'])
-    report['GtkTheme'] = apport.hookutils.command_output(['gconftool-2','--get','/desktop/gnome/interface/gtk_theme'])
+    report['DesktopSession'] = apport.hookutils.command_output(['gsettings','get','org.gnome.desktop.session', 'session-name'])
+    report['IconTheme'] = apport.hookutils.command_output(['gsettings','get','org.gnome.desktop.interface', 'icon-theme'])
+    report['GtkTheme'] = apport.hookutils.command_output(['gsettings','get','org.gnome.desktop.interface', 'gtk-theme'])
 
 
 ## DEBUGING ##
