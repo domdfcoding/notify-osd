@@ -1,3 +1,10 @@
+notify-osd (0.9.34-0ubuntu5) quantal; urgency=low
+
+  * debian/source_notify-osd.py:
+    - Use gsettings not gconf to read current theme
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Mon, 17 Sep 2012 22:21:32 -0400
+
 notify-osd (0.9.34-0ubuntu4) quantal; urgency=low
 
   * When running without a compositor, don't show a dark black border
