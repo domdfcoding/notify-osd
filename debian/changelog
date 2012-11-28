@@ -1,3 +1,17 @@
+notify-osd (0.9.35daily12.11.28-0ubuntu1) raring; urgency=low
+
+  [ Robert Bruce Park ]
+  * Inline packaging metadata.
+
+  [ Didier Roche ]
+  * Automatic snapshot from revision 458 (bootstrap):
+    - add some dep8 test. Thanks mterry
+
+  [ Automatic PS uploader ]
+  * Automatic snapshot from revision 460
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Wed, 28 Nov 2012 06:30:40 +0000
+
 notify-osd (0.9.34-0ubuntu5) quantal; urgency=low
 
   * debian/source_notify-osd.py:
@@ -27,8 +41,8 @@ notify-osd (0.9.34-0ubuntu2) precise; urgency=low
 notify-osd (0.9.34-0ubuntu1) precise; urgency=low
 
   * New upstream release
-    - Use _GNOME_BACKGROUND_REPRESENTATIVE_COLORS to better determine tinting 
-      for the notification background 
+    - Use _GNOME_BACKGROUND_REPRESENTATIVE_COLORS to better determine tinting
+      for the notification background
     * notify-osd in invisible area of dual screen setup (LP: #716458)
 
  -- Ken VanDine <ken.vandine@canonical.com>  Fri, 23 Mar 2012 12:21:58 -0400
@@ -36,7 +50,7 @@ notify-osd (0.9.34-0ubuntu1) precise; urgency=low
 notify-osd (0.9.33-0ubuntu1) precise; urgency=low
 
   * New upstream release:
-    - change background colour to use the same median colour used in 
+    - change background colour to use the same median colour used in
       the unity dash (lp: #810325)
     - should migrate the user gconf keys values to gsettings (lp: #827897)
     - accessibility broken due to recent GTK3 changes (lp: #856071)
@@ -44,7 +58,7 @@ notify-osd (0.9.33-0ubuntu1) precise; urgency=low
       (lp: #904835)
     - wakes up for every key/focus event after showing the first bubble
       (lp: #915389)
-      
+
  -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 08 Feb 2012 21:08:41 +0100
 
 notify-osd (0.9.32-0ubuntu5) precise; urgency=low
@@ -101,7 +115,7 @@ notify-osd (0.9.31-0ubuntu1) oneiric; urgency=low
 
   * New upstream version:
     - use gtk3 (lp: #655232)
-  * debian/control: 
+  * debian/control:
     - updated the build-depends
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 11 Jul 2011 18:24:23 +0200
@@ -128,13 +142,13 @@ notify-osd (0.9.30-0ubuntu2) natty; urgency=low
 notify-osd (0.9.30-0ubuntu1) natty; urgency=low
 
   * New upstream release
-    - multi-monitor related fixes for correctly positioning the 
-      notification-bubbles 
+    - multi-monitor related fixes for correctly positioning the
+      notification-bubbles
     - Notification borders are cut off on the right bottom side (LP: #724842)
     - Two notification bubbles at the same time (LP: #559109)
     - Fallback alert has leftmost button as default (LP: #353843)
     - should build without GTK deprecation (LP: #655232)
-    - Black border in the notifications when effects are turned 
+    - Black border in the notifications when effects are turned
       off (LP: #654921)
     - Notify-osd needs to pause the timer during mouse-over (LP: #500663)
 
@@ -173,12 +187,12 @@ notify-osd (0.9.29-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
     - change the way the "empty" 1x1 pixel large input-mask is created
-    - fixed the masking out of the bubble on mouse-over for the non-composited 
+    - fixed the masking out of the bubble on mouse-over for the non-composited
       desktop (lp: #546650)
-    - reset the stored filename (or path) of an icon, when an icon is passed 
+    - reset the stored filename (or path) of an icon, when an icon is passed
       via a hint (lp: #451086)
-    - added C-example testing updating the icon of a notification 
-      using all three possible approaches 
+    - added C-example testing updating the icon of a notification
+      using all three possible approaches
       (image_path hint, image_data hint, icon-parameter)
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 08 Apr 2010 12:47:50 +0200
@@ -200,11 +214,11 @@ notify-osd (0.9.27-0ubuntu2) lucid; urgency=low
 notify-osd (0.9.27-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
-    - Small maintainance release to fix LP: #525546, so appending works 
-      correctly. This release is also a prerequisite for fixing nm-applet bug 
+    - Small maintainance release to fix LP: #525546, so appending works
+      correctly. This release is also a prerequisite for fixing nm-applet bug
       LP: #460144  (or papercut LP: #530041).
-    - updates to the title- and body-tiles (surface/blur-cache) were 
-      not always done correctly (lp: #525546) 
+    - updates to the title- and body-tiles (surface/blur-cache) were
+      not always done correctly (lp: #525546)
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 09 Mar 2010 16:12:46 +0100
 
@@ -222,7 +236,7 @@ notify-osd (0.9.26-0ubuntu1) lucid; urgency=low
 notify-osd (0.9.25-0ubuntu1) lucid; urgency=low
 
   * New upstream version:
-    - conditional refresh of blurred tiles, prevent regeneration of 
+    - conditional refresh of blurred tiles, prevent regeneration of
       tiles if title, body, icon or value didn't change
     - font-sizes with fractional parts don't cause bubble to become tiny anymore
       (fixes LP: #396736, LP: #457655, LP: #458413, LP: #459290, LP: #459689)
@@ -240,7 +254,7 @@ notify-osd (0.9.24-0ubuntu3) lucid; urgency=low
 notify-osd (0.9.24-0ubuntu2) lucid; urgency=low
 
   * data/org.freedesktop.Notifications.service.in:
-    - set debug on in lucid 
+    - set debug on in lucid
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 12 Nov 2009 12:47:45 -0600
 
@@ -250,7 +264,7 @@ notify-osd (0.9.24-0ubuntu1) karmic; urgency=low
     - fixed regression for newline-character replacement in the text_filter
     - fixed fonts issues (LP: #396736)
     - fixed crasher (LP: #425508
-    - fixed another crasher (LP: #437088) 
+    - fixed another crasher (LP: #437088)
     - added workaround for icon-name-prefix substitution
     - fixed accidentally deleted drawing of drop-shadow for title-text
     - avoid re-executing glow-/dim-effect when synchronizing timeouts of bubbles
@@ -263,7 +277,7 @@ notify-osd (0.9.23-0ubuntu1) karmic; urgency=low
     - updating NEWS file now, fixes LP: #432486
     - no long using hard-coded -Werror, fixes LP: #361788
     - solved regression regarding throbbing-animation for
-      value-indicator, fixes LP: #435116 
+      value-indicator, fixes LP: #435116
     - looking up gravity-gconf-key upon startup, fixes LP: #431200
     - convert newline characters to spaces, fixes LP: #402247
 
@@ -275,8 +289,8 @@ notify-osd (0.9.23-0ubuntu1) karmic; urgency=low
 
 notify-osd (0.9.22-0ubuntu1) karmic; urgency=low
 
-  * New upstream version: notify-osd has been scrutinized thoroughly 
-    under valgrind to identify all mem-leaks and invalid reads. 
+  * New upstream version: notify-osd has been scrutinized thoroughly
+    under valgrind to identify all mem-leaks and invalid reads.
     (LP: #427924, #375408, #405364, #378193, #428302)
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 24 Sep 2009 16:14:59 +0200
@@ -297,9 +311,9 @@ notify-osd (0.9.21-0ubuntu2) karmic; urgency=low
 notify-osd (0.9.21-0ubuntu1) karmic; urgency=low
 
   * New upstream version (LP: #427434)
-    - Using a fixed slot-allocation scheme now. This means async 
-      bubbles (e.g. volume) always appear in the top slot/position 
-      and sync. bubbles (e.g. IM-message notification) always appear 
+    - Using a fixed slot-allocation scheme now. This means async
+      bubbles (e.g. volume) always appear in the top slot/position
+      and sync. bubbles (e.g. IM-message notification) always appear
       in the bottom slot/position.
 
  -- Ken VanDine <ken.vandine@canonical.com>  Thu, 10 Sep 2009 12:51:58 -0400
@@ -316,15 +330,15 @@ notify-osd (0.9.20-0ubuntu1) karmic; urgency=low
 notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
 
   * New upstream version: (LP: #420046)
-    - updated sizing-factor of body-text height to be 0.9 EMs (of system-wide 
+    - updated sizing-factor of body-text height to be 0.9 EMs (of system-wide
       setting) according to https://wiki.ubuntu.com/NotifyOSD#Body%20text
-    - implemented fade-prevention when bubble is opened while mouse-pointer 
+    - implemented fade-prevention when bubble is opened while mouse-pointer
       is over it/within proximity-fade area
-    - fade-out value now set to 40% as stated in 
+    - fade-out value now set to 40% as stated in
       https://wiki.ubuntu.com/NotifyOSD#Interaction
     - added support for automake-1.11's slient output
     - added valgrind make-rule
-    - experiment with centering bubbles vertically, sync. bubble always goes 
+    - experiment with centering bubbles vertically, sync. bubble always goes
       above center-line, async. one always below it
     - ensure GErrors are correctly freed
 
@@ -332,7 +346,7 @@ notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
 
 notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
 
-  * New upstream version: (lp: #417384) 
+  * New upstream version: (lp: #417384)
     - code-clean by extracting fallback-dialog from class Bubble
     - fixes for i18n unit-tests
     - enforce notification-spam protection (part of backlog-feature work), max. 50 allowed in queue
@@ -343,7 +357,7 @@ notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
 notify-osd (0.9.17-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
-    - added timings-object in preparation for coming 
+    - added timings-object in preparation for coming
       "animations and durations" work
     - patch from Eitan Isaacson fixing LP: #409810
     - patch from Aurélien Gateau extending text-filtering to handle newlines and
@@ -381,16 +395,16 @@ notify-osd (0.9.15-0ubuntu1) karmic; urgency=low
     - fixed wrong default values for bubble-width, margin- and icon-size
     - fixed regressions introduced by the move to the surface- and blur-cache
     - improved drawing of gauge/indicator
-    - tweaked rendering of layout-grid, added display of layout-grid to 
+    - tweaked rendering of layout-grid, added display of layout-grid to
       debug-mode of notify-osd
     - refactored rendering code for bubble
-    - migrated rendering of drop-shadow, background, icon, title, 
+    - migrated rendering of drop-shadow, background, icon, title,
       body and gauge to surface/blur-cache
     - added surface- and blur-cache
-    - added debug-output for font-size, screen-dpi, pixels/EM and 
+    - added debug-output for font-size, screen-dpi, pixels/EM and
       bubble-width in pixels
-    - fixed rounding errors in pixel-per-em calculation, changed default bubble 
-      width to 24 EMs, fixed title- and body-text height, 
+    - fixed rounding errors in pixel-per-em calculation, changed default bubble
+      width to 24 EMs, fixed title- and body-text height,
       fixes LP: #336110 and LP: #391190
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 21 Jul 2009 10:46:15 +0200
@@ -423,7 +437,7 @@ notify-osd (0.9.14-0ubuntu1) karmic; urgency=low
 
 notify-osd (0.9.13-0ubuntu1) karmic; urgency=low
 
-  * New upstream version 
+  * New upstream version
   * Tweak to the apport hook installation
 
   [ Ara Pulido ]
