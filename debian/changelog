@@ -1,3 +1,22 @@
+notify-osd (0.9.35+15.04.20150126-1) unstable; urgency=medium
+
+  * Merge new upstream release from Ubuntu. Remaining Debian changes:
+   - debian/control:
+    + Update Standards-Version, change Maintainer and VCS fields.
+    + Do not recommend notify-osd-icons, not in Debian.
+   - src/defaults.c: Use dynamic slot allocation (See: #550592).
+   - egg/egg-fixed.c: Fix build on armv4 instruction set (See: #598931).
+   - debian/rules: Generate debian/changelog.upstream
+   - Don't install dbus activation file (See: #640120).
+   - Install notify-osd.desktop to /etc/xdg/autostart (See: #669136).
+  * Allow overriding the building of the upstream changelog by
+    setting 'DEB_BUILD_OPTIONS=nochanges'
+  * Break out changes to the upstream source into quilt patches.
+  * notify-osd.desktop: Remove OnlyShowIn field and insetead use
+    NotShowIn (Closes: #786668).
+
+ -- Andrew Starr-Bochicchio <asb@debian.org>  Mon, 25 May 2015 18:21:46 -0400
+
 notify-osd (0.9.35+15.04.20150126-0ubuntu1) vivid; urgency=low
 
   [ Alberts Muktupāvels ]
@@ -146,6 +165,34 @@ notify-osd (0.9.35daily12.11.28-0ubuntu1) raring; urgency=low
 
  -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Wed, 28 Nov 2012 06:30:40 +0000
 
+notify-osd (0.9.34-2) unstable; urgency=low
+
+  * Fix FTBFS on armel when using armv4/armv4t instruction set.
+    (Closes: #598931) Thanks to Evgeni Golov for the patch.
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Wed, 06 Jun 2012 15:05:43 -0400
+
+notify-osd (0.9.34-1) unstable; urgency=low
+
+  [ Andrew Starr-Bochicchio ]
+  * Merge new upstream release from Ubuntu.
+  * Remaining Debian changes:
+   - debian/control:
+    + Update Standards-Version, change Maintainer and VCS fields.
+    + Do not recommend notify-osd-icons, not in Debian.
+    + Provide notification-daemon.
+   - src/defaults.c: Use dynamic slot allocation (See: #550592).
+   - debian/rules: Generate debian/changelog.upstream
+   - Don't install dbus activation file (See: #640120).
+  * debian/rules: Generate upstream changelog from tag.
+  * debian/control: Bump Standards-Version to 3.9.3, no changes.
+  * Install notify-osd.desktop to /etc/xdg/autostart (Closes: #669136).
+
+  [ Evgeni Golov ]
+  * Set DM-Upload-Allowed: yes for Andrew.
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Sun, 20 May 2012 12:54:51 -0400
+
 notify-osd (0.9.34-0ubuntu5) quantal; urgency=low
 
   * debian/source_notify-osd.py:
@@ -194,6 +241,33 @@ notify-osd (0.9.33-0ubuntu1) precise; urgency=low
       (lp: #915389)
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 08 Feb 2012 21:08:41 +0100
+
+notify-osd (0.9.32-2) unstable; urgency=low
+
+  * debian/control: Provide notification-daemon (Closes: #659124).
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Wed, 15 Feb 2012 07:18:18 +0100
+
+notify-osd (0.9.32-1) unstable; urgency=low
+
+  * Merge new upstream release from Ubuntu.
+   - Drop Conflict/Replace on notify-daemon and alsdorf.(Closes: #541779).
+   - Fixes FTBFS with libnotify 0.7 (Closes: #636669).
+  * Remaining Debian changes:
+   - debian/control:
+    + Update Standards-Version, change Maintainer and VCS fields.
+    + Do not recommend notify-osd-icons, not in Debian.
+   - src/defaults.c: Use dynamic slot allocation (See: #550592)
+   - debian/rules: Generate debian/changelog.upstream
+   - notify-osd.{preinst, postrm}: Do not redirect output of dpkg-divert.
+  * Update Vcs-Browser field due to Aloith changes. 
+  * debian/rules: Upstream didn't tag 0.9.32 properly in vcs. Use specific
+    rev number instead of tag to generate debian/changelog.upstream
+  * Don't install dbus activation file (Closes: #640120).
+   - Drop Replaces on notification-daemon added in Ubuntu.
+   - Drop postrm script and modify preinst to remove obsolete diversion.
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Tue, 31 Jan 2012 13:53:39 +0100
 
 notify-osd (0.9.32-0ubuntu5) precise; urgency=low
 
@@ -253,6 +327,28 @@ notify-osd (0.9.31-0ubuntu1) oneiric; urgency=low
     - updated the build-depends
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 11 Jul 2011 18:24:23 +0200
+
+notify-osd (0.9.30-1) unstable; urgency=low
+
+  * Merge new upstream release from Ubuntu, remaining
+    Debian changes:
+   - debian/control:
+    + Update Standards-Version, change Maintainer and VCS fields.
+    + Do not recommend notify-osd-icons, not in Debian.
+   - src/defaults.c: Use dynamic slot allocation (See: #550592)
+   - debian/rules: Generate debian/changelog.upstream
+  * Adopt package for the Ayatana Packagers team and point Vcs
+    fields to the pkg-ayatana repo at bzr.debian.org (Closes: #624758).
+  * The new release fixes the FTBFS with binutils-gold (Closes: #555778).
+  * Do not redirect output of dpkg-divert in notify-osd.{preinst, postrm}
+    (Closes: #548247).
+  * Bump Standards-Version to 3.9.2, no changes needed.
+  * debian/rules:
+   - Revert change from CDBS to dh 7.
+   - Call autoreconf.mk before debhelper.mk so that it is
+     properly cleaned up after (See: #596099).
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Thu, 19 May 2011 13:24:31 -0400
 
 notify-osd (0.9.30-0ubuntu4) natty; urgency=low
 
@@ -405,6 +501,20 @@ notify-osd (0.9.24-0ubuntu1) karmic; urgency=low
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 20 Oct 2009 11:23:14 +0200
 
+notify-osd (0.9.23-2) unstable; urgency=low
+
+  * src/defaults.c: Use dynamic slot allocation (Closes: #550592)
+  * debian/changelog.upstream: Include upstream bzr log (Closes: #550591).
+    - Created by debian/rules pre-build, which is run by bzr builddeb.
+
+ -- Julian Andres Klode <jak@debian.org>  Sun, 11 Oct 2009 15:46:22 +0200
+
+notify-osd (0.9.23-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Julian Andres Klode <jak@debian.org>  Sat, 10 Oct 2009 18:21:49 +0200
+
 notify-osd (0.9.23-0ubuntu1) karmic; urgency=low
 
   * New upstream version:
@@ -478,6 +588,12 @@ notify-osd (0.9.19-0ubuntu1) karmic; urgency=low
 
  -- Ken VanDine <ken.vandine@canonical.com>  Thu, 27 Aug 2009 20:47:56 +0200
 
+notify-osd (0.9.18-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Julian Andres Klode <jak@debian.org>  Fri, 21 Aug 2009 18:00:04 +0200
+
 notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
 
   * New upstream version: (lp: #417384)
@@ -487,6 +603,13 @@ notify-osd (0.9.18-0ubuntu1) karmic; urgency=low
     - Python-examples now get included in generated dist. tarball
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 27 Aug 2009 11:29:55 +0200
+
+notify-osd (0.9.17-1) unstable; urgency=low
+
+  * New upstream release.
+  * Upgrade Standards-Version to 3.8.3.
+
+ -- Julian Andres Klode <jak@debian.org>  Sun, 16 Aug 2009 12:18:36 +0200
 
 notify-osd (0.9.17-0ubuntu1) karmic; urgency=low
 
@@ -512,6 +635,17 @@ notify-osd (0.9.16-0ubuntu1) karmic; urgency=low
     - added support for image_data and image_path
 
  -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 05 Aug 2009 08:49:17 +0100
+
+notify-osd (0.9.15-1) unstable; urgency=low
+
+  * Initial upload to Debian (Closes: #537852)
+  * debian/copyright: Use DEP-5 specification.
+  * debian/control:
+    - Update Standards-Version, change Maintainer and VCS fields.
+    - Do not depend on human-icon-theme anymore
+  * debian/rules: Use debhelper 7 instead of cdbs
+
+ -- Julian Andres Klode <jak@debian.org>  Tue, 21 Jul 2009 13:02:42 +0200
 
 notify-osd (0.9.15-0ubuntu2) karmic; urgency=low
 

@@ -13,3 +13,21 @@ override_dh_auto_test:
 
 override_dh_install:
 	dh_install --fail-missing
+	rm debian/notify-osd/usr/share/dbus-1/services/org.freedesktop.Notifications.service
+	rmdir debian/notify-osd/usr/share/dbus-1/services/
+	rmdir debian/notify-osd/usr/share/dbus-1/
+
+override_dh_installchangelogs:
+	dh_installchangelogs debian/changelog.upstream
+
+
+override_dh_auto_test:
+
+pre-build:
+ifeq (,$(filter nochanges,$(DEB_BUILD_OPTIONS)))
+	bzr log --gnu -r ..tag:$(shell bzr tags -d nosmart+lp:notify-osd | \
+		sort -k 2 -n | tail -n 1 | tr ' ' '\n' | head -n 1) \
+		nosmart+lp:notify-osd > debian/changelog.upstream
+endif
+
+.PHONY: pre-build

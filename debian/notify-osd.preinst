@@ -2,12 +2,14 @@
 set -e
 
 case "$1" in
-    install|upgrade)
-        # avoid file conflict with notification-daemon
-        dpkg-divert --add --rename --package notify-osd --divert /usr/share/dbus-1/services/org.freedesktop.Notifications.service.notify-osd /usr/share/dbus-1/services/org.freedesktop.Notifications.service > /dev/null
+    upgrade)
+        # Remove obsolete diversion.
+        if  dpkg --compare-versions "$2" lt 0.9.32-1; then
+            dpkg-divert --remove --rename --package notify-osd --divert /usr/share/dbus-1/services/org.freedesktop.Notifications.service.notify-osd /usr/share/dbus-1/services/org.freedesktop.Notifications.service
+        fi
         ;;
 
-    abort-upgrade)
+    install|abort-upgrade)
         ;;
 
     *)
