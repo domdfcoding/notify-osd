@@ -269,15 +269,21 @@ _trigger_bubble_redraw (gpointer data,
 	bubble_refresh (bubble);
 }
 
+static Bubble *sync_bubble = NULL;
+
 static void
 value_changed_handler (Defaults* defaults,
 		       Stack*    stack)
 {
 	if (stack->list != NULL)
 		g_list_foreach (stack->list, _trigger_bubble_redraw, NULL);
-}
 
-static Bubble *sync_bubble = NULL;
+	if (sync_bubble != NULL)
+	{
+		bubble_recalc_size (sync_bubble);
+		bubble_refresh (sync_bubble);
+	}
+}
 
 #include "display.c"
 
@@ -730,7 +736,7 @@ stack_notify_handler (Stack*                 self,
 		{
 			g_debug("Using image_path hint\n");
 			if ((data && G_VALUE_HOLDS_STRING (data)))
-				bubble_set_icon_from_path (bubble, g_value_get_string(data));
+				bubble_set_icon (bubble, g_value_get_string(data));
 			else
 				g_warning ("image_path hint is not a string\n");
 		}
