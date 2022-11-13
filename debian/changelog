@@ -1,3 +1,11 @@
+notify-osd (0.9.35+15.04.20150126-2) unstable; urgency=medium
+
+  * QA upload.
+  * Set maintainer to Debian QA Group <packages@qa.debian.org>. (see: #818024)
+  * debian/control: Remove Uploaders field.
+
+ -- Marcos Talau <talau@debian.org>  Sun, 13 Nov 2022 16:57:39 -0300
+
 notify-osd (0.9.35+15.04.20150126-1) unstable; urgency=medium
 
   * Merge new upstream release from Ubuntu. Remaining Debian changes:
