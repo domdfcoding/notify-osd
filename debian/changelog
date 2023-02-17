@@ -1,3 +1,10 @@
+notify-osd (0.9.35+15.04.20150126-3) unstable; urgency=medium
+
+  * QA upload.
+  * Move Vcs to salsa.
+
+ -- Bastian Germann <bage@debian.org>  Fri, 17 Feb 2023 10:46:59 +0100
+
 notify-osd (0.9.35+15.04.20150126-2) unstable; urgency=medium
 
   * QA upload.

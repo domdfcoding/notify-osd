@@ -14,8 +14,8 @@ Build-Depends: debhelper (>= 9),
                libwnck-3-dev
 XS-Testsuite: autopkgtest
 Standards-Version: 3.9.6
-Vcs-Bzr: http://bzr.debian.org/bzr/pkg-ayatana/notify-osd/debian/
-Vcs-Browser: http://anonscm.debian.org/loggerhead/pkg-ayatana/notify-osd/debian/files
+Vcs-Git: https://salsa.debian.org/debian/notify-osd.git
+Vcs-Browser: https://salsa.debian.org/debian/notify-osd
 Homepage: https://launchpad.net/notify-osd
 
 Package: notify-osd
