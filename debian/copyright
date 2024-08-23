@@ -1,4 +1,4 @@
-Format: http://dep.debian.net/deps/dep5/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: notify-osd
 Upstream-Contact: Mirco Mueller <mirco.mueller@canonical.com>
 Source: https://launchpad.net/notify-osd

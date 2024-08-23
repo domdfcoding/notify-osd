@@ -1,3 +1,12 @@
 Tests: upstream
-Depends: @, make, dbus-x11, gnome-screensaver, hicolor-icon-theme, xvfb, at-spi2-core, libnotify-bin
+Depends:
+ at-spi2-core,
+ dbus,
+ gnome-screensaver,
+ hicolor-icon-theme,
+ libnotify-bin,
+ make,
+ xauth,
+ xvfb,
+ @,
 Restrictions: build-needed

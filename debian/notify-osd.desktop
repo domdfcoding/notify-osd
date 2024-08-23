@@ -1,7 +1,8 @@
 [Desktop Entry]
 Name=Notify OSD
 Comment=Display notifications
-Exec=/usr/lib/notify-osd/notify-osd
+Comment[zh_CN]=显示通知
+Exec=/usr/libexec/notify-osd
 Terminal=false
 Type=Application
 NotShowIn=KDE;

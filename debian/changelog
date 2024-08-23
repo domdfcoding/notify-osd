@@ -1,3 +1,23 @@
+notify-osd (0.9.35+20.04.20191129-1) unstable; urgency=medium
+
+  * QA upload.
+  * Merge new upstream release from Ubuntu. Remaining Debian changes:
+    - Don't install dbus activation file (See: #640120).
+    - Install notify-osd.desktop to /etc/xdg/autostart (See: #669136).
+    + Update Standards-Version, change Maintainer and Vcs fields.
+  * Refresh packaging:
+    - debian/source/format: Use "3.0 (quilt)".
+    - debian/control: Bump debhelper compat to v13.
+    - debian/source_notify-osd.py: Dropped following Ubuntu upstream.
+  * debian/tests/control: Add xauth to autopkgtest dependency to fix
+    autopkgtest error.
+  * debian/patches/0001-Fix-Werror-return-mismatch.patch: Add proposed
+    patch from Arch Linux to fix Werror=return-mismatch. (Closes: #1075319)
+  * debian/notify-osd.desktop: Update Exec field to use the new executable
+    location /usr/libexec/notify-osd.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 23 Aug 2024 13:49:23 -0400
+
 notify-osd (0.9.35+15.04.20150126-3) unstable; urgency=medium
 
   * QA upload.

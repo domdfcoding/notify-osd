@@ -1,2 +1,1 @@
-debian/source_notify-osd.py usr/share/apport/package-hooks
 debian/notify-osd.desktop etc/xdg/autostart

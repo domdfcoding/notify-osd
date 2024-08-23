@@ -1,2 +1,1 @@
-use_DYNAMIC_slot-allocation.patch
-fix_build_on_arm4.patch
+0001-Fix-Werror-return-mismatch.patch
