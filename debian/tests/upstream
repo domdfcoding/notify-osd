@@ -1,5 +1,15 @@
 #!/bin/sh
-if ! xvfb-run --server-args="-screen 0 800x600x8" dbus-run-session make check; then
-   cat tests/test-suite.log >&2
-   exit 1
+
+# SPDX-FileCopyrightText: 2024 Boyuan Yang <byang@debian.org>
+# SPDX-License-Identifier: GPL-3.0-only or LGPL-2.0-or-later or CC0-1.0 or BSD-3-Clause
+
+echo 'starting test upstream ...'
+if ! xvfb-run --server-args="-screen 0 800x600x8" dbus-run-session ./debian/tests/start-notification-daemon-and-make-check.sh; then
+    echo "test script failed! printing test-suite.log below ..."
+    cat tests/test-suite.log >&2
+    echo "upstream test failed with exit code 1."
+    exit 1
+else
+    echo "upstream test finished successfully!"
+    exit 0
 fi

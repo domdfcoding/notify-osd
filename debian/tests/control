@@ -1,12 +1,16 @@
 Tests: upstream
 Depends:
  at-spi2-core,
+ build-essential,
  dbus,
  gnome-screensaver,
+ gnome-session,
+ gnome-shell,
  hicolor-icon-theme,
  libnotify-bin,
  make,
  xauth,
  xvfb,
  @,
-Restrictions: build-needed
+ @builddeps@,
+Restrictions: build-needed, allow-stderr

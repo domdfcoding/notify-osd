@@ -1,3 +1,14 @@
+notify-osd (0.9.35+20.04.20191129-2) unstable; urgency=medium
+
+  * QA upload.
+  * The 20191129 snapshot already fixes the xdg autostart desktop
+    file. (Closes: #805527, #1027272)
+  * debian/tests/: Try to fix autopkgtest. (Closes: #836038)
+  * debian/copyright: Further clarify copyright information using
+    SPDX identifier.
+
+ -- Boyuan Yang <byang@debian.org>  Sun, 22 Sep 2024 13:46:37 -0400
+
 notify-osd (0.9.35+20.04.20191129-1) unstable; urgency=medium
 
   * QA upload.
