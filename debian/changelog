@@ -1,3 +1,11 @@
+notify-osd (0.9.35+20.04.20191129-3) unstable; urgency=medium
+
+  * QA upload.
+  * Build with -std=gnu17 to workaround FTBFS with GCC 15.
+    (Closes: #1097475)
+
+ -- Adrian Bunk <bunk@debian.org>  Tue, 21 Oct 2025 19:37:16 +0300
+
 notify-osd (0.9.35+20.04.20191129-2) unstable; urgency=medium
 
   * QA upload.
