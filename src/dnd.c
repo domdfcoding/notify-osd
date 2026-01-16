@@ -116,6 +116,7 @@ get_gnomesession_proxy (void)
 gboolean
 dnd_is_idle_inhibited ()
 {
+	return FALSE;
 	GError  *error = NULL;
 	gboolean inhibited = FALSE;
 	guint idle = 8; // 8: Inhibit the session being marked as idle
