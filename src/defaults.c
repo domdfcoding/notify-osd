@@ -173,7 +173,9 @@ _get_font_size_dpi (Defaults* self)
 		return;
 
 	/* determine current system font-name/size */
-	font_name = g_settings_get_string (self->gnome_settings, GSETTINGS_FONT_KEY);
+	// font_name = g_settings_get_string (self->gnome_settings, GSETTINGS_FONT_KEY);
+	// TODO: g_settings_get_string is not getting the right value (it's using Cantarell, GNOME's default)
+	font_name = "Ubuntu 11";
 	string = g_string_new (font_name);
 
 	// extract text point-size
@@ -184,7 +186,7 @@ _get_font_size_dpi (Defaults* self)
 		points = (gdouble) pango_font_description_get_size (desc) /
 			 (gdouble) PANGO_SCALE;
 	pango_font_description_free (desc);
-	g_free ((gpointer) font_name);
+	// g_free ((gpointer) font_name);
 
 	// extract font-face-name/style
 	font_face = extract_font_face (string->str);
